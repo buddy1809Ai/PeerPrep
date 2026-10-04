@@ -2,6 +2,10 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const { exec } = require('child_process');
+const crypto = require('crypto');
 
 const app = express();
 app.use(cors());
@@ -335,49 +339,107 @@ app.get('/api/problems', (req, res) => {
   res.json(PROBLEMS);
 });
 
-// Remote Code Execution via Piston API (Free, high-throughput sandbox)
+// Local Isolated Code Execution Engine
+const EXEC_TIMEOUT = 7000; // 7 seconds timeout
+
+function runLocalCode(language, code) {
+  return new Promise((resolve) => {
+    const runId = 'run_' + crypto.randomBytes(4).toString('hex');
+    const tempDir = path.join(__dirname, 'temp_runs', runId);
+    
+    try {
+      fs.mkdirSync(tempDir, { recursive: true });
+    } catch (e) {
+      return resolve({
+        output: 'Failed to create execution sandbox: ' + e.message,
+        isError: true,
+        executionTimeMs: 0
+      });
+    }
+
+    const startTime = Date.now();
+    let runCommand = '';
+    let filePath = '';
+
+    if (language === 'javascript') {
+      filePath = path.join(tempDir, 'solution.js');
+      fs.writeFileSync(filePath, code, 'utf8');
+      runCommand = `node "${filePath}"`;
+    } else if (language === 'python') {
+      filePath = path.join(tempDir, 'solution.py');
+      fs.writeFileSync(filePath, code, 'utf8');
+      runCommand = `python "${filePath}"`;
+    } else if (language === 'java') {
+      const match = code.match(/public\s+class\s+([A-Za-z0-9_]+)/);
+      const className = match ? match[1] : 'Solution';
+      filePath = path.join(tempDir, `${className}.java`);
+      fs.writeFileSync(filePath, code, 'utf8');
+      runCommand = `javac "${filePath}" && java -cp "${tempDir}" ${className}`;
+    } else if (language === 'cpp') {
+      filePath = path.join(tempDir, 'solution.cpp');
+      const exePath = path.join(tempDir, 'solution.exe');
+      fs.writeFileSync(filePath, code, 'utf8');
+      runCommand = `g++ -O2 "${filePath}" -o "${exePath}" && "${exePath}"`;
+    } else {
+      try { fs.rmSync(tempDir, { recursive: true, force: true }); } catch (_) {}
+      return resolve({
+        output: `Unsupported language runtime: ${language}`,
+        isError: true,
+        executionTimeMs: 0
+      });
+    }
+
+    exec(runCommand, { timeout: EXEC_TIMEOUT, maxBuffer: 1024 * 1024, cwd: tempDir }, (error, stdout, stderr) => {
+      const executionTimeMs = Date.now() - startTime;
+      
+      // Clean up temp directory safely after a brief delay
+      setTimeout(() => {
+        try {
+          fs.rmSync(tempDir, { recursive: true, force: true });
+        } catch (_) {}
+      }, 500);
+
+      if (error && error.killed) {
+        return resolve({
+          output: `Execution Timed Out (Limit: ${EXEC_TIMEOUT / 1000}s). Check for infinite loops.`,
+          isError: true,
+          executionTimeMs
+        });
+      }
+
+      const cleanStdout = stdout ? stdout.toString() : '';
+      const cleanStderr = stderr ? stderr.toString() : '';
+
+      if (cleanStderr && !cleanStdout) {
+        return resolve({
+          output: cleanStderr,
+          isError: true,
+          executionTimeMs
+        });
+      }
+
+      return resolve({
+        output: (cleanStdout || 'Code executed successfully with no output.') + (cleanStderr ? `\n[Warnings/Stderr]:\n${cleanStderr}` : ''),
+        isError: !!error,
+        executionTimeMs
+      });
+    });
+  });
+}
+
+// Remote / Local Code Execution Endpoint
 app.post('/api/execute', async (req, res) => {
   const { language, code } = req.body;
   if (!code || !language) {
     return res.status(400).json({ error: 'Code and language are required' });
   }
 
-  const pistonLangMap = {
-    javascript: { language: 'javascript', version: '18.15.0' },
-    python: { language: 'python', version: '3.10.0' },
-    java: { language: 'java', version: '15.0.2' },
-    cpp: { language: 'c++', version: '10.2.0' }
-  };
-
-  const runtime = pistonLangMap[language] || { language: 'javascript', version: '18.15.0' };
-
   try {
-    const startTime = Date.now();
-    const response = await fetch('https://emkc.org/api/v2/piston/execute', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        language: runtime.language,
-        version: runtime.version,
-        files: [{ content: code }]
-      })
-    });
-
-    const data = await response.json();
-    const executionTimeMs = Date.now() - startTime;
-
-    if (data.run) {
-      return res.json({
-        output: data.run.stdout || data.run.stderr || 'Code executed with no output.',
-        isError: !!data.run.stderr,
-        executionTimeMs
-      });
-    } else {
-      return res.status(500).json({ error: 'Execution engine failed', details: data });
-    }
+    const result = await runLocalCode(language, code);
+    return res.json(result);
   } catch (err) {
-    console.error('Remote execution error:', err.message);
-    res.status(500).json({ error: 'Code execution service unavailable', details: err.message });
+    console.error('Execution error:', err.message);
+    res.status(500).json({ error: 'Code execution failed', details: err.message });
   }
 });
 
