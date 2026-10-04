@@ -364,22 +364,21 @@ function runLocalCode(language, code) {
     if (language === 'javascript') {
       filePath = path.join(tempDir, 'solution.js');
       fs.writeFileSync(filePath, code, 'utf8');
-      runCommand = `node "${filePath}"`;
+      runCommand = 'node solution.js';
     } else if (language === 'python') {
       filePath = path.join(tempDir, 'solution.py');
       fs.writeFileSync(filePath, code, 'utf8');
-      runCommand = `python "${filePath}"`;
+      runCommand = 'python solution.py';
     } else if (language === 'java') {
       const match = code.match(/public\s+class\s+([A-Za-z0-9_]+)/);
       const className = match ? match[1] : 'Solution';
       filePath = path.join(tempDir, `${className}.java`);
       fs.writeFileSync(filePath, code, 'utf8');
-      runCommand = `javac "${filePath}" && java -cp "${tempDir}" ${className}`;
+      runCommand = `javac ${className}.java && java ${className}`;
     } else if (language === 'cpp') {
       filePath = path.join(tempDir, 'solution.cpp');
-      const exePath = path.join(tempDir, 'solution.exe');
       fs.writeFileSync(filePath, code, 'utf8');
-      runCommand = `g++ -O2 "${filePath}" -o "${exePath}" && "${exePath}"`;
+      runCommand = 'g++ solution.cpp -o solution.exe && solution.exe';
     } else {
       try { fs.rmSync(tempDir, { recursive: true, force: true }); } catch (_) {}
       return resolve({
