@@ -925,11 +925,11 @@ ${interviewerNotes}
 
             {/* QR Code Section */}
             <div className="text-center space-y-2">
-              <div className="relative inline-block bg-white p-2.5 rounded-2xl shadow-xl shadow-indigo-500/10 border-2 border-indigo-500/30">
+              <div className="relative inline-block bg-black p-2 rounded-2xl shadow-2xl border-2 border-indigo-500/40">
                 <img
                   src="/qr_code.png"
                   alt="Aman Gajbhiye PhonePe UPI QR"
-                  className="w-44 h-44 object-contain rounded-lg"
+                  className="w-48 h-48 object-contain rounded-xl block mx-auto"
                 />
               </div>
 
