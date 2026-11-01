@@ -112,6 +112,10 @@ export default function App() {
 
   const socketRef = useRef(null);
   const chatBottomRef = useRef(null);
+  const editorRef = useRef(null);
+  const monacoRef = useRef(null);
+  const decorationsRef = useRef([]);
+  const [remoteCursor, setRemoteCursor] = useState(null);
 
   // Check saved Pro status
   useEffect(() => {
@@ -176,12 +180,28 @@ export default function App() {
   useEffect(() => {
     let timer = null;
     if (isTimerRunning && timeLeft > 0) {
-      timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+      timer = setInterval(() => setTimeLeft(prev => Math.max(0, prev - 1)), 1000);
     } else if (timeLeft === 0) {
       setIsTimerRunning(false);
     }
     return () => clearInterval(timer);
   }, [isTimerRunning, timeLeft]);
+
+  const toggleTimer = () => {
+    const next = !isTimerRunning;
+    setIsTimerRunning(next);
+    if (socketRef.current) {
+      socketRef.current.emit('timer-toggle', { roomId, running: next });
+    }
+  };
+
+  const resetTimer = () => {
+    setTimeLeft(45 * 60);
+    setIsTimerRunning(false);
+    if (socketRef.current) {
+      socketRef.current.emit('timer-reset', { roomId, seconds: 45 * 60 });
+    }
+  };
 
   // Socket Connection Management
   useEffect(() => {
@@ -193,15 +213,66 @@ export default function App() {
     socket.emit('join-room', { roomId, username, role });
 
     socket.on('room-state', (state) => {
-      setCode(state.code);
-      setLanguage(state.language);
-      setProblemId(state.problemId);
-      setUsers(state.users);
-      setMessages(state.messages || []);
+      if (state.code) setCode(state.code);
+      if (state.language) setLanguage(state.language);
+      if (state.problemId) setProblemId(state.problemId);
+      if (state.users) setUsers(state.users);
+      if (state.messages) setMessages(state.messages);
+      if (state.timerSeconds !== undefined) {
+        setTimeLeft(state.timerSeconds);
+        setIsTimerRunning(state.timerRunning || false);
+      }
     });
 
     socket.on('code-update', (newCode) => {
-      setCode(newCode);
+      setCode(prev => (prev !== newCode ? newCode : prev));
+    });
+
+    socket.on('timer-update', ({ timerSeconds, timerRunning }) => {
+      setTimeLeft(timerSeconds);
+      setIsTimerRunning(timerRunning);
+    });
+
+    socket.on('cursor-update', ({ username: peerName, role: peerRole, position }) => {
+      setRemoteCursor({ username: peerName, role: peerRole, position });
+      if (editorRef.current && monacoRef.current && position) {
+        const isInterviewer = peerRole === 'interviewer';
+        const styleId = 'monaco-remote-cursor-styles';
+        if (!document.getElementById(styleId)) {
+          const style = document.createElement('style');
+          style.id = styleId;
+          style.innerHTML = `
+            .remote-cursor-candidate { border-left: 2px solid #6366f1 !important; margin-left: -1px; }
+            .remote-cursor-interviewer { border-left: 2px solid #10b981 !important; margin-left: -1px; }
+          `;
+          document.head.appendChild(style);
+        }
+
+        decorationsRef.current = editorRef.current.deltaDecorations(
+          decorationsRef.current,
+          [
+            {
+              range: new monacoRef.current.Range(
+                position.lineNumber,
+                position.column,
+                position.lineNumber,
+                position.column
+              ),
+              options: {
+                className: isInterviewer ? 'remote-cursor-interviewer' : 'remote-cursor-candidate',
+                hoverMessage: { value: `**${peerName}** (${peerRole.toUpperCase()})` }
+              }
+            }
+          ]
+        );
+      }
+    });
+
+    socket.on('cursor-remove', () => {
+      setRemoteCursor(null);
+      if (editorRef.current && decorationsRef.current.length > 0) {
+        decorationsRef.current = editorRef.current.deltaDecorations(decorationsRef.current, []);
+      }
     });
 
     socket.on('language-update', ({ language: newLang, code: newCode }) => {
@@ -247,6 +318,25 @@ export default function App() {
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, activeTab]);
+
+  const handleEditorDidMount = (editor, monaco) => {
+    editorRef.current = editor;
+    monacoRef.current = monaco;
+
+    editor.onDidChangeCursorPosition((e) => {
+      if (socketRef.current) {
+        socketRef.current.emit('cursor-move', {
+          roomId,
+          username,
+          role,
+          position: {
+            lineNumber: e.position.lineNumber,
+            column: e.position.column
+          }
+        });
+      }
+    });
+  };
 
   const handleEditorChange = (newVal) => {
     setCode(newVal);
@@ -1059,15 +1149,15 @@ ${interviewerNotes}
             {formatTimer(timeLeft)}
           </span>
           <button
-            onClick={() => setIsTimerRunning(!isTimerRunning)}
-            className="text-[11px] px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+            onClick={toggleTimer}
+            className="text-[11px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition cursor-pointer"
           >
             {isTimerRunning ? 'Pause' : 'Start'}
           </button>
           <button
-            onClick={() => { setTimeLeft(45 * 60); setIsTimerRunning(false); }}
+            onClick={resetTimer}
             title="Reset to 45 mins"
-            className="text-slate-400 hover:text-slate-200 transition"
+            className="text-slate-400 hover:text-slate-200 transition cursor-pointer"
           >
             <RotateCcw className="w-3 h-3" />
           </button>
@@ -1276,7 +1366,14 @@ ${interviewerNotes}
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               solution.{language === 'javascript' ? 'js' : language === 'python' ? 'py' : language === 'java' ? 'java' : 'cpp'}
             </span>
-            <span className="text-[10px] text-slate-500">Live Dual-Cursor Sync (Sub-50ms)</span>
+            {remoteCursor ? (
+              <span className="text-[10px] flex items-center gap-1.5 text-indigo-300 bg-indigo-950/70 border border-indigo-500/40 px-2 py-0.5 rounded font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" />
+                {remoteCursor.username} ({remoteCursor.role}): Ln {remoteCursor.position?.lineNumber}, Col {remoteCursor.position?.column}
+              </span>
+            ) : (
+              <span className="text-[10px] text-slate-500">Live Dual-Cursor Sync (Active)</span>
+            )}
           </div>
 
           <div className="flex-1">
@@ -1286,6 +1383,7 @@ ${interviewerNotes}
               theme="vs-dark"
               value={code}
               onChange={handleEditorChange}
+              onMount={handleEditorDidMount}
               options={{
                 fontSize: 13,
                 fontFamily: 'Fira Code, Menlo, Monaco, Consolas, monospace',

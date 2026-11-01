@@ -555,7 +555,10 @@ function getInitialRoom(roomId) {
     problemId: defaultProblem.id,
     code: defaultProblem.starterCode[defaultLanguage],
     users: new Map(), // socketId -> { username, role }
-    messages: []
+    messages: [],
+    timerSeconds: 45 * 60,
+    timerRunning: false,
+    timerLastUpdate: Date.now()
   };
 }
 
@@ -797,13 +800,22 @@ io.on('connection', (socket) => {
     const room = rooms.get(roomId);
     room.users.set(socket.id, { username, role, socketId: socket.id });
 
+    if (room.timerRunning) {
+      const elapsed = Math.floor((Date.now() - room.timerLastUpdate) / 1000);
+      room.timerSeconds = Math.max(0, room.timerSeconds - elapsed);
+      room.timerLastUpdate = Date.now();
+      if (room.timerSeconds === 0) room.timerRunning = false;
+    }
+
     socket.emit('room-state', {
       roomId,
       code: room.code,
       language: room.language,
       problemId: room.problemId,
       users: Array.from(room.users.values()),
-      messages: room.messages
+      messages: room.messages,
+      timerSeconds: room.timerSeconds,
+      timerRunning: room.timerRunning
     });
 
     socket.to(roomId).emit('user-joined', {
@@ -811,6 +823,47 @@ io.on('connection', (socket) => {
       role,
       users: Array.from(room.users.values())
     });
+  });
+
+  socket.on('cursor-move', ({ roomId, username, role, position, selection }) => {
+    if (roomId && position) {
+      socket.to(roomId).emit('cursor-update', {
+        socketId: socket.id,
+        username,
+        role,
+        position,
+        selection
+      });
+    }
+  });
+
+  socket.on('timer-toggle', ({ roomId, running }) => {
+    if (rooms.has(roomId)) {
+      const room = rooms.get(roomId);
+      if (room.timerRunning && !running) {
+        const elapsed = Math.floor((Date.now() - room.timerLastUpdate) / 1000);
+        room.timerSeconds = Math.max(0, room.timerSeconds - elapsed);
+      }
+      room.timerRunning = running;
+      room.timerLastUpdate = Date.now();
+      io.in(roomId).emit('timer-update', {
+        timerSeconds: room.timerSeconds,
+        timerRunning: room.timerRunning
+      });
+    }
+  });
+
+  socket.on('timer-reset', ({ roomId, seconds = 45 * 60 }) => {
+    if (rooms.has(roomId)) {
+      const room = rooms.get(roomId);
+      room.timerSeconds = seconds;
+      room.timerRunning = false;
+      room.timerLastUpdate = Date.now();
+      io.in(roomId).emit('timer-update', {
+        timerSeconds: room.timerSeconds,
+        timerRunning: false
+      });
+    }
   });
 
   socket.on('code-change', ({ roomId, code }) => {
@@ -868,6 +921,10 @@ io.on('connection', (socket) => {
         io.in(roomId).emit('user-left', {
           username: user.username,
           users: Array.from(room.users.values())
+        });
+        socket.to(roomId).emit('cursor-remove', {
+          socketId: socket.id,
+          username: user.username
         });
 
         if (room.users.size === 0) {
