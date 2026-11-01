@@ -22,7 +22,8 @@ import {
   BookOpen,
   Award,
   Layers,
-  ChevronDown
+  ChevronDown,
+  X
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -50,20 +51,13 @@ export function LeetCodePortal({
   const [topicsList, setTopicsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // User Solved Tracking in localStorage
+  // User Solved Tracking in localStorage - Start Fresh with 0 Activity
   const [solvedStatus, setSolvedStatus] = useState(() => {
     try {
       const stored = localStorage.getItem('peerprep_user_solved_status');
       if (stored) return JSON.parse(stored);
     } catch (_) {}
-    return {
-      'bitwise-xor-of-all-pairings': 'solved',
-      'fraction-addition-and-subtraction': 'solved',
-      'two-sum': 'solved',
-      'trapping-rain-water': 'attempted',
-      'lru-cache': 'attempted',
-      'substring-xor-queries': 'solved'
-    };
+    return {};
   });
 
   const toggleStatus = (id) => {
@@ -84,7 +78,7 @@ export function LeetCodePortal({
         localStorage.setItem('peerprep_user_solved_status', JSON.stringify(updated));
       } catch (_) {}
       if (nextStatus === 'solved') {
-        confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+        confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 } });
       }
       return updated;
     });
@@ -134,43 +128,40 @@ export function LeetCodePortal({
     return filteredProblems.slice(start, start + pageSize);
   }, [filteredProblems, page, pageSize]);
 
-  // Generate 365-Day LeetCode Activity Heatmap
+  // 365-Day LeetCode Activity Heatmap - Completely Clean Initial State (No fake activity)
   const heatmapData = useMemo(() => {
     const days = [];
     const today = new Date();
-    // Deterministic pseudo-activity distribution
+    const todayStr = today.toISOString().split('T')[0];
+    const solvedTodayCount = Object.values(solvedStatus).filter(s => s === 'solved').length;
+
     for (let i = 364; i >= 0; i--) {
       const d = new Date();
       d.setDate(today.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
       const dayOfWeek = d.getDay();
       
-      // Calculate activity intensity: high on weekdays, peak streaks in recent months
-      const seed = (d.getFullYear() * 1000 + (d.getMonth() + 1) * 35 + d.getDate() * 7);
-      let count = 0;
+      // Clean zero activity for new candidate. If candidate solved problems today, light up today!
+      const isToday = dateStr === todayStr;
+      const count = isToday ? solvedTodayCount : 0;
       let level = 0;
-      
-      // Recent 30 days active streak
-      if (i < 30) {
-        count = (seed % 6) + 1;
-        level = count > 4 ? 4 : count > 2 ? 3 : 2;
-      } else if (seed % 7 === 0 || seed % 11 === 0) {
-        count = (seed % 4) + 1;
-        level = count > 3 ? 3 : count > 1 ? 2 : 1;
-      }
+      if (count >= 5) level = 4;
+      else if (count >= 3) level = 3;
+      else if (count >= 2) level = 2;
+      else if (count >= 1) level = 1;
 
       days.push({
         date: dateStr,
         dayOfWeek,
         count,
-        level
+        level,
+        isToday
       });
     }
 
     // Group into 53 weeks (columns) x 7 days (rows)
     const weeks = [];
     let currentWeek = [];
-    // Pad first week
     const firstDayOfWeek = days[0].dayOfWeek;
     for (let p = 0; p < firstDayOfWeek; p++) {
       currentWeek.push({ date: '', count: 0, level: 0, dayOfWeek: p, empty: true });
@@ -189,7 +180,7 @@ export function LeetCodePortal({
       weeks.push(currentWeek);
     }
     return weeks;
-  }, []);
+  }, [solvedStatus]);
 
   const [hoveredDate, setHoveredDate] = useState(null);
 
@@ -223,30 +214,35 @@ export function LeetCodePortal({
     'Graph'
   ];
 
-  // Stats Counters
+  // Real Stats Counters
   const solvedCount = Object.values(solvedStatus).filter(s => s === 'solved').length;
-  const attemptedCount = Object.values(solvedStatus).filter(s => s === 'attempted').length;
+  const currentStreak = solvedCount > 0 ? 1 : 0;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen w-full bg-slate-950 text-slate-100 flex flex-col font-sans overflow-x-hidden selection:bg-indigo-500 selection:text-white">
       {/* Top Header Bar */}
-      <header className="h-14 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2.5">
+      <header className="h-14 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 shrink-0">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-bold shadow-md shadow-orange-500/20">
               <Code2 className="w-5 h-5 text-slate-950" />
             </div>
             <div>
-              <span className="font-extrabold text-base tracking-tight text-white flex items-center gap-1.5">
-                PeerPrep <span className="text-amber-400 font-mono text-xs px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30">LeetCode Hub</span>
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
+                PeerPrep <span className="text-amber-400 font-mono text-[10px] sm:text-xs px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30">LeetCode Hub</span>
               </span>
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-1.5 ml-4 pl-4 border-l border-slate-800">
+          <div className="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-slate-800">
             <button
-              onClick={() => setSelectedCompany('Trilogy')}
-              className={`text-xs px-3 py-1 rounded-full font-medium transition flex items-center gap-1.5 ${
+              onClick={() => {
+                setSelectedCompany('Trilogy');
+                setSelectedTopic('All');
+                setSearchQuery('');
+                setPage(1);
+              }}
+              className={`text-xs px-3 py-1 rounded-full font-medium transition flex items-center gap-1.5 cursor-pointer ${
                 selectedCompany === 'Trilogy'
                   ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                   : 'text-slate-400 hover:text-slate-200'
@@ -258,31 +254,31 @@ export function LeetCodePortal({
 
             <button
               onClick={() => onSwitchToInterviewRoom && onSwitchToInterviewRoom()}
-              className="text-xs px-3 py-1 rounded-full text-indigo-300 bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 transition flex items-center gap-1.5 ml-2"
+              className="text-xs px-3 py-1 rounded-full text-indigo-300 bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 transition flex items-center gap-1.5 cursor-pointer"
             >
               <Play className="w-3 h-3 text-indigo-400 fill-indigo-400" />
-              <span>Switch to Live Mock Interview Room</span>
+              <span>Enter Live Mock Room</span>
             </button>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
           {/* Streak Badge */}
-          <div className="flex items-center gap-1.5 bg-slate-900 border border-orange-500/30 px-3 py-1 rounded-lg text-xs font-semibold text-orange-400 shadow-sm shadow-orange-500/10">
-            <Flame className="w-4 h-4 fill-orange-500 text-orange-500 animate-pulse" />
-            <span>14 Days Streak</span>
+          <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300">
+            <Flame className={`w-3.5 h-3.5 ${currentStreak > 0 ? 'text-orange-400 fill-orange-400 animate-pulse' : 'text-slate-500'}`} />
+            <span>{currentStreak} Days Streak</span>
           </div>
 
           {/* Daily Goal Badge */}
-          <div className="hidden sm:flex items-center gap-1.5 bg-slate-900 border border-emerald-500/30 px-3 py-1 rounded-lg text-xs font-semibold text-emerald-400">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Goal: 3 / 5 Today</span>
+          <div className="hidden sm:flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300">
+            <CheckCircle2 className={`w-3.5 h-3.5 ${solvedCount > 0 ? 'text-emerald-400' : 'text-slate-500'}`} />
+            <span>Goal: {Math.min(solvedCount, 5)} / 5 Today</span>
           </div>
 
           {/* Pricing Pass Button */}
           <button
             onClick={onOpenPricing}
-            className="text-xs font-semibold text-amber-300 bg-amber-500/20 border border-amber-500/40 px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-amber-500/30 transition shadow-sm"
+            className="text-xs font-semibold text-amber-300 bg-amber-500/20 border border-amber-500/40 px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-amber-500/30 transition shadow-sm cursor-pointer"
           >
             <Crown className="w-3.5 h-3.5 text-amber-400" />
             <span>Pass ₹29</span>
@@ -290,8 +286,8 @@ export function LeetCodePortal({
         </div>
       </header>
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+      {/* Main Scrollable Content Container */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6 pb-36">
         
         {/* Banner: Trilogy Innovations Innovation Catalyst PYQ Highlight */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-amber-950/40 border border-indigo-800/40 p-5 sm:p-6 shadow-xl">
@@ -303,10 +299,10 @@ export function LeetCodePortal({
                 Trilogy Innovations • Innovation Catalyst Special Bank
               </div>
               <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-                470 Tech Companies • 3,392 LeetCode PYQs with Real Heatmap
+                470 Tech Companies • 3,392 LeetCode PYQs & Topic Directory
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-                Practice verified company-wise past interview problems. Each problem is equipped with clean function signatures, 3-level progressive hints, optimal $O(N)$ solutions, and instant one-click loading into the live collaborative Monaco code editor.
+                Practice verified company-wise past interview problems. Each problem provides clean function signatures, 3-level progressive hints, optimal O(N) solutions, and instant loading into the Monaco live coding editor.
               </p>
             </div>
 
@@ -316,17 +312,18 @@ export function LeetCodePortal({
                   setSelectedCompany('Trilogy');
                   setSelectedTopic('All');
                   setSearchQuery('');
+                  setPage(1);
                 }}
-                className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-orange-500/20 transition flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-orange-500/20 transition flex items-center gap-2 cursor-pointer"
               >
                 <Flame className="w-4 h-4 fill-slate-950" />
-                <span>Practice Trilogy PYQs ({popularCompanies[0].count})</span>
+                <span>Practice Trilogy PYQs (6)</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* LeetCode Activity Heatmap & Stats Card */}
+        {/* LeetCode Activity Heatmap Card - Clean 0 Activity for New User */}
         <div className="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-5 shadow-lg backdrop-blur-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
             <div className="flex items-center gap-3">
@@ -336,26 +333,26 @@ export function LeetCodePortal({
               <div>
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   LeetCode Submissions Heatmap
-                  <span className="text-[11px] font-mono font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    284 submissions in past year
+                  <span className="text-[11px] font-mono font-medium text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                    {solvedCount} submissions in past year
                   </span>
                 </h3>
-                <p className="text-xs text-slate-400">Active coding cadence synchronized with peer mock interview rounds</p>
+                <p className="text-xs text-slate-400">Start solving problems to light up your daily activity streak</p>
               </div>
             </div>
 
             {/* Quick Metrics */}
             <div className="flex items-center gap-4 text-xs font-mono">
               <div>
-                <span className="text-slate-400 block text-[10px]">CURRENT STREAK</span>
-                <span className="text-orange-400 font-bold text-sm">14 days</span>
+                <span className="text-slate-500 block text-[10px]">CURRENT STREAK</span>
+                <span className="text-slate-200 font-bold text-sm">{currentStreak} days</span>
               </div>
               <div className="border-l border-slate-800 pl-4">
-                <span className="text-slate-400 block text-[10px]">LONGEST STREAK</span>
-                <span className="text-indigo-400 font-bold text-sm">32 days</span>
+                <span className="text-slate-500 block text-[10px]">LONGEST STREAK</span>
+                <span className="text-slate-200 font-bold text-sm">{currentStreak} days</span>
               </div>
               <div className="border-l border-slate-800 pl-4">
-                <span className="text-slate-400 block text-[10px]">TOTAL SOLVED</span>
+                <span className="text-slate-500 block text-[10px]">TOTAL SOLVED</span>
                 <span className="text-emerald-400 font-bold text-sm">{solvedCount} / 3,392</span>
               </div>
             </div>
@@ -365,7 +362,7 @@ export function LeetCodePortal({
           <div className="overflow-x-auto pb-2">
             <div className="min-w-[760px]">
               {/* Month Header row */}
-              <div className="flex text-[10px] text-slate-400 font-mono mb-1.5 pl-6 gap-8">
+              <div className="flex text-[10px] text-slate-500 font-mono mb-1.5 pl-6 gap-8">
                 <span>Nov</span>
                 <span>Dec</span>
                 <span>Jan</span>
@@ -383,7 +380,7 @@ export function LeetCodePortal({
 
               <div className="flex gap-1 items-start">
                 {/* Day of week labels */}
-                <div className="flex flex-col gap-1 text-[9px] text-slate-400 font-mono pr-2 h-[86px] justify-between">
+                <div className="flex flex-col gap-1 text-[9px] text-slate-500 font-mono pr-2 h-[86px] justify-between">
                   <span>Mon</span>
                   <span>Wed</span>
                   <span>Fri</span>
@@ -394,7 +391,7 @@ export function LeetCodePortal({
                   {heatmapData.map((week, wIdx) => (
                     <div key={wIdx} className="flex flex-col gap-1">
                       {week.map((day, dIdx) => {
-                        let bg = 'bg-slate-800/40 border-slate-800/50';
+                        let bg = 'bg-slate-900 border-slate-800/80';
                         if (day.level === 1) bg = 'bg-emerald-950 border-emerald-900/60';
                         if (day.level === 2) bg = 'bg-emerald-700 border-emerald-600/60';
                         if (day.level === 3) bg = 'bg-emerald-500 border-emerald-400/80 shadow-sm shadow-emerald-500/20';
@@ -421,15 +418,15 @@ export function LeetCodePortal({
               {/* Heatmap Footer Legend & Hover Tooltip */}
               <div className="flex items-center justify-between text-[11px] text-slate-400 pt-3 mt-2 border-t border-slate-800/60">
                 <div className="flex items-center gap-2">
-                  <span className="text-slate-400">Activity on {hoveredDate ? hoveredDate.date : 'Hovered Day'}:</span>
+                  <span className="text-slate-400">Activity on {hoveredDate ? hoveredDate.date : 'Selected Day'}:</span>
                   <span className="font-semibold text-emerald-400">
-                    {hoveredDate ? `${hoveredDate.count} problems solved` : 'Hover squares to view daily submissions'}
+                    {hoveredDate ? `${hoveredDate.count} problems solved on ${hoveredDate.date}` : 'Hover squares to view submissions (0 initial activity)'}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5 font-mono text-[10px]">
                   <span>Less</span>
-                  <span className="w-2.5 h-2.5 rounded-sm bg-slate-800 border border-slate-700" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-slate-900 border border-slate-800" />
                   <span className="w-2.5 h-2.5 rounded-sm bg-emerald-950 border border-emerald-900" />
                   <span className="w-2.5 h-2.5 rounded-sm bg-emerald-700 border border-emerald-600" />
                   <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-emerald-400" />
@@ -441,15 +438,31 @@ export function LeetCodePortal({
           </div>
         </div>
 
-        {/* Company Quick-Filter Pills */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
+        {/* Company Quick-Filter Pills & Dropdown */}
+        <div className="space-y-2.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <Building2 className="w-3.5 h-3.5 text-indigo-400" /> Target Company PYQ Banks
             </span>
-            <span className="text-[11px] text-slate-400">
-              Showing questions for <strong className="text-indigo-300">{selectedCompany}</strong>
-            </span>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-slate-400">
+                Active: <strong className="text-indigo-300">{selectedCompany}</strong> ({totalProblems} questions)
+              </span>
+              {(selectedCompany !== 'All' || selectedTopic !== 'All' || searchQuery) && (
+                <button
+                  onClick={() => {
+                    setSelectedCompany('All');
+                    setSelectedTopic('All');
+                    setSearchQuery('');
+                    setPage(1);
+                  }}
+                  className="text-[10px] text-rose-400 hover:text-rose-300 flex items-center gap-1 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded cursor-pointer"
+                >
+                  <X className="w-3 h-3" /> Reset
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
@@ -483,7 +496,7 @@ export function LeetCodePortal({
         </div>
 
         {/* Topic Categorization Shelf */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-amber-400" /> Data Structures & Algorithmic Topics
@@ -578,10 +591,10 @@ export function LeetCodePortal({
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
           <div className="px-5 py-3 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
             <span>
-              Showing <strong className="text-white">{filteredProblems.length}</strong> problems matching criteria
+              Showing <strong className="text-white">{filteredProblems.length}</strong> matching questions (Total: {totalProblems})
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-indigo-400">Click ⚡ "Solve in Live IDE" to practice without spoilers</span>
+              <span className="text-[11px] text-indigo-400">Click ⚡ "Solve in Live IDE" to code in Monaco editor</span>
             </div>
           </div>
 
