@@ -35,12 +35,16 @@ import {
   Flame
 } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? (window.location.port === '5173' ? 'http://localhost:5000' : window.location.origin)
-    : 'https://server-rho-nine-82.vercel.app');
+const isLocalhost = typeof window !== 'undefined' && 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_URL || API_BASE_URL;
+const API_BASE_URL = isLocalhost
+  ? (window.location.port === '5173' ? 'http://localhost:5000' : window.location.origin)
+  : (import.meta.env.VITE_API_URL || 'https://server-rho-nine-82.vercel.app');
+
+const SOCKET_SERVER_URL = isLocalhost
+  ? (window.location.port === '5173' ? 'http://localhost:5000' : window.location.origin)
+  : (import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || 'https://server-rho-nine-82.vercel.app');
 
 export default function App() {
   // Room & User State
@@ -115,6 +119,7 @@ export default function App() {
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
   const decorationsRef = useRef([]);
+  const isRemoteUpdateRef = useRef(false);
   const [remoteCursor, setRemoteCursor] = useState(null);
 
   // Check saved Pro status
@@ -225,6 +230,16 @@ export default function App() {
     });
 
     socket.on('code-update', (newCode) => {
+      if (editorRef.current) {
+        const currentVal = editorRef.current.getValue();
+        if (currentVal !== newCode) {
+          isRemoteUpdateRef.current = true;
+          const pos = editorRef.current.getPosition();
+          editorRef.current.setValue(newCode);
+          if (pos) editorRef.current.setPosition(pos);
+          isRemoteUpdateRef.current = false;
+        }
+      }
       setCode(prev => (prev !== newCode ? newCode : prev));
     });
 
@@ -322,6 +337,15 @@ export default function App() {
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
+
+    editor.onDidChangeModelContent(() => {
+      if (isRemoteUpdateRef.current) return;
+      const newVal = editor.getValue();
+      setCode(newVal);
+      if (socketRef.current) {
+        socketRef.current.emit('code-change', { roomId, code: newVal });
+      }
+    });
 
     editor.onDidChangeCursorPosition((e) => {
       if (socketRef.current) {
