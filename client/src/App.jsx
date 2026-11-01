@@ -69,8 +69,16 @@ export default function App() {
   const [showSolutionModal, setShowSolutionModal] = useState(false);
 
   // Editor State
-  const [language, setLanguage] = useState('javascript');
-  const [code, setCode] = useState(PROBLEMS[0].starterCode.javascript);
+  const [language, setLanguage] = useState(() => localStorage.getItem('peerprep_user_language') || 'java');
+  const [code, setCode] = useState(() => {
+    const defLang = localStorage.getItem('peerprep_user_language') || 'java';
+    const draftKey = `peerprep_draft_${PROBLEMS[0].id}_${defLang}`;
+    try {
+      const saved = localStorage.getItem(draftKey);
+      if (saved && saved.trim().length > 0) return saved;
+    } catch (_) {}
+    return (PROBLEMS[0].starterCode && PROBLEMS[0].starterCode[defLang]) || PROBLEMS[0].starterCode.java || '';
+  });
   const [users, setUsers] = useState([]);
   const [autosaveNotice, setAutosaveNotice] = useState('Autosaved');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -91,7 +99,9 @@ export default function App() {
   const [testResults, setTestResults] = useState([]);
   const [selectedTestCaseIdx, setSelectedTestCaseIdx] = useState(0);
   const [customInput, setCustomInput] = useState('');
-  const [bottomTab, setBottomTab] = useState('testcases'); // 'testcases' | 'results' | 'terminal' | 'chat' | 'editorial'
+  const [bottomTab, setBottomTab] = useState('testcases'); // 'testcases' | 'results' | 'history' | 'terminal' | 'chat' | 'editorial'
+  const [leftPanelTab, setLeftPanelTab] = useState('statement'); // 'statement' | 'intelligence' | 'editorial'
+  const [submissionHistory, setSubmissionHistory] = useState([]); // 'testcases' | 'results' | 'terminal' | 'chat' | 'editorial'
   const [isConsoleExpanded, setIsConsoleExpanded] = useState(true);
 
   // Live Chat State
@@ -141,6 +151,11 @@ export default function App() {
     setJudgeVerdict(null);
     setTestResults([]);
     setSelectedTestCaseIdx(0);
+    try {
+      const savedHist = localStorage.getItem(`peerprep_history_${resolved.id}`);
+      if (savedHist) setSubmissionHistory(JSON.parse(savedHist));
+      else setSubmissionHistory([]);
+    } catch (_) { setSubmissionHistory([]); }
 
     // Check for saved local draft for this problem + language
     const draftKey = `peerprep_draft_${resolved.id}_${language}`;
@@ -425,6 +440,7 @@ export default function App() {
 
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
+    localStorage.setItem('peerprep_user_language', newLang);
     if (currentProblem) {
       const draftKey = `peerprep_draft_${currentProblem.id}_${newLang}`;
       let targetCode = '';
@@ -610,6 +626,24 @@ export default function App() {
         setExecutionTime(data.executionTimeMs);
         setTestResults(data.testResults || []);
         setJudgeVerdict(data.verdict);
+        
+        // Record into Submission History
+        const newSub = {
+          id: Date.now().toString(),
+          problemId: currentProblem.id,
+          language,
+          verdict: data.verdict,
+          executionTimeMs: data.executionTimeMs,
+          passedTests: data.passedTests || 0,
+          totalTests: data.totalTests || 0,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        };
+        setSubmissionHistory(prev => [newSub, ...prev]);
+        try {
+          const histKey = `peerprep_history_${currentProblem.id}`;
+          const existing = JSON.parse(localStorage.getItem(histKey) || '[]');
+          localStorage.setItem(histKey, JSON.stringify([newSub, ...existing].slice(0, 30)));
+        } catch (_) {}
 
         // ONLY trigger celebratory confetti on genuinely Accepted submission!
         if (data.verdict === 'Accepted') {
@@ -1028,10 +1062,10 @@ ${interviewerNotes}
             onChange={e => handleLanguageChange(e.target.value)}
             className="bg-slate-950 border border-slate-800 text-xs rounded-md px-2.5 py-1 text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"
           >
-            <option value="javascript">JavaScript (Node.js)</option>
-            <option value="python">Python 3</option>
             <option value="java">Java (JDK)</option>
+            <option value="python">Python 3</option>
             <option value="cpp">C++ (GCC)</option>
+            <option value="javascript">JavaScript (Node.js)</option>
           </select>
 
           {/* Reset Code Button */}
@@ -1160,31 +1194,47 @@ ${interviewerNotes}
 
           {currentProblem && (
             <div className="p-4 space-y-4 text-sm">
-              {/* Problem Title & Difficulty Badge */}
-              <div className="flex items-center justify-between gap-2">
-                {currentProblem.url ? (
-                  <a
-                    href={currentProblem.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-base font-bold text-white hover:text-amber-400 tracking-tight transition inline-flex items-center gap-1.5 group/header"
-                    title={`Open official "${currentProblem.title}" on LeetCode`}
-                  >
-                    <span>{currentProblem.title}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover/header:text-amber-400 transition stroke-[2.5]" />
-                  </a>
+              {/* Problem Title & Difficulty & Content Status Badge */}
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {currentProblem.url ? (
+                    <a
+                      href={currentProblem.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-base font-bold text-white hover:text-amber-400 tracking-tight transition inline-flex items-center gap-1.5 group/header"
+                      title={`Open official "${currentProblem.title}" on LeetCode`}
+                    >
+                      <span>{currentProblem.title}</span>
+                      <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover/header:text-amber-400 transition stroke-[2.5]" />
+                    </a>
+                  ) : (
+                    <h2 className="text-base font-bold text-white tracking-tight">{currentProblem.title}</h2>
+                  )}
+
+                  <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
+                    currentProblem.difficulty === 'Hard'
+                      ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                      : currentProblem.difficulty === 'Medium'
+                      ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                      : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                  }`}>
+                    {currentProblem.difficulty}
+                  </span>
+                </div>
+
+                {/* Content Provenance Badge */}
+                {currentProblem.contentStatus === 'VERIFIED_EDITORIAL' ? (
+                  <span className="text-[10px] px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    <span>Verified Editorial</span>
+                  </span>
                 ) : (
-                  <h2 className="text-base font-bold text-white tracking-tight">{currentProblem.title}</h2>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1" title="Proprietary full statement hosted directly on LeetCode">
+                    <AlertTriangle className="w-3 h-3 text-amber-400" />
+                    <span>Attributed Summary</span>
+                  </span>
                 )}
-                <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
-                  currentProblem.difficulty === 'Hard'
-                    ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                    : currentProblem.difficulty === 'Medium'
-                    ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                }`}>
-                  {currentProblem.difficulty}
-                </span>
               </div>
 
               {/* Company Tags, Category & Prominent Solve on LeetCode Button */}
@@ -1197,7 +1247,7 @@ ${interviewerNotes}
                     {currentProblem.category}
                   </span>
                 </div>
-                {currentProblem.url ? (
+                {currentProblem.url && (
                   <a
                     href={currentProblem.url}
                     target="_blank"
@@ -1208,128 +1258,358 @@ ${interviewerNotes}
                     <span>Solve on LeetCode</span>
                     <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
                   </a>
-                ) : (
-                  <span className="text-[10px] text-slate-500 italic">Original link unavailable</span>
                 )}
               </div>
 
-              {/* Markdown Rendered Problem Description */}
-              <div className="pt-1">
-                <MarkdownRenderer content={currentProblem.description} />
+              {/* Navigation Tabs for Left Problem Panel */}
+              <div className="flex items-center gap-1 border-b border-slate-800 pb-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setLeftPanelTab('statement')}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+                    leftPanelTab === 'statement'
+                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Statement</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setLeftPanelTab('intelligence')}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+                    leftPanelTab === 'intelligence'
+                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Interview Coach</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setLeftPanelTab('editorial')}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+                    leftPanelTab === 'editorial'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <BarChart2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Complexity</span>
+                </button>
               </div>
 
-              {/* Input & Output Format */}
-              {(currentProblem.inputFormat || currentProblem.outputFormat) && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-xs">
-                  {currentProblem.inputFormat && (
-                    <div className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5">
-                      <div className="text-[10px] text-slate-500 uppercase tracking-wider font-sans font-semibold mb-1 flex items-center gap-1">
-                        <Terminal className="w-3 h-3 text-indigo-400" /> Input Signature
-                      </div>
-                      <div className="text-slate-300 text-[11px] font-mono">{currentProblem.inputFormat}</div>
-                    </div>
-                  )}
-                  {currentProblem.outputFormat && (
-                    <div className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5">
-                      <div className="text-[10px] text-slate-500 uppercase tracking-wider font-sans font-semibold mb-1 flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Return Format
-                      </div>
-                      <div className="text-slate-300 text-[11px] font-mono">{currentProblem.outputFormat}</div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Examples */}
-              <div className="space-y-2.5 pt-1">
-                <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Code2 className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Examples ({currentProblem.examples?.length || 0}):</span>
-                </h3>
-                {currentProblem.examples?.map((ex, idx) => (
-                  <div key={idx} className="bg-slate-950 border border-slate-800/90 rounded-xl p-3 space-y-1.5 text-xs font-mono shadow-sm">
-                    <div className="flex items-center justify-between border-b border-slate-800/60 pb-1 text-[11px]">
-                      <span className="font-semibold text-slate-400 font-sans">Example {idx + 1}</span>
-                      <button
-                        type="button"
-                        onClick={() => navigator.clipboard.writeText(ex.input)}
-                        title="Copy input"
-                        className="text-[10px] text-slate-500 hover:text-slate-300 flex items-center gap-1 font-sans cursor-pointer transition"
-                      >
-                        <Copy className="w-3 h-3" /> Copy
-                      </button>
-                    </div>
-                    <p className="text-slate-300"><strong className="text-indigo-400 font-semibold font-sans">Input: </strong>{ex.input}</p>
-                    <p className="text-slate-300"><strong className="text-emerald-400 font-semibold font-sans">Output: </strong>{ex.output}</p>
-                    {ex.explanation && (
-                      <p className="text-slate-400 text-[11px] font-sans pt-0.5 border-t border-slate-900 leading-relaxed">
-                        <strong className="text-slate-500 font-semibold">Explanation: </strong>{ex.explanation}
-                      </p>
-                    )}
+              {/* TAB 1: Statement */}
+              {leftPanelTab === 'statement' && (
+                <div className="space-y-4">
+                  {/* Markdown Rendered Problem Description */}
+                  <div className="pt-1">
+                    <MarkdownRenderer content={currentProblem.description} />
                   </div>
-                ))}
-              </div>
 
-              {/* Constraints */}
-              {currentProblem.constraints && currentProblem.constraints.length > 0 && (
-                <div className="space-y-1.5 pt-1">
-                  <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Constraints:</span>
-                  </h3>
-                  <div className="bg-slate-950/80 border border-slate-800/90 rounded-xl p-3 space-y-1 text-xs font-mono text-slate-300">
-                    {currentProblem.constraints.map((c, idx) => (
-                      <p key={idx} className="flex items-center gap-2">
-                        <span className="text-indigo-400">•</span>
-                        <span>{c}</span>
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Hints Accordion */}
-              {currentProblem.hints && currentProblem.hints.length > 0 && (
-                <div className="space-y-2 pt-2 border-t border-slate-800">
-                  <div className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Algorithmic Hints ({currentProblem.hints.length})</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {currentProblem.hints.map((hintText, hIdx) => (
-                      <div key={hIdx} className="border border-slate-800 rounded-lg overflow-hidden bg-slate-950/60">
-                        <button
-                          type="button"
-                          onClick={() => toggleHint(hIdx)}
-                          className="w-full p-2 text-left text-xs font-medium text-slate-400 hover:text-white flex items-center justify-between cursor-pointer"
-                        >
-                          <span>Hint {hIdx + 1}</span>
-                          <span className="text-[10px] text-indigo-400 font-mono">
-                            {revealedHints[hIdx] ? 'Hide' : 'Reveal'}
-                          </span>
-                        </button>
-                        {revealedHints[hIdx] && (
-                          <div className="p-2.5 bg-slate-900 border-t border-slate-800/60 text-xs text-amber-200/90 leading-relaxed font-sans">
-                            {hintText}
+                  {/* Input & Output Format */}
+                  {(currentProblem.inputFormat || currentProblem.outputFormat) && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-xs">
+                      {currentProblem.inputFormat && (
+                        <div className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5">
+                          <div className="text-[10px] text-slate-500 uppercase tracking-wider font-sans font-semibold mb-1 flex items-center gap-1">
+                            <Terminal className="w-3 h-3 text-indigo-400" /> Input Format
                           </div>
+                          <div className="text-slate-300 text-[11px] font-mono">{currentProblem.inputFormat}</div>
+                        </div>
+                      )}
+                      {currentProblem.outputFormat && (
+                        <div className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5">
+                          <div className="text-[10px] text-slate-500 uppercase tracking-wider font-sans font-semibold mb-1 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Return Format
+                          </div>
+                          <div className="text-slate-300 text-[11px] font-mono">{currentProblem.outputFormat}</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Examples */}
+                  <div className="space-y-2.5 pt-1">
+                    <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Code2 className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Examples ({currentProblem.examples?.length || 0}):</span>
+                    </h3>
+                    {currentProblem.examples?.map((ex, idx) => (
+                      <div key={idx} className="bg-slate-950 border border-slate-800/90 rounded-xl p-3 space-y-1.5 text-xs font-mono shadow-sm">
+                        <div className="flex items-center justify-between border-b border-slate-800/60 pb-1 text-[11px]">
+                          <span className="font-semibold text-slate-400 font-sans">Example {idx + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => navigator.clipboard.writeText(ex.input)}
+                            title="Copy input"
+                            className="text-[10px] text-slate-500 hover:text-slate-300 flex items-center gap-1 font-sans cursor-pointer transition"
+                          >
+                            <Copy className="w-3 h-3" /> Copy
+                          </button>
+                        </div>
+                        <p className="text-slate-300"><strong className="text-indigo-400 font-semibold font-sans">Input: </strong>{ex.input}</p>
+                        <p className="text-slate-300"><strong className="text-emerald-400 font-semibold font-sans">Output: </strong>{ex.output}</p>
+                        {ex.explanation && (
+                          <p className="text-slate-400 text-[11px] font-sans pt-0.5 border-t border-slate-900 leading-relaxed">
+                            <strong className="text-slate-500 font-semibold">Explanation: </strong>{ex.explanation}
+                          </p>
                         )}
                       </div>
                     ))}
                   </div>
+
+                  {/* Constraints */}
+                  {currentProblem.constraints && currentProblem.constraints.length > 0 && (
+                    <div className="space-y-1.5 pt-1">
+                      <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Constraints:</span>
+                      </h3>
+                      <div className="bg-slate-950/80 border border-slate-800/90 rounded-xl p-3 space-y-1 text-xs font-mono text-slate-300">
+                        {currentProblem.constraints.map((c, idx) => (
+                          <p key={idx} className="flex items-center gap-2">
+                            <span className="text-indigo-400">•</span>
+                            <span>{c}</span>
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Solution Button */}
-              {currentProblem.solution && (
-                <div className="pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowSolutionModal(true)}
-                    className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition cursor-pointer"
-                  >
-                    <Eye className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>View Optimal Solution & Complexity</span>
-                  </button>
+              {/* TAB 2: Interview Intelligence */}
+              {leftPanelTab === 'intelligence' && (
+                <div className="space-y-4 pt-1 font-sans">
+                  {/* Provenance Header */}
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-amber-500/10 via-indigo-500/10 to-slate-900 border border-amber-500/20 text-xs text-amber-200 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span><strong>PeerPrep Interview Intelligence</strong>: Structured technical coaching for live interview rounds.</span>
+                  </div>
+
+                  {/* Prerequisites */}
+                  {currentProblem.interviewIntelligence?.prerequisites && (
+                    <div className="space-y-1.5">
+                      <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <span>💡 Core Prerequisites:</span>
+                      </h4>
+                      <div className="flex flex-wrap gap-1.5">
+                        {currentProblem.interviewIntelligence.prerequisites.map((req, i) => (
+                          <span key={i} className="text-[11px] px-2.5 py-1 rounded-md bg-slate-950 border border-slate-800 text-indigo-300 font-mono">
+                            {req}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Brute-Force Thinking */}
+                  {currentProblem.interviewIntelligence?.bruteForceThinking && (
+                    <div className="space-y-1.5 bg-slate-950 border border-slate-800/80 rounded-xl p-3">
+                      <h4 className="text-xs font-semibold text-amber-300 flex items-center gap-1.5">
+                        <span>🔨 Brute-Force Baseline:</span>
+                      </h4>
+                      <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                        {currentProblem.interviewIntelligence.bruteForceThinking}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Pattern Recognition */}
+                  {currentProblem.interviewIntelligence?.patternRecognition && (
+                    <div className="space-y-1.5 bg-slate-950 border border-slate-800/80 rounded-xl p-3">
+                      <h4 className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                        <span>🎯 DSA Pattern Recognition:</span>
+                      </h4>
+                      <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                        {currentProblem.interviewIntelligence.patternRecognition}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Progressive 3-Level Hints */}
+                  {currentProblem.interviewIntelligence?.progressiveHints && (
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <span>🧠 3-Level Progressive Hints:</span>
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="border border-slate-800 rounded-lg overflow-hidden bg-slate-950">
+                          <button
+                            type="button"
+                            onClick={() => toggleHint(1)}
+                            className="w-full px-3 py-2 text-left text-xs font-semibold text-indigo-300 flex items-center justify-between hover:bg-slate-900 transition cursor-pointer"
+                          >
+                            <span>Hint 1: Concept Intuition</span>
+                            <span className="text-[10px] text-slate-500">{revealedHints[1] ? 'Hide' : 'Reveal'}</span>
+                          </button>
+                          {revealedHints[1] && (
+                            <div className="px-3 pb-2.5 text-xs text-slate-300 border-t border-slate-900 pt-2 leading-relaxed">
+                              {currentProblem.interviewIntelligence.progressiveHints.concept}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="border border-slate-800 rounded-lg overflow-hidden bg-slate-950">
+                          <button
+                            type="button"
+                            onClick={() => toggleHint(2)}
+                            className="w-full px-3 py-2 text-left text-xs font-semibold text-amber-300 flex items-center justify-between hover:bg-slate-900 transition cursor-pointer"
+                          >
+                            <span>Hint 2: Optimal Data Structure & Strategy</span>
+                            <span className="text-[10px] text-slate-500">{revealedHints[2] ? 'Hide' : 'Reveal'}</span>
+                          </button>
+                          {revealedHints[2] && (
+                            <div className="px-3 pb-2.5 text-xs text-slate-300 border-t border-slate-900 pt-2 leading-relaxed">
+                              {currentProblem.interviewIntelligence.progressiveHints.approach}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="border border-slate-800 rounded-lg overflow-hidden bg-slate-950">
+                          <button
+                            type="button"
+                            onClick={() => toggleHint(3)}
+                            className="w-full px-3 py-2 text-left text-xs font-semibold text-emerald-400 flex items-center justify-between hover:bg-slate-900 transition cursor-pointer"
+                          >
+                            <span>Hint 3: Step-by-Step Implementation</span>
+                            <span className="text-[10px] text-slate-500">{revealedHints[3] ? 'Hide' : 'Reveal'}</span>
+                          </button>
+                          {revealedHints[3] && (
+                            <div className="px-3 pb-2.5 text-xs text-slate-300 border-t border-slate-900 pt-2 leading-relaxed">
+                              {currentProblem.interviewIntelligence.progressiveHints.algorithm}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Interview Follow-Ups */}
+                  {currentProblem.interviewIntelligence?.interviewFollowUps && (
+                    <div className="space-y-1.5 bg-slate-950 border border-slate-800/80 rounded-xl p-3">
+                      <h4 className="text-xs font-semibold text-sky-400 flex items-center gap-1.5">
+                        <span>🎙️ Live Interview Follow-Up Questions:</span>
+                      </h4>
+                      <ul className="list-disc pl-4 space-y-1 text-xs text-slate-300">
+                        {currentProblem.interviewIntelligence.interviewFollowUps.map((q, i) => (
+                          <li key={i}>{q}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Complexity Coach */}
+                  {currentProblem.interviewIntelligence?.complexityCoach && (
+                    <div className="space-y-1.5 bg-slate-950 border border-slate-800/80 rounded-xl p-3">
+                      <h4 className="text-xs font-semibold text-indigo-400 flex items-center gap-1.5">
+                        <span>⚡ Complexity Coach:</span>
+                      </h4>
+                      <div className="grid grid-cols-2 gap-2 text-[11px] font-mono py-1">
+                        <div className="bg-slate-900 p-2 rounded border border-slate-800">
+                          <span className="text-slate-500 block text-[10px]">Naive Bound:</span>
+                          <span className="text-rose-400 font-bold">{currentProblem.interviewIntelligence.complexityCoach.naive}</span>
+                        </div>
+                        <div className="bg-slate-900 p-2 rounded border border-slate-800">
+                          <span className="text-slate-500 block text-[10px]">Optimal Target:</span>
+                          <span className="text-emerald-400 font-bold">{currentProblem.interviewIntelligence.complexityCoach.optimal}</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-400 pt-1 leading-relaxed">
+                        {currentProblem.interviewIntelligence.complexityCoach.guidance}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Common Mistakes */}
+                  {currentProblem.interviewIntelligence?.commonMistakes && (
+                    <div className="space-y-1.5 bg-slate-950 border border-slate-800/80 rounded-xl p-3">
+                      <h4 className="text-xs font-semibold text-rose-400 flex items-center gap-1.5">
+                        <span>⚠️ Common Traps & Edge Cases:</span>
+                      </h4>
+                      <ul className="list-disc pl-4 space-y-1 text-xs text-slate-300">
+                        {currentProblem.interviewIntelligence.commonMistakes.map((m, i) => (
+                          <li key={i}>{m}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Fast Revision Card */}
+                  {currentProblem.interviewIntelligence?.revisionCard && (
+                    <div className="p-3 rounded-xl bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-slate-950 border border-indigo-800/40 space-y-1">
+                      <h4 className="text-xs font-semibold text-indigo-300 flex items-center gap-1.5">
+                        <span>📑 Fast Revision Card:</span>
+                      </h4>
+                      <p className="text-xs text-slate-300 font-mono leading-relaxed">
+                        {currentProblem.interviewIntelligence.revisionCard}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 3: Editorial & Complexity */}
+              {leftPanelTab === 'editorial' && (
+                <div className="space-y-4 pt-1 font-sans">
+                  {currentProblem.solution ? (
+                    <>
+                      <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                        <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                          <span className="text-[10px] text-slate-500 uppercase block font-semibold">Time Complexity</span>
+                          <span className="text-emerald-400 font-bold text-sm">{currentProblem.solution.timeComplexity}</span>
+                        </div>
+                        <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                          <span className="text-[10px] text-slate-500 uppercase block font-semibold">Space Complexity</span>
+                          <span className="text-indigo-400 font-bold text-sm">{currentProblem.solution.spaceComplexity}</span>
+                        </div>
+                      </div>
+
+                      <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Core Strategy:</span>
+                        <p className="text-xs text-slate-300 leading-relaxed">{currentProblem.solution.explanation}</p>
+                      </div>
+
+                      {currentProblem.solution.code && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-xs text-slate-400 font-semibold">
+                            <span>Optimal Reference Implementation:</span>
+                            <button
+                              type="button"
+                              onClick={copySolutionToEditor}
+                              className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-sans cursor-pointer transition"
+                            >
+                              <Copy className="w-3 h-3" /> Load Into Editor
+                            </button>
+                          </div>
+                          <pre className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-mono text-emerald-400 overflow-x-auto leading-relaxed">
+                            <code>{currentProblem.solution.code}</code>
+                          </pre>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 text-center space-y-2">
+                      <Sparkles className="w-6 h-6 text-amber-400 mx-auto" />
+                      <p className="text-xs text-slate-300">
+                        Official editorial and verified community discussions for <strong>{currentProblem.title}</strong> are hosted directly on LeetCode.
+                      </p>
+                      <a
+                        href={currentProblem.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 bg-amber-500 text-slate-950 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-amber-400 transition"
+                      >
+                        <span>Open LeetCode Editorial</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -1537,6 +1817,60 @@ ${interviewerNotes}
                           placeholder="e.g. nums = [2, 7, 11, 15], target = 9"
                           className="w-full h-24 bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                         />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 2. Submission History Tab */}
+                {bottomTab === 'history' && (
+                  <div className="space-y-3 font-sans">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        Submission History for {currentProblem.title}
+                      </span>
+                      {submissionHistory.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSubmissionHistory([]);
+                            try { localStorage.removeItem(`peerprep_history_${currentProblem.id}`); } catch(_) {}
+                          }}
+                          className="text-[10px] text-slate-500 hover:text-rose-400 transition cursor-pointer"
+                        >
+                          Clear History
+                        </button>
+                      )}
+                    </div>
+
+                    {submissionHistory.length === 0 ? (
+                      <div className="p-6 bg-slate-950 border border-slate-800 rounded-xl text-center text-slate-500 text-xs">
+                        No submissions recorded for this question yet. Click "Submit" to run official evaluation.
+                      </div>
+                    ) : (
+                      <div className="bg-slate-950 border border-slate-800/80 rounded-xl overflow-hidden divide-y divide-slate-800/60 font-mono text-xs">
+                        {submissionHistory.map((sub, sIdx) => (
+                          <div key={sIdx} className="p-3 flex items-center justify-between gap-2 hover:bg-slate-900/60 transition">
+                            <div className="flex items-center gap-2">
+                              <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                                sub.verdict === 'Accepted'
+                                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                  : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                              }`}>
+                                {sub.verdict}
+                              </span>
+                              <span className="text-slate-400 uppercase text-[10px] font-sans px-1.5 py-0.5 rounded bg-slate-800">
+                                {sub.language}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-3 text-slate-400 text-[11px]">
+                              {sub.executionTimeMs && <span>{sub.executionTimeMs}ms</span>}
+                              <span>{sub.passedTests}/{sub.totalTests} passed</span>
+                              <span className="text-slate-500 text-[10px] font-sans">{sub.timestamp}</span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>
