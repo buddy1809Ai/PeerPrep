@@ -860,7 +860,10 @@ export function LeetCodePortal({
               Showing <strong className="text-white">{filteredProblems.length}</strong> questions for <strong className="text-indigo-300">{selectedCompany}</strong> (Total: {totalProblems})
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-indigo-400">Click ⚡ "Solve in Live IDE" to code in Monaco editor</span>
+              <span className="text-[11px] text-amber-400/90 font-medium flex items-center gap-1.5">
+                <ExternalLink className="w-3.5 h-3.5 text-amber-400 stroke-[2.5]" />
+                Click any question title or "Solve on LeetCode" to open the original problem page
+              </span>
             </div>
           </div>
 
@@ -874,7 +877,7 @@ export function LeetCodePortal({
                   <th className="py-3 px-4 w-28">Frequency</th>
                   <th className="py-3 px-4 w-24">Acceptance</th>
                   <th className="py-3 px-4 w-24">Difficulty</th>
-                  <th className="py-3 px-4 w-36 text-right">Action</th>
+                  <th className="py-3 px-4 w-52 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className={`divide-y divide-slate-800/60 font-sans transition-opacity duration-150 ${isLoading ? 'opacity-50' : 'opacity-100'}`}>
@@ -918,18 +921,22 @@ export function LeetCodePortal({
 
                         {/* Title & Topics */}
                         <td className="py-3 px-4">
-                          <div className="font-semibold text-slate-100 group-hover:text-indigo-300 transition flex items-center gap-2">
-                            <span>{prob.title}</span>
-                            {prob.url && (
+                          <div className="font-semibold text-slate-100 transition flex items-center gap-2">
+                            {prob.url ? (
                               <a
                                 href={prob.url}
                                 target="_blank"
-                                rel="noreferrer"
-                                title="Open on LeetCode"
-                                className="text-slate-500 hover:text-slate-300 opacity-0 group-hover:opacity-100 transition"
+                                rel="noopener noreferrer"
+                                className="cursor-pointer hover:underline text-slate-100 hover:text-amber-400 transition inline-flex items-center gap-1.5 group/link"
+                                title={`Open original "${prob.title}" on LeetCode`}
                               >
-                                <ExternalLink className="w-3 h-3" />
+                                <span>{prob.title}</span>
+                                <ExternalLink className="w-3 h-3 text-slate-500 group-hover/link:text-amber-400 transition stroke-[2]" />
                               </a>
+                            ) : (
+                              <span className="text-slate-400 cursor-not-allowed" title="Original problem link unavailable">
+                                {prob.title}
+                              </span>
                             )}
                           </div>
                           {prob.topics && prob.topics.length > 0 && (
@@ -1004,16 +1011,39 @@ export function LeetCodePortal({
                           </span>
                         </td>
 
-                        {/* Action: Solve in Live IDE */}
+                        {/* Action: Prominent Solve on LeetCode & Live IDE */}
                         <td className="py-3 px-4 text-right">
-                          <button
-                            type="button"
-                            onClick={() => onSelectProblem(prob)}
-                            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-1.5 rounded-lg text-xs shadow transition flex items-center gap-1.5 ml-auto cursor-pointer"
-                          >
-                            <Play className="w-3 h-3 fill-white" />
-                            <span>Solve in Live IDE</span>
-                          </button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            {prob.url ? (
+                              <a
+                                href={prob.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={`Solve "${prob.title}" on LeetCode`}
+                                className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs shadow-md shadow-amber-500/10 hover:shadow-amber-500/25 transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                              >
+                                <span>Solve on LeetCode</span>
+                                <ExternalLink className="w-3 h-3 stroke-[2.5]" />
+                              </a>
+                            ) : (
+                              <button
+                                disabled
+                                className="bg-slate-800 text-slate-500 px-2.5 py-1.5 rounded-lg text-xs cursor-not-allowed whitespace-nowrap"
+                                title="Original problem link unavailable"
+                              >
+                                Link unavailable
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => onSelectProblem(prob)}
+                              title={`Pair-program "${prob.title}" in Live Monaco IDE`}
+                              className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2 py-1.5 rounded-lg text-xs border border-slate-700/80 transition flex items-center gap-1 cursor-pointer whitespace-nowrap"
+                            >
+                              <Play className="w-3 h-3 text-indigo-400 fill-indigo-400" />
+                              <span className="hidden xl:inline">Pair IDE</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

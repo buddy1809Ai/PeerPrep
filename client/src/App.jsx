@@ -3,6 +3,7 @@ import Editor from '@monaco-editor/react';
 import { io } from 'socket.io-client';
 import confetti from 'canvas-confetti';
 import { LeetCodePortal } from './LeetCodePortal';
+import { getFullProblem, PROBLEMS, generateProblemDetails } from './problemUtils';
 import { 
   Play, 
   RotateCcw, 
@@ -15,6 +16,7 @@ import {
   Sparkles, 
   BookOpen, 
   ChevronRight,
+  ChevronLeft,
   Code2,
   LogOut,
   Award,
@@ -120,6 +122,7 @@ export default function App() {
   const monacoRef = useRef(null);
   const decorationsRef = useRef([]);
   const isRemoteUpdateRef = useRef(false);
+  const allCatalogRef = useRef([]);
   const [remoteCursor, setRemoteCursor] = useState(null);
 
   // Check saved Pro status
@@ -128,29 +131,78 @@ export default function App() {
     if (savedPro === 'true') setIsPro(true);
   }, []);
 
-  // Fetch initial curated problem list
+  // Primary Problem Selection Handler (Universal across all 3,392 questions)
+  const selectProblem = (probOrSlug, broadcast = true) => {
+    const resolved = getFullProblem(probOrSlug, allCatalogRef.current);
+    if (!resolved) return;
+
+    setCurrentProblem(resolved);
+    setProblemId(resolved.id);
+    setRevealedHints({});
+    setShowSolutionModal(false);
+
+    const starter = (resolved.starterCode && resolved.starterCode[language]) || 
+      (resolved.starterCode && resolved.starterCode['javascript']) || '';
+    setCode(starter);
+    if (editorRef.current) {
+      editorRef.current.setValue(starter);
+    }
+
+    try {
+      const url = new URL(window.location);
+      url.searchParams.set('problem', resolved.slug || resolved.id);
+      window.history.pushState({ problemId: resolved.id }, '', url);
+    } catch (_) {}
+
+    if (broadcast && socketRef.current) {
+      socketRef.current.emit('problem-change', { roomId, problemId: resolved.id });
+    }
+  };
+
+  // Load All 3,392 LeetCode Questions and handle URL query param (?problem=slug)
   useEffect(() => {
-    fetch(`${SOCKET_SERVER_URL}/api/problems`)
+    fetch('/problems.json')
       .then(res => res.json())
       .then(data => {
+        allCatalogRef.current = data;
         setProblems(data);
-        if (data.length > 0) {
-          const defaultProb = data.find(p => p.company === 'Trilogy Innovations') || data[0];
-          setCurrentProblem(defaultProb);
-          setProblemId(defaultProb.id);
-          setCode(defaultProb.starterCode[language] || '');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlProblem = urlParams.get('problem');
+
+        if (urlProblem) {
+          selectProblem(urlProblem, false);
+          setInRoom(true);
+          setMainView('room');
+        } else {
+          const def = getFullProblem('bitwise-xor-of-all-pairings', data);
+          setCurrentProblem(def);
+          setProblemId(def.id);
+          setCode(def.starterCode[language] || def.starterCode['javascript']);
         }
       })
-      .catch(err => console.error('Failed to load problems:', err));
+      .catch(err => {
+        console.warn('Loading fallback curated problems:', err);
+        const def = getFullProblem('bitwise-xor-of-all-pairings', PROBLEMS);
+        setCurrentProblem(def);
+        setProblemId(def.id);
+        setCode(def.starterCode[language] || def.starterCode['javascript']);
+      });
   }, []);
 
-  // Update current problem when problemId changes
+  // Browser Back/Forward navigation listener
   useEffect(() => {
-    if (problems.length > 0) {
-      const prob = problems.find(p => p.id === problemId) || problems[0];
-      setCurrentProblem(prob);
-    }
-  }, [problemId, problems]);
+    const handlePopState = () => {
+      const pSlug = new URLSearchParams(window.location.search).get('problem');
+      if (pSlug) {
+        selectProblem(pSlug, false);
+        setInRoom(true);
+        setMainView('room');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [language]);
 
   // Fetch from 470-Company Directory API
   const fetchCatalogProblems = (company = catalogCompany, search = catalogSearch, diff = catalogDifficulty) => {
@@ -292,12 +344,19 @@ export default function App() {
 
     socket.on('language-update', ({ language: newLang, code: newCode }) => {
       setLanguage(newLang);
-      setCode(newCode);
+      if (newCode) {
+        setCode(newCode);
+        if (editorRef.current) editorRef.current.setValue(newCode);
+      }
     });
 
-    socket.on('problem-update', ({ problemId: newProbId, code: newCode }) => {
+    socket.on('problem-update', ({ problemId: newProbId, code: newCode, problem: receivedProb }) => {
+      const resolved = receivedProb || getFullProblem(newProbId, allCatalogRef.current);
       setProblemId(newProbId);
-      setCode(newCode);
+      setCurrentProblem(resolved);
+      const targetCode = newCode || (resolved.starterCode && resolved.starterCode[language]) || '';
+      setCode(targetCode);
+      if (editorRef.current) editorRef.current.setValue(targetCode);
     });
 
     socket.on('user-joined', ({ users: updatedUsers }) => {
@@ -371,79 +430,48 @@ export default function App() {
 
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
+    if (currentProblem && currentProblem.starterCode) {
+      const newTemplate = currentProblem.starterCode[newLang] || currentProblem.starterCode['javascript'] || '';
+      setCode(newTemplate);
+      if (editorRef.current) {
+        editorRef.current.setValue(newTemplate);
+      }
+    }
     if (socketRef.current) {
       socketRef.current.emit('language-change', { roomId, language: newLang });
     }
   };
 
   const handleProblemChange = (newProbId) => {
-    setProblemId(newProbId);
-    setRevealedHints({});
-    setShowSolutionModal(false);
-    if (socketRef.current) {
-      socketRef.current.emit('problem-change', { roomId, problemId: newProbId });
-    }
+    selectProblem(newProbId);
   };
 
+  const handlePrevProblem = () => {
+    const list = filteredProblems && filteredProblems.length > 0 
+      ? filteredProblems 
+      : (allCatalogRef.current.length > 0 ? allCatalogRef.current : problems);
+    if (!list || list.length === 0) return;
+    const currIdx = list.findIndex(p => p.id === problemId || p.slug === problemId);
+    const prevIdx = currIdx > 0 ? currIdx - 1 : list.length - 1;
+    selectProblem(list[prevIdx]);
+  };
+
+  const handleNextProblem = () => {
+    const list = filteredProblems && filteredProblems.length > 0 
+      ? filteredProblems 
+      : (allCatalogRef.current.length > 0 ? allCatalogRef.current : problems);
+    if (!list || list.length === 0) return;
+    const currIdx = list.findIndex(p => p.id === problemId || p.slug === problemId);
+    const nextIdx = currIdx >= 0 && currIdx < list.length - 1 ? currIdx + 1 : 0;
+    selectProblem(list[nextIdx]);
+  };
 
   // Launch problem from full LeetCode portal into live Monaco room
   const handleSolveFromLeetCode = (prob) => {
-    const curatedMatch = problems.find(p => p.id === prob.id || p.id === prob.slug);
-    if (curatedMatch) {
-      setCurrentProblem(curatedMatch);
-      setProblemId(curatedMatch.id);
-      setCode(curatedMatch.starterCode[language] || curatedMatch.starterCode['javascript']);
-    } else {
-      handleLoadFromCatalog(prob);
-    }
+    selectProblem(prob);
     setInRoom(true);
     setMainView('room');
-  };
-
-  // Load Problem directly from 3,392 Company Catalog into Monaco Live Room
-  const handleLoadFromCatalog = (prob) => {
-    const loadedProb = {
-      id: prob.id || prob.slug,
-      title: prob.title,
-      difficulty: prob.difficulty,
-      category: (prob.topics && prob.topics.slice(0, 2).join(' & ')) || 'Algorithms',
-      company: (prob.companies && prob.companies.slice(0, 3).join(', ')) || 'Tier-1 Tech',
-      description: `Solve "${prob.title}" (${prob.difficulty}).\n\nCompany Frequencies: ${(prob.companies || []).slice(0, 6).join(', ')}\nAlgorithmic Topics: ${(prob.topics || []).join(', ')}\nAcceptance Rate: ${prob.acceptanceRate || 50}%\nOfficial LeetCode: ${prob.url || 'https://leetcode.com/problems/' + prob.slug}`,
-      examples: [
-        {
-          input: 'Input parameters match standard LeetCode specifications',
-          output: 'Return optimal answer adhering to time and space constraints',
-          explanation: `Direct official verification available on LeetCode: ${prob.url || 'https://leetcode.com'}`
-        }
-      ],
-      hints: [
-        `Hint 1: This problem tests core concepts in ${(prob.topics || ['DSA']).slice(0, 3).join(', ')}.`,
-        `Hint 2: It is a high-frequency question asked by ${(prob.companies || ['top tech']).slice(0, 4).join(', ')}.`,
-        "Hint 3: Think about optimal Big-O bounds before writing brute-force loops."
-      ],
-      starterCode: {
-        javascript: `// Problem: ${prob.title} (${prob.difficulty})\n// Target Companies: ${(prob.companies || []).slice(0, 3).join(', ')}\n\nfunction solve() {\n  // TODO: Write your optimal solution here...\n  return null;\n}\n\nconsole.log('Testing solution for ${prob.title}...');`,
-        python: `# Problem: ${prob.title} (${prob.difficulty})\n# Target Companies: ${(prob.companies || []).slice(0, 3).join(', ')}\n\ndef solve():\n    # TODO: Write your optimal solution here...\n    return None\n\nprint('Testing solution for ${prob.title}...')`,
-        java: `public class Solution {\n    public static void main(String[] args) {\n        // TODO: Solve ${prob.title} (${prob.difficulty})\n        System.out.println("Testing solution for ${prob.title}...");\n    }\n}`,
-        cpp: `#include <iostream>\nusing namespace std;\n\n// Problem: ${prob.title} (${prob.difficulty})\nint main() {\n    cout << "Testing solution for ${prob.title}..." << endl;\n    return 0;\n}`
-      },
-      solution: {
-        timeComplexity: 'Optimal LeetCode Benchmark',
-        spaceComplexity: 'O(1) / O(N)',
-        explanation: `Solve directly on LeetCode: ${prob.url}`,
-        code: `// Editorial and reference solution available on LeetCode: ${prob.url}`
-      }
-    };
-
-    setCurrentProblem(loadedProb);
-    setProblemId(loadedProb.id);
-    setCode(loadedProb.starterCode[language] || loadedProb.starterCode['javascript']);
-    setIsCatalogOpen(false);
-    confetti({ particleCount: 80, spread: 70 });
-
-    if (socketRef.current) {
-      socketRef.current.emit('problem-change', { roomId, problemId: loadedProb.id });
-    }
+    confetti({ particleCount: 60, spread: 60 });
   };
 
   const handleSendMessage = (e) => {
@@ -598,9 +626,27 @@ ${interviewerNotes}
     a.click();
   };
 
-  const filteredProblems = selectedCompany === 'All Companies'
-    ? problems
-    : problems.filter(p => p.company?.toLowerCase().includes(selectedCompany.toLowerCase()) || p.company === selectedCompany);
+  const filteredProblems = React.useMemo(() => {
+    const source = allCatalogRef.current.length > 0 ? allCatalogRef.current : problems;
+    if (selectedCompany === 'All Companies' || selectedCompany === 'All') {
+      return source.slice(0, 300);
+    }
+    const targetComp = selectedCompany.toLowerCase().trim();
+    const matches = source.filter(p => {
+      if (!p.companies || !Array.isArray(p.companies)) return false;
+      return p.companies.some(c => {
+        const cLow = String(c).toLowerCase().trim();
+        if (cLow === targetComp) return true;
+        if (targetComp.includes('trilogy') && cLow.includes('trilogy')) return true;
+        if (targetComp.includes('google') && cLow.includes('google')) return true;
+        if (targetComp.includes('amazon') && cLow.includes('amazon')) return true;
+        if (targetComp.includes('meta') && cLow.includes('meta')) return true;
+        if (targetComp.includes('microsoft') && cLow.includes('microsoft')) return true;
+        return false;
+      });
+    });
+    return matches.length > 0 ? matches : source.slice(0, 100);
+  }, [problems, selectedCompany]);
 
 
   // Full LeetCode Company Directory & Heatmap View
@@ -935,24 +981,27 @@ ${interviewerNotes}
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    {prob.url && (
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {prob.url ? (
                       <a
                         href={prob.url}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         title="Solve on official LeetCode"
-                        className="text-[11px] text-slate-400 hover:text-white p-1.5 rounded-lg border border-slate-800 hover:border-slate-700 flex items-center gap-1"
+                        className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm cursor-pointer whitespace-nowrap"
                       >
-                        <ExternalLink className="w-3 h-3" />
+                        <span>Solve on LeetCode</span>
+                        <ExternalLink className="w-3 h-3 stroke-[2.5]" />
                       </a>
+                    ) : (
+                      <span className="text-[10px] text-slate-500 italic">Original link unavailable</span>
                     )}
                     <button
                       type="button"
                       onClick={() => handleLoadFromCatalog(prob)}
-                      className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-1.5 rounded-lg shadow transition flex items-center gap-1 cursor-pointer"
+                      className="text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 font-medium px-2.5 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1 cursor-pointer"
                     >
-                      <Zap className="w-3 h-3" /> Load into Room
+                      <Zap className="w-3 h-3" /> Pair IDE
                     </button>
                   </div>
                 </div>
@@ -1284,19 +1333,55 @@ ${interviewerNotes}
               <select
                 value={problemId}
                 onChange={e => handleProblemChange(e.target.value)}
-                className="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-0.5 text-slate-200 focus:outline-none max-w-[210px]"
+                className="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-0.5 text-slate-200 focus:outline-none max-w-[210px] truncate"
               >
                 {filteredProblems.map(p => (
-                  <option key={p.id} value={p.id}>{p.title}</option>
+                  <option key={p.id || p.slug} value={p.id || p.slug}>{p.title}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Quick Prev / Next Question Navigation */}
+            <div className="flex items-center justify-between pt-1">
+              <button
+                type="button"
+                onClick={handlePrevProblem}
+                title="Navigate to Previous Problem"
+                className="text-[10px] px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 flex items-center gap-1 transition cursor-pointer"
+              >
+                <ChevronLeft className="w-3 h-3" />
+                <span>Prev Question</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNextProblem}
+                title="Navigate to Next Problem"
+                className="text-[10px] px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 flex items-center gap-1 transition cursor-pointer"
+              >
+                <span>Next Question</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
             </div>
           </div>
 
           {currentProblem && (
             <div className="p-4 space-y-4 text-sm">
               <div className="flex items-center justify-between gap-2">
-                <h2 className="text-base font-bold text-white tracking-tight">{currentProblem.title}</h2>
+                {currentProblem.url ? (
+                  <a
+                    href={currentProblem.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-base font-bold text-white hover:text-amber-400 tracking-tight transition inline-flex items-center gap-1.5 group/header"
+                    title={`Open original "${currentProblem.title}" on LeetCode`}
+                  >
+                    <span>{currentProblem.title}</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover/header:text-amber-400 transition" />
+                  </a>
+                ) : (
+                  <h2 className="text-base font-bold text-white tracking-tight">{currentProblem.title}</h2>
+                )}
                 <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium border ${
                   currentProblem.difficulty === 'Hard'
                     ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
@@ -1308,13 +1393,30 @@ ${interviewerNotes}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-semibold">
-                  {currentProblem.company}
-                </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">
-                  {currentProblem.category}
-                </span>
+              {/* Company, Topic Tags & Prominent Solve on LeetCode Button */}
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-semibold">
+                    {currentProblem.company}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+                    {currentProblem.category}
+                  </span>
+                </div>
+                {currentProblem.url ? (
+                  <a
+                    href={currentProblem.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-lg text-xs shadow-md shadow-amber-500/10 hover:shadow-amber-500/25 transition flex items-center gap-1.5 cursor-pointer"
+                    title={`Solve "${currentProblem.title}" on LeetCode`}
+                  >
+                    <span>Solve on LeetCode</span>
+                    <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </a>
+                ) : (
+                  <span className="text-[10px] text-slate-500 italic">Original problem link unavailable</span>
+                )}
               </div>
 
               <div className="text-slate-300 text-xs leading-relaxed whitespace-pre-wrap">
@@ -1334,6 +1436,20 @@ ${interviewerNotes}
                   </div>
                 ))}
               </div>
+
+              {/* Constraints */}
+              {currentProblem.constraints && currentProblem.constraints.length > 0 && (
+                <div className="space-y-1.5 pt-1">
+                  <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Constraints:</h3>
+                  <div className="bg-slate-950/70 border border-slate-800/80 rounded-lg p-2.5 space-y-1 text-xs font-mono text-slate-300">
+                    {currentProblem.constraints.map((c, idx) => (
+                      <p key={idx} className="flex items-center gap-1.5">
+                        <span className="text-indigo-400">•</span> {c}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Hints Accordion */}
               {currentProblem.hints && currentProblem.hints.length > 0 && (
