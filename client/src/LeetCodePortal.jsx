@@ -427,7 +427,7 @@ export function LeetCodePortal({
               className="text-xs px-3 py-1 rounded-full text-indigo-300 bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 transition flex items-center gap-1.5 cursor-pointer"
             >
               <Play className="w-3 h-3 text-indigo-400 fill-indigo-400" />
-              <span>Enter Live Mock Room</span>
+              <span>Launch Live IDE Workspace</span>
             </button>
           </div>
         </div>
@@ -1036,12 +1036,15 @@ export function LeetCodePortal({
                             )}
                             <button
                               type="button"
-                              onClick={() => onSelectProblem(prob)}
-                              title={`Pair-program "${prob.title}" in Live Monaco IDE`}
-                              className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2 py-1.5 rounded-lg text-xs border border-slate-700/80 transition flex items-center gap-1 cursor-pointer whitespace-nowrap"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectProblem(prob);
+                              }}
+                              title={`Open and solve "${prob.title}" in Live Monaco IDE`}
+                              className="bg-indigo-600/30 hover:bg-indigo-600 text-indigo-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-indigo-500/40 hover:border-indigo-400 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shadow-sm shadow-indigo-600/20 active:scale-95"
                             >
-                              <Play className="w-3 h-3 text-indigo-400 fill-indigo-400" />
-                              <span className="hidden xl:inline">Pair IDE</span>
+                              <Play className="w-3.5 h-3.5 text-indigo-400 fill-indigo-400 group-hover:text-white" />
+                              <span className="inline">Run IDE</span>
                             </button>
                           </div>
                         </td>

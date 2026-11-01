@@ -2784,12 +2784,27 @@ function generateInterviewIntelligence(title, difficulty, topics, companies) {
 
 function generateProblemDetails(raw) {
   if (!raw) return null;
-  const slug = raw.slug || raw.id || 'problem';
-  if (CURATED_MAP.has(slug) || CURATED_MAP.has(raw.id)) {
-    return CURATED_MAP.get(slug) || CURATED_MAP.get(raw.id);
+
+  let slug = 'problem';
+  let id = 'problem';
+  let rawTitle = '';
+
+  if (typeof raw === 'string') {
+    slug = raw.trim();
+    id = raw.trim();
+  } else if (typeof raw === 'object' && raw !== null) {
+    const rawSlug = raw.slug;
+    const rawId = raw.id;
+    slug = typeof rawSlug === 'string' ? rawSlug : (typeof rawId === 'string' ? rawId : 'problem');
+    id = typeof rawId === 'string' ? rawId : slug;
+    rawTitle = typeof raw.title === 'string' ? raw.title : '';
   }
 
-  const title = raw.title || slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  if (CURATED_MAP.has(slug) || CURATED_MAP.has(id)) {
+    return CURATED_MAP.get(slug) || CURATED_MAP.get(id);
+  }
+
+  const title = rawTitle || slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   const difficulty = raw.difficulty || 'Medium';
   const topics = Array.isArray(raw.topics) && raw.topics.length > 0 ? raw.topics : ['Algorithms', 'Data Structures'];
   const companies = Array.isArray(raw.companies) && raw.companies.length > 0 ? raw.companies : ['Top Tech'];
@@ -2927,16 +2942,32 @@ Design a clean, production-grade algorithm in Java, Python, C++, or JavaScript t
 
 function getFullProblem(idOrSlug, fullList = []) {
   if (!idOrSlug) return PROBLEMS[0];
-  if (CURATED_MAP.has(idOrSlug)) {
-    return CURATED_MAP.get(idOrSlug);
+
+  let targetKey = '';
+  let rawObj = null;
+
+  if (typeof idOrSlug === 'object' && idOrSlug !== null) {
+    rawObj = idOrSlug;
+    targetKey = typeof idOrSlug.slug === 'string' ? idOrSlug.slug : (typeof idOrSlug.id === 'string' ? idOrSlug.id : '');
+  } else if (typeof idOrSlug === 'string') {
+    targetKey = idOrSlug.trim();
   }
 
-  const raw = fullList.find(p => p.id === idOrSlug || p.slug === idOrSlug);
-  if (raw) {
-    return generateProblemDetails(raw);
+  if (targetKey) {
+    if (CURATED_MAP.has(targetKey)) {
+      return CURATED_MAP.get(targetKey);
+    }
+    const found = (fullList || []).find(p => p && (String(p.slug) === targetKey || String(p.id) === targetKey));
+    if (found) {
+      return generateProblemDetails(found);
+    }
   }
 
-  return generateProblemDetails({ id: idOrSlug, slug: idOrSlug });
+  if (rawObj) {
+    return generateProblemDetails(rawObj);
+  }
+
+  return generateProblemDetails({ id: targetKey || 'problem', slug: targetKey || 'problem' });
 }
 
 module.exports = {
