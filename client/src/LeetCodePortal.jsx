@@ -30,6 +30,11 @@ import confetti from 'canvas-confetti';
 import ALL_COMPANIES from './data/companies.json';
 import ALL_TOPICS from './data/topics.json';
 
+// Local storage keys for user progress
+const STORAGE_KEY_STATUS = 'peerprep_user_solved_status';
+const STORAGE_KEY_EVENTS = 'peerprep_user_solved_events';
+const STORAGE_KEY_LEGACY = 'peerprep_user_progress_v1';
+
 export function LeetCodePortal({
   onSelectProblem,
   onOpenPricing,
@@ -57,16 +62,45 @@ export function LeetCodePortal({
   const [totalProblems, setTotalProblems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  // User Solved Tracking in localStorage
+  // User Solved Status (problemId -> 'solved' | 'attempted')
   const [solvedStatus, setSolvedStatus] = useState(() => {
     try {
-      const stored = localStorage.getItem('peerprep_user_solved_status');
+      const stored = localStorage.getItem(STORAGE_KEY_STATUS);
       if (stored) return JSON.parse(stored);
+      // Fallback check legacy storage
+      const legacy = localStorage.getItem(STORAGE_KEY_LEGACY);
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        if (parsed.problems) {
+          const map = {};
+          Object.entries(parsed.problems).forEach(([k, v]) => {
+            if (v.status === 'solved') map[k] = 'solved';
+            else if (v.status === 'attempted') map[k] = 'attempted';
+          });
+          return map;
+        }
+      }
     } catch (_) {}
     return {};
   });
 
+  // Solved Events array for Heatmap ([{ date: 'YYYY-MM-DD', problemId: '...', timestamp: 123456 }])
+  const [solvedEvents, setSolvedEvents] = useState(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_EVENTS);
+      if (stored) return JSON.parse(stored);
+      const legacy = localStorage.getItem(STORAGE_KEY_LEGACY);
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        if (Array.isArray(parsed.solvedEvents)) return parsed.solvedEvents;
+      }
+    } catch (_) {}
+    return [];
+  });
+
+  // Toggle problem status and update both solvedStatus & solvedEvents
   const toggleStatus = (id) => {
+    const today = new Date().toISOString().split('T')[0];
     setSolvedStatus(prev => {
       const curr = prev[id];
       let nextStatus = 'solved';
@@ -81,11 +115,32 @@ export function LeetCodePortal({
         delete updated[id];
       }
       try {
-        localStorage.setItem('peerprep_user_solved_status', JSON.stringify(updated));
+        localStorage.setItem(STORAGE_KEY_STATUS, JSON.stringify(updated));
       } catch (_) {}
-      if (nextStatus === 'solved') {
-        confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
-      }
+
+      // Update Solved Events for Contribution Heatmap
+      setSolvedEvents(prevEvents => {
+        let updatedEvents = [...prevEvents];
+        if (nextStatus === 'solved') {
+          // Add event if not already present for this problem today
+          if (!updatedEvents.some(e => e.problemId === id && e.date === today)) {
+            updatedEvents.push({
+              problemId: id,
+              date: today,
+              timestamp: Date.now()
+            });
+          }
+          confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+        } else {
+          // Remove event for this problem
+          updatedEvents = updatedEvents.filter(e => e.problemId !== id);
+        }
+        try {
+          localStorage.setItem(STORAGE_KEY_EVENTS, JSON.stringify(updatedEvents));
+        } catch (_) {}
+        return updatedEvents;
+      });
+
       return updated;
     });
   };
@@ -107,7 +162,7 @@ export function LeetCodePortal({
       topic: selectedTopic === 'All' ? '' : selectedTopic,
       difficulty: selectedDifficulty === 'All' ? '' : selectedDifficulty,
       search: searchQuery.trim(),
-      limit: '150'
+      limit: '200'
     });
 
     fetch(`${serverUrl}/api/company-directory?${params}`)
@@ -145,7 +200,11 @@ export function LeetCodePortal({
   // Active Company Metadata
   const activeCompanyMeta = useMemo(() => {
     if (selectedCompany === 'All') return null;
-    return ALL_COMPANIES.find(c => c.name.toLowerCase() === selectedCompany.toLowerCase()) || {
+    const match = ALL_COMPANIES.find(c => 
+      c.name.toLowerCase() === selectedCompany.toLowerCase() ||
+      (selectedCompany.toLowerCase().includes('trilogy') && c.name.toLowerCase().includes('trilogy'))
+    );
+    return match || {
       name: selectedCompany,
       problemCount: totalProblems,
       easyCount: Math.round(totalProblems * 0.25),
@@ -161,24 +220,28 @@ export function LeetCodePortal({
     return ALL_COMPANIES.filter(c => c.name.toLowerCase().includes(s));
   }, [companySearch]);
 
-  // 365-Day LeetCode Activity Heatmap
+  // Contribution Heatmap Generator (365 Days across 53 weeks)
   const heatmapData = useMemo(() => {
+    const dateCounts = new Map();
+    for (const ev of solvedEvents) {
+      if (ev.date) {
+        dateCounts.set(ev.date, (dateCounts.get(ev.date) || 0) + 1);
+      }
+    }
+
     const days = [];
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    const solvedTodayCount = Object.values(solvedStatus).filter(s => s === 'solved').length;
 
     for (let i = 364; i >= 0; i--) {
       const d = new Date();
       d.setDate(today.getDate() - i);
       const dateStr = d.toISOString().split('T')[0];
-      const dayOfWeek = d.getDay();
-      
-      const isToday = dateStr === todayStr;
-      const count = isToday ? solvedTodayCount : 0;
+      const dayOfWeek = d.getDay(); // 0 is Sunday
+      const count = dateCounts.get(dateStr) || 0;
+
       let level = 0;
-      if (count >= 5) level = 4;
-      else if (count >= 3) level = 3;
+      if (count >= 7) level = 4;
+      else if (count >= 4) level = 3;
       else if (count >= 2) level = 2;
       else if (count >= 1) level = 1;
 
@@ -190,6 +253,7 @@ export function LeetCodePortal({
       });
     }
 
+    // Group into 53 weeks (columns) x 7 days (rows)
     const weeks = [];
     let currentWeek = [];
     const firstDayOfWeek = days[0].dayOfWeek;
@@ -210,21 +274,65 @@ export function LeetCodePortal({
       weeks.push(currentWeek);
     }
     return weeks;
-  }, [solvedStatus]);
+  }, [solvedEvents]);
 
-  const [hoveredDate, setHoveredDate] = useState(null);
+  const [hoveredDay, setHoveredDay] = useState(null);
 
-  // Quick Top Companies
+  // Total Contributions & Real Streak Calculation
+  const totalContributions = solvedEvents.length;
+  const streakInfo = useMemo(() => {
+    const solvedDates = Array.from(new Set(solvedEvents.map(e => e.date))).sort();
+    if (solvedDates.length === 0) return { currentStreak: 0, longestStreak: 0 };
+
+    const parseYMD = (s) => {
+      const [y, m, d] = s.split('-').map(Number);
+      return new Date(Date.UTC(y, m - 1, d));
+    };
+
+    let longest = 1;
+    let currRun = 1;
+    for (let i = 1; i < solvedDates.length; i++) {
+      const diff = Math.round((parseYMD(solvedDates[i]) - parseYMD(solvedDates[i - 1])) / 86400000);
+      if (diff === 1) {
+        currRun++;
+        if (currRun > longest) longest = currRun;
+      } else if (diff > 1) {
+        currRun = 1;
+      }
+    }
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const lastDate = solvedDates[solvedDates.length - 1];
+    const diffFromToday = Math.round((parseYMD(todayStr) - parseYMD(lastDate)) / 86400000);
+
+    let activeStreak = 0;
+    if (diffFromToday <= 1) {
+      activeStreak = 1;
+      for (let i = solvedDates.length - 1; i > 0; i--) {
+        const diff = Math.round((parseYMD(solvedDates[i]) - parseYMD(solvedDates[i - 1])) / 86400000);
+        if (diff === 1) activeStreak++;
+        else break;
+      }
+    }
+
+    return {
+      currentStreak: activeStreak,
+      longestStreak: Math.max(longest, activeStreak)
+    };
+  }, [solvedEvents]);
+
+  // Quick Top Companies Pills
   const quickCompanies = [
     { name: 'Trilogy', label: 'Trilogy Innovations', count: 6, hot: true },
     { name: 'Google', label: 'Google', count: 2344 },
     { name: 'Amazon', label: 'Amazon', count: 2011 },
     { name: 'Meta', label: 'Meta', count: 1399 },
-    { name: 'Microsoft', label: 'Microsoft', count: 1310 },
+    { name: 'Microsoft', label: 'Microsoft', count: 1384 },
     { name: 'Bloomberg', label: 'Bloomberg', count: 854 },
     { name: 'Uber', label: 'Uber', count: 512 },
     { name: 'Apple', label: 'Apple', count: 490 },
     { name: 'Goldman Sachs', label: 'Goldman Sachs', count: 340 },
+    { name: 'Adobe', label: 'Adobe', count: 410 },
     { name: 'Nvidia', label: 'Nvidia', count: 195 },
     { name: 'Citadel', label: 'Citadel', count: 87 },
     { name: 'Netflix', label: 'Netflix', count: 72 },
@@ -245,9 +353,6 @@ export function LeetCodePortal({
     'Math',
     'Graph'
   ];
-
-  const solvedCount = Object.values(solvedStatus).filter(s => s === 'solved').length;
-  const currentStreak = solvedCount > 0 ? 1 : 0;
 
   return (
     <div className="min-h-screen w-full bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
@@ -272,13 +377,13 @@ export function LeetCodePortal({
                 setPage(1);
               }}
               className={`text-xs px-3 py-1 rounded-full font-medium transition flex items-center gap-1.5 cursor-pointer ${
-                selectedCompany === 'Trilogy'
+                selectedCompany.toLowerCase().includes('trilogy')
                   ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Trilogy PYQs</span>
+              <span>Trilogy Innovations (6)</span>
             </button>
 
             <button
@@ -293,8 +398,8 @@ export function LeetCodePortal({
 
         <div className="flex items-center gap-2.5 sm:gap-3">
           <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300">
-            <Flame className={`w-3.5 h-3.5 ${currentStreak > 0 ? 'text-orange-400 fill-orange-400 animate-pulse' : 'text-slate-500'}`} />
-            <span>{currentStreak} Days Streak</span>
+            <Flame className={`w-3.5 h-3.5 ${streakInfo.currentStreak > 0 ? 'text-orange-400 fill-orange-400 animate-pulse' : 'text-slate-500'}`} />
+            <span>{streakInfo.currentStreak} Days Streak</span>
           </div>
 
           <button
@@ -320,10 +425,10 @@ export function LeetCodePortal({
                 Trilogy Innovations • Innovation Catalyst Question Bank
               </div>
               <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-                All 470 Tech Companies • 3,392 LeetCode Questions Categorized
+                All 470 Tech Companies • 3,392 LeetCode Questions Directory
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-                Browse verified interview problems across 470 companies. Each question features clean starter code signatures, 3 progressive hints, optimal $O(N)$ solutions, and instant loading into the live Monaco editor.
+                Browse verified technical interview problems across 470 tech companies. Each problem provides clean function signatures, 3-level progressive hints, optimal O(N) complexity solutions, and instant one-click loading into the live Monaco editor.
               </p>
             </div>
 
@@ -344,6 +449,120 @@ export function LeetCodePortal({
           </div>
         </div>
 
+        {/* RESTORED: Contribution Calendar Heatmap */}
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-lg backdrop-blur-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <Calendar className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  Coding Contribution Calendar
+                  <span className="text-[11px] font-mono font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                    {totalContributions} contributions in the last year
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400">Mark questions as solved or run code in live rooms to record real daily contributions</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 text-xs font-mono">
+              <div>
+                <span className="text-slate-500 block text-[10px]">CURRENT STREAK</span>
+                <span className="text-emerald-400 font-bold text-sm">{streakInfo.currentStreak} days</span>
+              </div>
+              <div className="border-l border-slate-800 pl-4">
+                <span className="text-slate-500 block text-[10px]">LONGEST STREAK</span>
+                <span className="text-indigo-400 font-bold text-sm">{streakInfo.longestStreak} days</span>
+              </div>
+              <div className="border-l border-slate-800 pl-4">
+                <span className="text-slate-500 block text-[10px]">TOTAL SOLVED</span>
+                <span className="text-white font-bold text-sm">{Object.values(solvedStatus).filter(s => s === 'solved').length} / 3,392</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 53-Week Interactive Calendar Grid */}
+          <div className="overflow-x-auto pb-2">
+            <div className="min-w-[760px]">
+              {/* Month Header Row */}
+              <div className="flex text-[10px] text-slate-400 font-mono mb-1.5 pl-6 gap-8">
+                <span>Nov</span>
+                <span>Dec</span>
+                <span>Jan</span>
+                <span>Feb</span>
+                <span>Mar</span>
+                <span>Apr</span>
+                <span>May</span>
+                <span>Jun</span>
+                <span>Jul</span>
+                <span>Aug</span>
+                <span>Sep</span>
+                <span>Oct</span>
+                <span>Nov</span>
+              </div>
+
+              <div className="flex gap-1 items-start">
+                {/* Weekday Labels */}
+                <div className="flex flex-col gap-1 text-[9px] text-slate-400 font-mono pr-2 h-[86px] justify-between">
+                  <span>Mon</span>
+                  <span>Wed</span>
+                  <span>Fri</span>
+                </div>
+
+                {/* 53 Weeks Grid */}
+                <div className="flex gap-1 flex-1">
+                  {heatmapData.map((week, wIdx) => (
+                    <div key={wIdx} className="flex flex-col gap-1">
+                      {week.map((day, dIdx) => {
+                        let bg = 'bg-slate-900 border-slate-800/80';
+                        if (day.level === 1) bg = 'bg-emerald-950 border-emerald-900/60';
+                        if (day.level === 2) bg = 'bg-emerald-700 border-emerald-600/60';
+                        if (day.level === 3) bg = 'bg-emerald-500 border-emerald-400/80 shadow-sm shadow-emerald-500/20';
+                        if (day.level === 4) bg = 'bg-emerald-400 border-emerald-300 shadow-md shadow-emerald-400/40';
+                        if (day.empty) bg = 'bg-transparent border-transparent';
+
+                        return (
+                          <div
+                            key={dIdx}
+                            onMouseEnter={() => !day.empty && setHoveredDay(day)}
+                            onMouseLeave={() => setHoveredDay(null)}
+                            title={day.empty ? '' : `${day.date}: ${day.count} contributions`}
+                            className={`w-2.5 h-2.5 rounded-sm border transition-all duration-150 cursor-pointer ${bg} ${
+                              !day.empty ? 'hover:scale-125 hover:z-20' : ''
+                            }`}
+                          />
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tooltip & Legend Footer */}
+              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-3 mt-2 border-t border-slate-800/60">
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-400">Activity on hovered day:</span>
+                  <span className="font-semibold text-emerald-400">
+                    {hoveredDay ? `${hoveredDay.count} contributions on ${hoveredDay.date}` : 'Hover any square to view daily coding activity'}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 font-mono text-[10px]">
+                  <span>Less</span>
+                  <span className="w-2.5 h-2.5 rounded-sm bg-slate-900 border border-slate-800" title="0 contributions" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-950 border border-emerald-900" title="1-3 contributions" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-700 border border-emerald-600" title="4-6 contributions" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-emerald-400" title="7-9 contributions" />
+                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-400 border border-emerald-300" title="10+ contributions" />
+                  <span>More</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* 470 Company Browser & Selector Shelf */}
         <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-3.5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
@@ -353,7 +572,7 @@ export function LeetCodePortal({
                 470 Tech Companies Directory
               </h3>
               <span className="text-[10px] font-mono bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30">
-                470 Companies Available
+                470 Companies • 3,392 Questions
               </span>
             </div>
 
@@ -377,10 +596,11 @@ export function LeetCodePortal({
                   setSelectedCompany(e.target.value);
                   setPage(1);
                 }}
-                className="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2.5 py-1 text-indigo-300 font-semibold focus:outline-none max-w-[160px] cursor-pointer"
+                className="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2.5 py-1 text-indigo-300 font-semibold focus:outline-none max-w-[170px] cursor-pointer"
               >
                 <option value="All">All 470 Companies (3,392)</option>
-                {ALL_COMPANIES.map(c => (
+                <option value="Trilogy">Trilogy Innovations (6)</option>
+                {ALL_COMPANIES.filter(c => c.name !== 'Trilogy').map(c => (
                   <option key={c.name} value={c.name}>
                     {c.name} ({c.problemCount})
                   </option>
@@ -403,32 +623,36 @@ export function LeetCodePortal({
 
           {/* Quick Company Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {quickCompanies.map(comp => (
-              <button
-                key={comp.name}
-                onClick={() => {
-                  setSelectedCompany(comp.name);
-                  setPage(1);
-                }}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition flex items-center gap-1.5 cursor-pointer border ${
-                  selectedCompany.toLowerCase() === comp.name.toLowerCase()
-                    ? comp.hot
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-md shadow-amber-500/10'
-                      : 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20'
-                    : 'bg-slate-950 hover:bg-slate-850 text-slate-300 border-slate-800 hover:border-slate-700'
-                }`}
-              >
-                {comp.hot && <Sparkles className="w-3 h-3 text-amber-400 fill-amber-400" />}
-                <span>{comp.label}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  selectedCompany.toLowerCase() === comp.name.toLowerCase()
-                    ? 'bg-white/20 text-white'
-                    : 'bg-slate-800 text-slate-400'
-                }`}>
-                  {comp.count}
-                </span>
-              </button>
-            ))}
+            {quickCompanies.map(comp => {
+              const isSelected = selectedCompany.toLowerCase() === comp.name.toLowerCase() ||
+                                (comp.name === 'Trilogy' && selectedCompany.toLowerCase().includes('trilogy'));
+              return (
+                <button
+                  key={comp.name}
+                  onClick={() => {
+                    setSelectedCompany(comp.name);
+                    setPage(1);
+                  }}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition flex items-center gap-1.5 cursor-pointer border ${
+                    isSelected
+                      ? comp.hot
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-md shadow-amber-500/10'
+                        : 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20'
+                      : 'bg-slate-950 hover:bg-slate-850 text-slate-300 border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  {comp.hot && <Sparkles className="w-3 h-3 text-amber-400 fill-amber-400" />}
+                  <span>{comp.label}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                    isSelected
+                      ? 'bg-white/20 text-white'
+                      : 'bg-slate-800 text-slate-400'
+                  }`}>
+                    {comp.count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Expandable 470 Company Grid Drawer */}
@@ -512,7 +736,7 @@ export function LeetCodePortal({
               <button
                 key={topic}
                 onClick={() => {
-                  if (topic !== 'All' && selectedCompany === 'Trilogy') {
+                  if (topic !== 'All' && selectedCompany.toLowerCase().includes('trilogy')) {
                     setSelectedCompany('All');
                   }
                   setSelectedTopic(topic);
@@ -547,6 +771,7 @@ export function LeetCodePortal({
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto">
+            {/* Difficulty Tabs */}
             <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
               {['All', 'Easy', 'Medium', 'Hard'].map(d => (
                 <button
@@ -566,6 +791,7 @@ export function LeetCodePortal({
               ))}
             </div>
 
+            {/* Status Tabs (Solved, Attempted, Todo) */}
             <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
               {['All', 'Solved', 'Attempted', 'Todo'].map(s => (
                 <button
@@ -637,6 +863,7 @@ export function LeetCodePortal({
 
                     return (
                       <tr key={prob.id} className="hover:bg-slate-800/40 transition group">
+                        {/* Status Checkbox */}
                         <td className="py-3 px-4 text-center">
                           <button
                             onClick={() => toggleStatus(prob.id)}
@@ -653,6 +880,7 @@ export function LeetCodePortal({
                           </button>
                         </td>
 
+                        {/* Title & Topics */}
                         <td className="py-3 px-4">
                           <div className="font-semibold text-slate-100 group-hover:text-indigo-300 transition flex items-center gap-2">
                             <span>{prob.title}</span>
@@ -674,7 +902,7 @@ export function LeetCodePortal({
                                 <span
                                   key={idx}
                                   onClick={() => {
-                                    if (selectedCompany === 'Trilogy') setSelectedCompany('All');
+                                    if (selectedCompany.toLowerCase().includes('trilogy')) setSelectedCompany('All');
                                     setSelectedTopic(t);
                                     setPage(1);
                                   }}
@@ -690,6 +918,7 @@ export function LeetCodePortal({
                           )}
                         </td>
 
+                        {/* Companies */}
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-1 flex-wrap max-w-[200px]">
                             {prob.companies && prob.companies.slice(0, 3).map((comp, i) => (
@@ -714,6 +943,7 @@ export function LeetCodePortal({
                           </div>
                         </td>
 
+                        {/* Frequency Heat Bar */}
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-2">
                             <div className="w-16 h-1.5 rounded-full bg-slate-800 overflow-hidden">
@@ -726,16 +956,19 @@ export function LeetCodePortal({
                           </div>
                         </td>
 
+                        {/* Acceptance Rate */}
                         <td className="py-3 px-4 font-mono text-slate-400 text-[11px]">
                           {prob.acceptanceRate ? `${prob.acceptanceRate}%` : '54.2%'}
                         </td>
 
+                        {/* Difficulty Badge */}
                         <td className="py-3 px-4">
                           <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${diffColor}`}>
                             {prob.difficulty}
                           </span>
                         </td>
 
+                        {/* Action: Solve in Live IDE */}
                         <td className="py-3 px-4 text-right">
                           <button
                             type="button"

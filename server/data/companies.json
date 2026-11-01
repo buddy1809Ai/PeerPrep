@@ -1,0 +1,6678 @@
+[
+  {
+    "name": "Google",
+    "slug": "google",
+    "problemCount": 2344,
+    "easyCount": 616,
+    "mediumCount": 1223,
+    "hardCount": 505,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Math"
+    ]
+  },
+  {
+    "name": "Amazon",
+    "slug": "amazon",
+    "problemCount": 2011,
+    "easyCount": 536,
+    "mediumCount": 1087,
+    "hardCount": 388,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Math",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Meta",
+    "slug": "meta",
+    "problemCount": 1399,
+    "easyCount": 427,
+    "mediumCount": 763,
+    "hardCount": 209,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Math",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Microsoft",
+    "slug": "microsoft",
+    "problemCount": 1384,
+    "easyCount": 393,
+    "mediumCount": 757,
+    "hardCount": 234,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Math"
+    ]
+  },
+  {
+    "name": "Bloomberg",
+    "slug": "bloomberg",
+    "problemCount": 1223,
+    "easyCount": 399,
+    "mediumCount": 650,
+    "hardCount": 174,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Math",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Uber",
+    "slug": "uber",
+    "problemCount": 359,
+    "easyCount": 45,
+    "mediumCount": 209,
+    "hardCount": 105,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Breadth-First Search",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "TikTok",
+    "slug": "tiktok",
+    "problemCount": 348,
+    "easyCount": 34,
+    "mediumCount": 243,
+    "hardCount": 71,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Oracle",
+    "slug": "oracle",
+    "problemCount": 299,
+    "easyCount": 58,
+    "mediumCount": 188,
+    "hardCount": 53,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Apple",
+    "slug": "apple",
+    "problemCount": 298,
+    "easyCount": 74,
+    "mediumCount": 177,
+    "hardCount": 47,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Breadth-First Search",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Goldman Sachs",
+    "slug": "goldman-sachs",
+    "problemCount": 264,
+    "easyCount": 46,
+    "mediumCount": 169,
+    "hardCount": 49,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "tcs",
+    "slug": "tcs",
+    "problemCount": 253,
+    "easyCount": 113,
+    "mediumCount": 116,
+    "hardCount": 24,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Infosys",
+    "slug": "infosys",
+    "problemCount": 221,
+    "easyCount": 53,
+    "mediumCount": 117,
+    "hardCount": 51,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Math",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Salesforce",
+    "slug": "salesforce",
+    "problemCount": 193,
+    "easyCount": 25,
+    "mediumCount": 117,
+    "hardCount": 51,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "LinkedIn",
+    "slug": "linkedin",
+    "problemCount": 175,
+    "easyCount": 26,
+    "mediumCount": 113,
+    "hardCount": 36,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Depth-First Search",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "IBM",
+    "slug": "ibm",
+    "problemCount": 173,
+    "easyCount": 53,
+    "mediumCount": 104,
+    "hardCount": 16,
+    "topTopics": [
+      "Array",
+      "String",
+      "Sorting",
+      "Hash Table",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Zoho",
+    "slug": "zoho",
+    "problemCount": 155,
+    "easyCount": 55,
+    "mediumCount": 84,
+    "hardCount": 16,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Math"
+    ]
+  },
+  {
+    "name": "Walmart Labs",
+    "slug": "walmart-labs",
+    "problemCount": 152,
+    "easyCount": 23,
+    "mediumCount": 102,
+    "hardCount": 27,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Adobe",
+    "slug": "adobe",
+    "problemCount": 148,
+    "easyCount": 29,
+    "mediumCount": 96,
+    "hardCount": 23,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Visa",
+    "slug": "visa",
+    "problemCount": 145,
+    "easyCount": 32,
+    "mediumCount": 91,
+    "hardCount": 22,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Nvidia",
+    "slug": "nvidia",
+    "problemCount": 136,
+    "easyCount": 32,
+    "mediumCount": 89,
+    "hardCount": 15,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Yandex",
+    "slug": "yandex",
+    "problemCount": 131,
+    "easyCount": 51,
+    "mediumCount": 71,
+    "hardCount": 9,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Two Pointers",
+      "Sliding Window"
+    ]
+  },
+  {
+    "name": "Accenture",
+    "slug": "accenture",
+    "problemCount": 129,
+    "easyCount": 58,
+    "mediumCount": 60,
+    "hardCount": 11,
+    "topTopics": [
+      "Array",
+      "String",
+      "Math",
+      "Hash Table",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "DE Shaw",
+    "slug": "de-shaw",
+    "problemCount": 116,
+    "easyCount": 14,
+    "mediumCount": 71,
+    "hardCount": 31,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Hash Table",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Flipkart",
+    "slug": "flipkart",
+    "problemCount": 108,
+    "easyCount": 8,
+    "mediumCount": 71,
+    "hardCount": 29,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "Sorting",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "PayPal",
+    "slug": "paypal",
+    "problemCount": 103,
+    "easyCount": 16,
+    "mediumCount": 70,
+    "hardCount": 17,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Sorting",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Snowflake",
+    "slug": "snowflake",
+    "problemCount": 101,
+    "easyCount": 13,
+    "mediumCount": 68,
+    "hardCount": 20,
+    "topTopics": [
+      "Array",
+      "String",
+      "Depth-First Search",
+      "Hash Table",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "PhonePe",
+    "slug": "phonepe",
+    "problemCount": 95,
+    "easyCount": 3,
+    "mediumCount": 55,
+    "hardCount": 37,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Hash Table",
+      "Sorting",
+      "String"
+    ]
+  },
+  {
+    "name": "Cisco",
+    "slug": "cisco",
+    "problemCount": 88,
+    "easyCount": 22,
+    "mediumCount": 50,
+    "hardCount": 16,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Two Pointers",
+      "Math"
+    ]
+  },
+  {
+    "name": "Citadel",
+    "slug": "citadel",
+    "problemCount": 87,
+    "easyCount": 6,
+    "mediumCount": 51,
+    "hardCount": 30,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "String",
+      "Design"
+    ]
+  },
+  {
+    "name": "Snap",
+    "slug": "snap",
+    "problemCount": 80,
+    "easyCount": 5,
+    "mediumCount": 46,
+    "hardCount": 29,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Breadth-First Search",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "DoorDash",
+    "slug": "doordash",
+    "problemCount": 74,
+    "easyCount": 7,
+    "mediumCount": 42,
+    "hardCount": 25,
+    "topTopics": [
+      "Array",
+      "String",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Expedia",
+    "slug": "expedia",
+    "problemCount": 69,
+    "easyCount": 13,
+    "mediumCount": 47,
+    "hardCount": 9,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Greedy",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Nutanix",
+    "slug": "nutanix",
+    "problemCount": 67,
+    "easyCount": 3,
+    "mediumCount": 48,
+    "hardCount": 16,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "ServiceNow",
+    "slug": "servicenow",
+    "problemCount": 67,
+    "easyCount": 5,
+    "mediumCount": 48,
+    "hardCount": 14,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "eBay",
+    "slug": "ebay",
+    "problemCount": 64,
+    "easyCount": 10,
+    "mediumCount": 41,
+    "hardCount": 13,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Airbnb",
+    "slug": "airbnb",
+    "problemCount": 63,
+    "easyCount": 11,
+    "mediumCount": 30,
+    "hardCount": 22,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "ByteDance",
+    "slug": "bytedance",
+    "problemCount": 63,
+    "easyCount": 4,
+    "mediumCount": 51,
+    "hardCount": 8,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Capital One",
+    "slug": "capital-one",
+    "problemCount": 63,
+    "easyCount": 13,
+    "mediumCount": 40,
+    "hardCount": 10,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Math",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "Intuit",
+    "slug": "intuit",
+    "problemCount": 62,
+    "easyCount": 9,
+    "mediumCount": 34,
+    "hardCount": 19,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Hash Table",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Morgan Stanley",
+    "slug": "morgan-stanley",
+    "problemCount": 62,
+    "easyCount": 15,
+    "mediumCount": 38,
+    "hardCount": 9,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "String",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Samsung",
+    "slug": "samsung",
+    "problemCount": 62,
+    "easyCount": 11,
+    "mediumCount": 33,
+    "hardCount": 18,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Two Pointers",
+      "Hash Table",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Atlassian",
+    "slug": "atlassian",
+    "problemCount": 58,
+    "easyCount": 5,
+    "mediumCount": 39,
+    "hardCount": 14,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Roblox",
+    "slug": "roblox",
+    "problemCount": 56,
+    "easyCount": 8,
+    "mediumCount": 35,
+    "hardCount": 13,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Matrix",
+      "Math"
+    ]
+  },
+  {
+    "name": "Wix",
+    "slug": "wix",
+    "problemCount": 56,
+    "easyCount": 17,
+    "mediumCount": 31,
+    "hardCount": 8,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Depth-First Search",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Anduril",
+    "slug": "anduril",
+    "problemCount": 54,
+    "easyCount": 9,
+    "mediumCount": 37,
+    "hardCount": 8,
+    "topTopics": [
+      "Array",
+      "String",
+      "Breadth-First Search",
+      "Hash Table",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Qualcomm",
+    "slug": "qualcomm",
+    "problemCount": 53,
+    "easyCount": 26,
+    "mediumCount": 20,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "Two Pointers",
+      "String",
+      "Math",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "X",
+    "slug": "x",
+    "problemCount": 51,
+    "easyCount": 8,
+    "mediumCount": 31,
+    "hardCount": 12,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Design",
+      "Math"
+    ]
+  },
+  {
+    "name": "EPAM Systems",
+    "slug": "epam-systems",
+    "problemCount": 49,
+    "easyCount": 16,
+    "mediumCount": 30,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Two Pointers",
+      "Hash Table",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Palo Alto Networks",
+    "slug": "palo-alto-networks",
+    "problemCount": 49,
+    "easyCount": 12,
+    "mediumCount": 30,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Linked List",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Coupang",
+    "slug": "coupang",
+    "problemCount": 48,
+    "easyCount": 3,
+    "mediumCount": 32,
+    "hardCount": 13,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Sorting",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Cognizant",
+    "slug": "cognizant",
+    "problemCount": 47,
+    "easyCount": 30,
+    "mediumCount": 15,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Two Pointers",
+      "Database",
+      "String",
+      "Math"
+    ]
+  },
+  {
+    "name": "Pinterest",
+    "slug": "pinterest",
+    "problemCount": 45,
+    "easyCount": 1,
+    "mediumCount": 28,
+    "hardCount": 16,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "String",
+      "Hash Table",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Deloitte",
+    "slug": "deloitte",
+    "problemCount": 44,
+    "easyCount": 17,
+    "mediumCount": 24,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Two Pointers",
+      "Dynamic Programming",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Agoda",
+    "slug": "agoda",
+    "problemCount": 43,
+    "easyCount": 13,
+    "mediumCount": 28,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Sorting",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Sprinklr",
+    "slug": "sprinklr",
+    "problemCount": 43,
+    "easyCount": 1,
+    "mediumCount": 21,
+    "hardCount": 21,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Stack",
+      "String",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "SAP",
+    "slug": "sap",
+    "problemCount": 42,
+    "easyCount": 15,
+    "mediumCount": 20,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Two Pointers",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Tesla",
+    "slug": "tesla",
+    "problemCount": 42,
+    "easyCount": 10,
+    "mediumCount": 26,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Breadth-First Search",
+      "Design"
+    ]
+  },
+  {
+    "name": "Meesho",
+    "slug": "meesho",
+    "problemCount": 40,
+    "easyCount": 1,
+    "mediumCount": 21,
+    "hardCount": 18,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Hash Table",
+      "Math",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Arista Networks",
+    "slug": "arista-networks",
+    "problemCount": 39,
+    "easyCount": 10,
+    "mediumCount": 26,
+    "hardCount": 3,
+    "topTopics": [
+      "String",
+      "Linked List",
+      "Hash Table",
+      "Array",
+      "Recursion"
+    ]
+  },
+  {
+    "name": "Capgemini",
+    "slug": "capgemini",
+    "problemCount": 36,
+    "easyCount": 17,
+    "mediumCount": 17,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Two Pointers",
+      "String",
+      "Hash Table",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Rubrik",
+    "slug": "rubrik",
+    "problemCount": 36,
+    "easyCount": 2,
+    "mediumCount": 23,
+    "hardCount": 11,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Math",
+      "String",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Swiggy",
+    "slug": "swiggy",
+    "problemCount": 36,
+    "easyCount": 6,
+    "mediumCount": 25,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "Sorting",
+      "String"
+    ]
+  },
+  {
+    "name": "josh technology",
+    "slug": "josh-technology",
+    "problemCount": 36,
+    "easyCount": 8,
+    "mediumCount": 25,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Binary Tree",
+      "Depth-First Search",
+      "Tree",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Media.net",
+    "slug": "medianet",
+    "problemCount": 35,
+    "easyCount": 4,
+    "mediumCount": 17,
+    "hardCount": 14,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Depth-First Search",
+      "Hash Table",
+      "Math"
+    ]
+  },
+  {
+    "name": "Turing",
+    "slug": "turing",
+    "problemCount": 35,
+    "easyCount": 7,
+    "mediumCount": 23,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "String",
+      "Math"
+    ]
+  },
+  {
+    "name": "Docusign",
+    "slug": "docusign",
+    "problemCount": 33,
+    "easyCount": 3,
+    "mediumCount": 23,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Sorting",
+      "Design"
+    ]
+  },
+  {
+    "name": "Yahoo",
+    "slug": "yahoo",
+    "problemCount": 32,
+    "easyCount": 10,
+    "mediumCount": 19,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Depth-First Search",
+      "Backtracking"
+    ]
+  },
+  {
+    "name": "Autodesk",
+    "slug": "autodesk",
+    "problemCount": 31,
+    "easyCount": 8,
+    "mediumCount": 16,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Databricks",
+    "slug": "databricks",
+    "problemCount": 31,
+    "easyCount": 2,
+    "mediumCount": 22,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Design",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "HashedIn",
+    "slug": "hashedin",
+    "problemCount": 31,
+    "easyCount": 4,
+    "mediumCount": 19,
+    "hardCount": 8,
+    "topTopics": [
+      "Array",
+      "String",
+      "Dynamic Programming",
+      "Hash Table",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Grammarly",
+    "slug": "grammarly",
+    "problemCount": 30,
+    "easyCount": 7,
+    "mediumCount": 19,
+    "hardCount": 4,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "Math"
+    ]
+  },
+  {
+    "name": "Zomato",
+    "slug": "zomato",
+    "problemCount": 30,
+    "easyCount": 2,
+    "mediumCount": 19,
+    "hardCount": 9,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Matrix",
+      "Greedy",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Netflix",
+    "slug": "netflix",
+    "problemCount": 29,
+    "easyCount": 5,
+    "mediumCount": 19,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "String",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Paytm",
+    "slug": "paytm",
+    "problemCount": 29,
+    "easyCount": 6,
+    "mediumCount": 20,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Two Pointers",
+      "Stack",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Rippling",
+    "slug": "rippling",
+    "problemCount": 29,
+    "easyCount": 1,
+    "mediumCount": 19,
+    "hardCount": 9,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Design",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Waymo",
+    "slug": "waymo",
+    "problemCount": 29,
+    "easyCount": 1,
+    "mediumCount": 16,
+    "hardCount": 12,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Matrix",
+      "Design"
+    ]
+  },
+  {
+    "name": "MathWorks",
+    "slug": "mathworks",
+    "problemCount": 28,
+    "easyCount": 5,
+    "mediumCount": 14,
+    "hardCount": 9,
+    "topTopics": [
+      "Array",
+      "String",
+      "Greedy",
+      "Dynamic Programming",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Yelp",
+    "slug": "yelp",
+    "problemCount": 28,
+    "easyCount": 8,
+    "mediumCount": 15,
+    "hardCount": 5,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Zeta",
+    "slug": "zeta",
+    "problemCount": 28,
+    "easyCount": 0,
+    "mediumCount": 18,
+    "hardCount": 10,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Hash Table",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "American Express",
+    "slug": "american-express",
+    "problemCount": 27,
+    "easyCount": 8,
+    "mediumCount": 13,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Tekion",
+    "slug": "tekion",
+    "problemCount": 27,
+    "easyCount": 1,
+    "mediumCount": 19,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Squarepoint Capital",
+    "slug": "squarepoint-capital",
+    "problemCount": 26,
+    "easyCount": 2,
+    "mediumCount": 18,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy",
+      "String",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Lyft",
+    "slug": "lyft",
+    "problemCount": 25,
+    "easyCount": 0,
+    "mediumCount": 19,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Breadth-First Search",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "MongoDB",
+    "slug": "mongodb",
+    "problemCount": 25,
+    "easyCount": 4,
+    "mediumCount": 15,
+    "hardCount": 6,
+    "topTopics": [
+      "Hash Table",
+      "Array",
+      "String",
+      "Design",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Ola Cabs",
+    "slug": "ola-cabs",
+    "problemCount": 24,
+    "easyCount": 5,
+    "mediumCount": 14,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "String",
+      "Dynamic Programming",
+      "Hash Table",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Deutsche Bank",
+    "slug": "deutsche-bank",
+    "problemCount": 22,
+    "easyCount": 7,
+    "mediumCount": 8,
+    "hardCount": 7,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Sorting",
+      "Binary Search",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Dropbox",
+    "slug": "dropbox",
+    "problemCount": 22,
+    "easyCount": 2,
+    "mediumCount": 10,
+    "hardCount": 10,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Design",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Siemens",
+    "slug": "siemens",
+    "problemCount": 21,
+    "easyCount": 6,
+    "mediumCount": 12,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Sorting",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Zenefits",
+    "slug": "zenefits",
+    "problemCount": 21,
+    "easyCount": 5,
+    "mediumCount": 11,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "String",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Zepto",
+    "slug": "zepto",
+    "problemCount": 21,
+    "easyCount": 1,
+    "mediumCount": 18,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Depth-First Search",
+      "Binary Search",
+      "Breadth-First Search",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Intel",
+    "slug": "intel",
+    "problemCount": 20,
+    "easyCount": 6,
+    "mediumCount": 13,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Stack",
+      "Two Pointers",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "Juspay",
+    "slug": "juspay",
+    "problemCount": 20,
+    "easyCount": 2,
+    "mediumCount": 13,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Greedy",
+      "Depth-First Search",
+      "Graph Theory"
+    ]
+  },
+  {
+    "name": "Myntra",
+    "slug": "myntra",
+    "problemCount": 20,
+    "easyCount": 4,
+    "mediumCount": 14,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Dynamic Programming",
+      "Hash Table",
+      "String"
+    ]
+  },
+  {
+    "name": "Tinkoff",
+    "slug": "tinkoff",
+    "problemCount": 20,
+    "easyCount": 8,
+    "mediumCount": 12,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Two Pointers",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Wayfair",
+    "slug": "wayfair",
+    "problemCount": 20,
+    "easyCount": 5,
+    "mediumCount": 12,
+    "hardCount": 3,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Wells Fargo",
+    "slug": "wells-fargo",
+    "problemCount": 20,
+    "easyCount": 9,
+    "mediumCount": 9,
+    "hardCount": 2,
+    "topTopics": [
+      "String",
+      "Array",
+      "Two Pointers",
+      "Hash Table",
+      "Design"
+    ]
+  },
+  {
+    "name": "Wipro",
+    "slug": "wipro",
+    "problemCount": 20,
+    "easyCount": 14,
+    "mediumCount": 6,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Accolite",
+    "slug": "accolite",
+    "problemCount": 19,
+    "easyCount": 4,
+    "mediumCount": 14,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Two Pointers",
+      "String",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "BNY Mellon",
+    "slug": "bny-mellon",
+    "problemCount": 19,
+    "easyCount": 1,
+    "mediumCount": 10,
+    "hardCount": 8,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Hash Table",
+      "Sorting",
+      "Bit Manipulation"
+    ]
+  },
+  {
+    "name": "MakeMyTrip",
+    "slug": "makemytrip",
+    "problemCount": 19,
+    "easyCount": 0,
+    "mediumCount": 14,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Hash Table",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Quora",
+    "slug": "quora",
+    "problemCount": 19,
+    "easyCount": 7,
+    "mediumCount": 9,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Math",
+      "Design"
+    ]
+  },
+  {
+    "name": "Two Sigma",
+    "slug": "two-sigma",
+    "problemCount": 19,
+    "easyCount": 3,
+    "mediumCount": 11,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Sorting",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Verkada",
+    "slug": "verkada",
+    "problemCount": 19,
+    "easyCount": 4,
+    "mediumCount": 10,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Math",
+      "Design"
+    ]
+  },
+  {
+    "name": "HCL",
+    "slug": "hcl",
+    "problemCount": 18,
+    "easyCount": 9,
+    "mediumCount": 7,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "String",
+      "Two Pointers",
+      "Dynamic Programming",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Okta",
+    "slug": "okta",
+    "problemCount": 18,
+    "easyCount": 0,
+    "mediumCount": 13,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Design",
+      "String",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Roku",
+    "slug": "roku",
+    "problemCount": 18,
+    "easyCount": 2,
+    "mediumCount": 10,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "Stack",
+      "String",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "AMD",
+    "slug": "amd",
+    "problemCount": 17,
+    "easyCount": 8,
+    "mediumCount": 9,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Two Pointers",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Akuna Capital",
+    "slug": "akuna-capital",
+    "problemCount": 17,
+    "easyCount": 1,
+    "mediumCount": 8,
+    "hardCount": 8,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "String",
+      "Graph Theory"
+    ]
+  },
+  {
+    "name": "BlackRock",
+    "slug": "blackrock",
+    "problemCount": 17,
+    "easyCount": 6,
+    "mediumCount": 10,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Hash Table",
+      "Math",
+      "Tree"
+    ]
+  },
+  {
+    "name": "Geico",
+    "slug": "geico",
+    "problemCount": 17,
+    "easyCount": 1,
+    "mediumCount": 15,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "String",
+      "Dynamic Programming",
+      "Greedy",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Huawei",
+    "slug": "huawei",
+    "problemCount": 17,
+    "easyCount": 5,
+    "mediumCount": 9,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Two Pointers",
+      "Stack"
+    ]
+  },
+  {
+    "name": "IXL",
+    "slug": "ixl",
+    "problemCount": 17,
+    "easyCount": 3,
+    "mediumCount": 11,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Math",
+      "String",
+      "Hash Table",
+      "Design"
+    ]
+  },
+  {
+    "name": "OpenAI",
+    "slug": "openai",
+    "problemCount": 17,
+    "easyCount": 1,
+    "mediumCount": 14,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Hash Table",
+      "String",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Barclays",
+    "slug": "barclays",
+    "problemCount": 16,
+    "easyCount": 5,
+    "mediumCount": 9,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Greedy",
+      "Trie"
+    ]
+  },
+  {
+    "name": "Epic Systems",
+    "slug": "epic-systems",
+    "problemCount": 16,
+    "easyCount": 4,
+    "mediumCount": 11,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Array",
+      "Backtracking",
+      "Math",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Hudson River Trading",
+    "slug": "hudson-river-trading",
+    "problemCount": 16,
+    "easyCount": 6,
+    "mediumCount": 5,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "String",
+      "Math",
+      "Hash Table",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "ZScaler",
+    "slug": "zscaler",
+    "problemCount": 16,
+    "easyCount": 3,
+    "mediumCount": 7,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Math",
+      "String",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "BitGo",
+    "slug": "bitgo",
+    "problemCount": 15,
+    "easyCount": 0,
+    "mediumCount": 10,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Breadth-First Search",
+      "String",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Booking.com",
+    "slug": "bookingcom",
+    "problemCount": 15,
+    "easyCount": 2,
+    "mediumCount": 9,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Depth-First Search",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Grab",
+    "slug": "grab",
+    "problemCount": 15,
+    "easyCount": 3,
+    "mediumCount": 12,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Dynamic Programming",
+      "Hash Table",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Moloco",
+    "slug": "moloco",
+    "problemCount": 15,
+    "easyCount": 0,
+    "mediumCount": 10,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Stack",
+      "String",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Pocket Gems",
+    "slug": "pocket-gems",
+    "problemCount": 15,
+    "easyCount": 1,
+    "mediumCount": 10,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Sorting",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Robinhood",
+    "slug": "robinhood",
+    "problemCount": 15,
+    "easyCount": 3,
+    "mediumCount": 11,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Depth-First Search",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Sigmoid",
+    "slug": "sigmoid",
+    "problemCount": 15,
+    "easyCount": 4,
+    "mediumCount": 10,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Dynamic Programming",
+      "Sorting",
+      "String"
+    ]
+  },
+  {
+    "name": "SoFi",
+    "slug": "sofi",
+    "problemCount": 15,
+    "easyCount": 1,
+    "mediumCount": 9,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Two Pointers",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "UiPath",
+    "slug": "uipath",
+    "problemCount": 15,
+    "easyCount": 0,
+    "mediumCount": 9,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Depth-First Search",
+      "Breadth-First Search",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Zopsmart",
+    "slug": "zopsmart",
+    "problemCount": 15,
+    "easyCount": 2,
+    "mediumCount": 11,
+    "hardCount": 2,
+    "topTopics": [
+      "String",
+      "Two Pointers",
+      "Greedy",
+      "Hash Table",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Dell",
+    "slug": "dell",
+    "problemCount": 14,
+    "easyCount": 7,
+    "mediumCount": 5,
+    "hardCount": 2,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Jane Street",
+    "slug": "jane-street",
+    "problemCount": 14,
+    "easyCount": 7,
+    "mediumCount": 4,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Simulation",
+      "Hash Table",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "Mitsogo",
+    "slug": "mitsogo",
+    "problemCount": 14,
+    "easyCount": 3,
+    "mediumCount": 9,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Bit Manipulation",
+      "String",
+      "Counting"
+    ]
+  },
+  {
+    "name": "Nike",
+    "slug": "nike",
+    "problemCount": 14,
+    "easyCount": 3,
+    "mediumCount": 9,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Greedy",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Spotify",
+    "slug": "spotify",
+    "problemCount": 14,
+    "easyCount": 7,
+    "mediumCount": 3,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Heap (Priority Queue)",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Akamai",
+    "slug": "akamai",
+    "problemCount": 13,
+    "easyCount": 6,
+    "mediumCount": 7,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "String",
+      "Math"
+    ]
+  },
+  {
+    "name": "Aurora",
+    "slug": "aurora",
+    "problemCount": 13,
+    "easyCount": 0,
+    "mediumCount": 8,
+    "hardCount": 5,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Hash Table",
+      "Design"
+    ]
+  },
+  {
+    "name": "Datadog",
+    "slug": "datadog",
+    "problemCount": 13,
+    "easyCount": 3,
+    "mediumCount": 7,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Depth-First Search",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "General Motors",
+    "slug": "general-motors",
+    "problemCount": 13,
+    "easyCount": 1,
+    "mediumCount": 8,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Design",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "InMobi",
+    "slug": "inmobi",
+    "problemCount": 13,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 9,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Binary Search",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Nuro",
+    "slug": "nuro",
+    "problemCount": 13,
+    "easyCount": 0,
+    "mediumCount": 10,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Matrix",
+      "String"
+    ]
+  },
+  {
+    "name": "Stripe",
+    "slug": "stripe",
+    "problemCount": 13,
+    "easyCount": 1,
+    "mediumCount": 11,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "String",
+      "Sorting",
+      "Hash Table",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "VK",
+    "slug": "vk",
+    "problemCount": 13,
+    "easyCount": 7,
+    "mediumCount": 6,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Two Pointers",
+      "Sliding Window",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Whatnot",
+    "slug": "whatnot",
+    "problemCount": 13,
+    "easyCount": 4,
+    "mediumCount": 9,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "String",
+      "Matrix",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "DP world",
+    "slug": "dp-world",
+    "problemCount": 12,
+    "easyCount": 0,
+    "mediumCount": 9,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Dream11",
+    "slug": "dream11",
+    "problemCount": 12,
+    "easyCount": 1,
+    "mediumCount": 10,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Two Pointers",
+      "Stack",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Mastercard",
+    "slug": "mastercard",
+    "problemCount": 12,
+    "easyCount": 5,
+    "mediumCount": 5,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "String",
+      "Dynamic Programming",
+      "Complete Knapsack",
+      "Knapsack Problem"
+    ]
+  },
+  {
+    "name": "Millennium",
+    "slug": "millennium",
+    "problemCount": 12,
+    "easyCount": 2,
+    "mediumCount": 7,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Dynamic Programming",
+      "Tree",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Revolut",
+    "slug": "revolut",
+    "problemCount": 12,
+    "easyCount": 3,
+    "mediumCount": 9,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Binary Search",
+      "Hash Table",
+      "Math"
+    ]
+  },
+  {
+    "name": "Applied Intuition",
+    "slug": "applied-intuition",
+    "problemCount": 11,
+    "easyCount": 0,
+    "mediumCount": 7,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Matrix",
+      "Sorting",
+      "Breadth-First Search",
+      "String"
+    ]
+  },
+  {
+    "name": "Baidu",
+    "slug": "baidu",
+    "problemCount": 11,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 5,
+    "topTopics": [
+      "Dynamic Programming",
+      "Array",
+      "Hash Table",
+      "String",
+      "Sliding Window"
+    ]
+  },
+  {
+    "name": "Cloudflare",
+    "slug": "cloudflare",
+    "problemCount": 11,
+    "easyCount": 1,
+    "mediumCount": 8,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Linked List",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Coinbase",
+    "slug": "coinbase",
+    "problemCount": 11,
+    "easyCount": 2,
+    "mediumCount": 8,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Hash Table",
+      "String",
+      "Trie"
+    ]
+  },
+  {
+    "name": "CrowdStrike",
+    "slug": "crowdstrike",
+    "problemCount": 11,
+    "easyCount": 2,
+    "mediumCount": 8,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "String",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Disney",
+    "slug": "disney",
+    "problemCount": 11,
+    "easyCount": 1,
+    "mediumCount": 9,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Array",
+      "Sorting",
+      "Hash Table",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Hubspot",
+    "slug": "hubspot",
+    "problemCount": 11,
+    "easyCount": 3,
+    "mediumCount": 6,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Two Pointers",
+      "Heap (Priority Queue)",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "NetApp",
+    "slug": "netapp",
+    "problemCount": 11,
+    "easyCount": 4,
+    "mediumCount": 7,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Backtracking"
+    ]
+  },
+  {
+    "name": "Ozon",
+    "slug": "ozon",
+    "problemCount": 11,
+    "easyCount": 6,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "String",
+      "Stack",
+      "Hash Table",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "PornHub",
+    "slug": "pornhub",
+    "problemCount": 11,
+    "easyCount": 2,
+    "mediumCount": 9,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Two Pointers",
+      "String",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "SIG",
+    "slug": "sig",
+    "problemCount": 11,
+    "easyCount": 0,
+    "mediumCount": 8,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Simulation",
+      "Matrix",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Splunk",
+    "slug": "splunk",
+    "problemCount": 11,
+    "easyCount": 2,
+    "mediumCount": 8,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Design",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Twilio",
+    "slug": "twilio",
+    "problemCount": 11,
+    "easyCount": 2,
+    "mediumCount": 9,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Sorting",
+      "Heap (Priority Queue)",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "UKG",
+    "slug": "ukg",
+    "problemCount": 11,
+    "easyCount": 3,
+    "mediumCount": 5,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Sorting",
+      "Hash Table",
+      "Math"
+    ]
+  },
+  {
+    "name": "Verily",
+    "slug": "verily",
+    "problemCount": 11,
+    "easyCount": 1,
+    "mediumCount": 8,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "String",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Wissen Technology",
+    "slug": "wissen-technology",
+    "problemCount": 11,
+    "easyCount": 1,
+    "mediumCount": 9,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "razorpay",
+    "slug": "razorpay",
+    "problemCount": 11,
+    "easyCount": 1,
+    "mediumCount": 8,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Hash Table",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Affirm",
+    "slug": "affirm",
+    "problemCount": 10,
+    "easyCount": 1,
+    "mediumCount": 6,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Design",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Arcesium",
+    "slug": "arcesium",
+    "problemCount": 10,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Dynamic Programming",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Criteo",
+    "slug": "criteo",
+    "problemCount": 10,
+    "easyCount": 7,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Binary Search",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Flexport",
+    "slug": "flexport",
+    "problemCount": 10,
+    "easyCount": 0,
+    "mediumCount": 10,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Hash Table",
+      "Array",
+      "Binary Search",
+      "Design"
+    ]
+  },
+  {
+    "name": "Karat",
+    "slug": "karat",
+    "problemCount": 10,
+    "easyCount": 3,
+    "mediumCount": 6,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Matrix",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Microstrategy",
+    "slug": "microstrategy",
+    "problemCount": 10,
+    "easyCount": 3,
+    "mediumCount": 7,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Hash Table",
+      "Stack"
+    ]
+  },
+  {
+    "name": "WeRide",
+    "slug": "weride",
+    "problemCount": 10,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 6,
+    "topTopics": [
+      "Array",
+      "Depth-First Search",
+      "Breadth-First Search",
+      "Matrix",
+      "String"
+    ]
+  },
+  {
+    "name": "Avito",
+    "slug": "avito",
+    "problemCount": 9,
+    "easyCount": 2,
+    "mediumCount": 7,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Dynamic Programming",
+      "String",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Compass",
+    "slug": "compass",
+    "problemCount": 9,
+    "easyCount": 2,
+    "mediumCount": 6,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Confluent",
+    "slug": "confluent",
+    "problemCount": 9,
+    "easyCount": 0,
+    "mediumCount": 7,
+    "hardCount": 2,
+    "topTopics": [
+      "Hash Table",
+      "Array",
+      "Design",
+      "Backtracking",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "Coursera",
+    "slug": "coursera",
+    "problemCount": 9,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Math",
+      "Sorting",
+      "String",
+      "Counting"
+    ]
+  },
+  {
+    "name": "FreshWorks",
+    "slug": "freshworks",
+    "problemCount": 9,
+    "easyCount": 1,
+    "mediumCount": 7,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Two Pointers",
+      "String",
+      "Greedy",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Instacart",
+    "slug": "instacart",
+    "problemCount": 9,
+    "easyCount": 2,
+    "mediumCount": 6,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Binary Search",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Nokia",
+    "slug": "nokia",
+    "problemCount": 9,
+    "easyCount": 5,
+    "mediumCount": 2,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "String",
+      "Sorting",
+      "Hash Table",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "Publicis Sapient",
+    "slug": "publicis-sapient",
+    "problemCount": 9,
+    "easyCount": 2,
+    "mediumCount": 5,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Greedy",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Rivian",
+    "slug": "rivian",
+    "problemCount": 9,
+    "easyCount": 2,
+    "mediumCount": 6,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Linked List",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "opentext",
+    "slug": "opentext",
+    "problemCount": 9,
+    "easyCount": 6,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Dynamic Programming",
+      "Hash Table",
+      "Sliding Window"
+    ]
+  },
+  {
+    "name": "Axon",
+    "slug": "axon",
+    "problemCount": 8,
+    "easyCount": 1,
+    "mediumCount": 7,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Design",
+      "Hash Table",
+      "Array",
+      "Math"
+    ]
+  },
+  {
+    "name": "Directi",
+    "slug": "directi",
+    "problemCount": 8,
+    "easyCount": 0,
+    "mediumCount": 5,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Graph Theory",
+      "Depth-First Search",
+      "Dynamic Programming",
+      "Tree"
+    ]
+  },
+  {
+    "name": "Info Edge",
+    "slug": "info-edge",
+    "problemCount": 8,
+    "easyCount": 1,
+    "mediumCount": 6,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Two Pointers",
+      "Sorting",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "KLA",
+    "slug": "kla",
+    "problemCount": 8,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 4,
+    "topTopics": [
+      "Hash Table",
+      "Array",
+      "Design",
+      "Two Pointers",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "LTI",
+    "slug": "lti",
+    "problemCount": 8,
+    "easyCount": 4,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Two Pointers",
+      "Sliding Window",
+      "Math"
+    ]
+  },
+  {
+    "name": "Nagarro",
+    "slug": "nagarro",
+    "problemCount": 8,
+    "easyCount": 4,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "String",
+      "Stack",
+      "Array",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Netskope",
+    "slug": "netskope",
+    "problemCount": 8,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 5,
+    "topTopics": [
+      "Hash Table",
+      "String",
+      "Design",
+      "Linked List",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "Pure Storage",
+    "slug": "pure-storage",
+    "problemCount": 8,
+    "easyCount": 2,
+    "mediumCount": 5,
+    "hardCount": 1,
+    "topTopics": [
+      "Design",
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "oyo",
+    "slug": "oyo",
+    "problemCount": 8,
+    "easyCount": 1,
+    "mediumCount": 6,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Linked List",
+      "Heap (Priority Queue)",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "persistent systems",
+    "slug": "persistent-systems",
+    "problemCount": 8,
+    "easyCount": 5,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Airtel",
+    "slug": "airtel",
+    "problemCount": 7,
+    "easyCount": 1,
+    "mediumCount": 6,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "Two Pointers",
+      "Prefix Sum",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Audible",
+    "slug": "audible",
+    "problemCount": 7,
+    "easyCount": 3,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Math",
+      "Array",
+      "Sorting",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Box",
+    "slug": "box",
+    "problemCount": 7,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 2,
+    "topTopics": [
+      "Breadth-First Search",
+      "Hash Table",
+      "String",
+      "Depth-First Search",
+      "Array"
+    ]
+  },
+  {
+    "name": "Citigroup",
+    "slug": "citigroup",
+    "problemCount": 7,
+    "easyCount": 2,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Math",
+      "Stack",
+      "Hash Table",
+      "Sliding Window"
+    ]
+  },
+  {
+    "name": "Dunzo",
+    "slug": "dunzo",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 3,
+    "topTopics": [
+      "Dynamic Programming",
+      "String",
+      "Array",
+      "Prefix Sum",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Groww",
+    "slug": "groww",
+    "problemCount": 7,
+    "easyCount": 1,
+    "mediumCount": 5,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy",
+      "Backtracking",
+      "Bit Manipulation"
+    ]
+  },
+  {
+    "name": "Hive",
+    "slug": "hive",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Design",
+      "Heap (Priority Queue)",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "IMC",
+    "slug": "imc",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Stack",
+      "Binary Search",
+      "Prefix Sum"
+    ]
+  },
+  {
+    "name": "Optiver",
+    "slug": "optiver",
+    "problemCount": 7,
+    "easyCount": 2,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Design",
+      "Array",
+      "Linked List",
+      "Dynamic Programming",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Rakuten",
+    "slug": "rakuten",
+    "problemCount": 7,
+    "easyCount": 1,
+    "mediumCount": 5,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Math",
+      "Matrix",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Shopee",
+    "slug": "shopee",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Hash Table",
+      "Binary Search",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Twitch",
+    "slug": "twitch",
+    "problemCount": 7,
+    "easyCount": 2,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Design",
+      "Sorting",
+      "Data Stream",
+      "Hash Table",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Urban Company",
+    "slug": "urban-company",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 5,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "String",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "VMware",
+    "slug": "vmware",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 5,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Greedy",
+      "String",
+      "Design"
+    ]
+  },
+  {
+    "name": "Vimeo",
+    "slug": "vimeo",
+    "problemCount": 7,
+    "easyCount": 1,
+    "mediumCount": 5,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Stack",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Warnermedia",
+    "slug": "warnermedia",
+    "problemCount": 7,
+    "easyCount": 2,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Hash Table",
+      "Math",
+      "String",
+      "Array",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "jio",
+    "slug": "jio",
+    "problemCount": 7,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Tree"
+    ]
+  },
+  {
+    "name": "Cadence",
+    "slug": "cadence",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 2,
+    "topTopics": [
+      "Linked List",
+      "String",
+      "Two Pointers",
+      "Hash Table",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Cashfree",
+    "slug": "cashfree",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Binary Search",
+      "Sliding Window",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Comcast",
+    "slug": "comcast",
+    "problemCount": 6,
+    "easyCount": 4,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Dynamic Programming",
+      "Sliding Window"
+    ]
+  },
+  {
+    "name": "Darwinbox",
+    "slug": "darwinbox",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Matrix",
+      "Sorting",
+      "Quicksort"
+    ]
+  },
+  {
+    "name": "Faire",
+    "slug": "faire",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 4,
+    "topTopics": [
+      "String",
+      "Array",
+      "Enumeration",
+      "Math",
+      "Recursion"
+    ]
+  },
+  {
+    "name": "Fidelity",
+    "slug": "fidelity",
+    "problemCount": 6,
+    "easyCount": 5,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Hash Table",
+      "Array",
+      "Math",
+      "Counting"
+    ]
+  },
+  {
+    "name": "HSBC",
+    "slug": "hsbc",
+    "problemCount": 6,
+    "easyCount": 4,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Math",
+      "String",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Indeed",
+    "slug": "indeed",
+    "problemCount": 6,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Counting",
+      "Matrix",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "LiveRamp",
+    "slug": "liveramp",
+    "problemCount": 6,
+    "easyCount": 2,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "String",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Lowe's",
+    "slug": "lowes",
+    "problemCount": 6,
+    "easyCount": 3,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topTopics": [
+      "Hash Table",
+      "Array",
+      "String",
+      "Bit Manipulation",
+      "Design"
+    ]
+  },
+  {
+    "name": "Lucid",
+    "slug": "lucid",
+    "problemCount": 6,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Tree",
+      "Depth-First Search",
+      "Stack",
+      "Graph Theory"
+    ]
+  },
+  {
+    "name": "MAQ Software",
+    "slug": "maq-software",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Dynamic Programming",
+      "Manacher",
+      "Two Pointers",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Mercari",
+    "slug": "mercari",
+    "problemCount": 6,
+    "easyCount": 3,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Greedy",
+      "Math",
+      "Array",
+      "String"
+    ]
+  },
+  {
+    "name": "Moveworks",
+    "slug": "moveworks",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Trie",
+      "Backtracking"
+    ]
+  },
+  {
+    "name": "Optum",
+    "slug": "optum",
+    "problemCount": 6,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Hash Table",
+      "String",
+      "Design",
+      "Doubly-Linked List",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "PayPay",
+    "slug": "paypay",
+    "problemCount": 6,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "String",
+      "Dynamic Programming",
+      "Binary Indexed Tree"
+    ]
+  },
+  {
+    "name": "Point72",
+    "slug": "point72",
+    "problemCount": 6,
+    "easyCount": 3,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Database",
+      "Array",
+      "Bit Manipulation",
+      "Greedy",
+      "Prefix Sum"
+    ]
+  },
+  {
+    "name": "Ripple",
+    "slug": "ripple",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Stack",
+      "String",
+      "Array",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Rokt",
+    "slug": "rokt",
+    "problemCount": 6,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 2,
+    "topTopics": [
+      "String",
+      "Stack",
+      "Math",
+      "Recursion",
+      "Array"
+    ]
+  },
+  {
+    "name": "Target",
+    "slug": "target",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "String",
+      "Sorting",
+      "Trie",
+      "Divide and Conquer"
+    ]
+  },
+  {
+    "name": "Trilogy",
+    "slug": "trilogy",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Bit Manipulation",
+      "String",
+      "Brainteaser",
+      "Euclidean Algorithm"
+    ]
+  },
+  {
+    "name": "Upstart",
+    "slug": "upstart",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Virtu Financial",
+    "slug": "virtu-financial",
+    "problemCount": 6,
+    "easyCount": 5,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Math",
+      "Array",
+      "Simulation",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Virtusa",
+    "slug": "virtusa",
+    "problemCount": 6,
+    "easyCount": 3,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Math",
+      "Counting"
+    ]
+  },
+  {
+    "name": "Wise",
+    "slug": "wise",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 5,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Design",
+      "Hash Table",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Workday",
+    "slug": "workday",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Greedy",
+      "String",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "ZS Associates",
+    "slug": "zs-associates",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 5,
+    "hardCount": 0,
+    "topTopics": [
+      "Dynamic Programming",
+      "String",
+      "Array",
+      "Database",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Zoox",
+    "slug": "zoox",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Array",
+      "Math",
+      "Stack",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Alibaba",
+    "slug": "alibaba",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Greedy",
+      "String",
+      "Divide and Conquer"
+    ]
+  },
+  {
+    "name": "Amdocs",
+    "slug": "amdocs",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Math",
+      "Design",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Aon",
+    "slug": "aon",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Bit Manipulation",
+      "Database",
+      "Polygons",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Asana",
+    "slug": "asana",
+    "problemCount": 5,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Heap (Priority Queue)",
+      "Divide and Conquer",
+      "Geometry",
+      "K-D Tree"
+    ]
+  },
+  {
+    "name": "Attentive",
+    "slug": "attentive",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Array",
+      "Stack",
+      "Binary Search",
+      "Prefix Sum"
+    ]
+  },
+  {
+    "name": "Bolt",
+    "slug": "bolt",
+    "problemCount": 5,
+    "easyCount": 3,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Counting"
+    ]
+  },
+  {
+    "name": "Careem",
+    "slug": "careem",
+    "problemCount": 5,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "Dynamic Programming",
+      "Heap (Priority Queue)",
+      "Prefix Sum"
+    ]
+  },
+  {
+    "name": "Chewy",
+    "slug": "chewy",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Design",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "Duolingo",
+    "slug": "duolingo",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Design",
+      "String",
+      "Trie"
+    ]
+  },
+  {
+    "name": "GSN Games",
+    "slug": "gsn-games",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Database"
+    ]
+  },
+  {
+    "name": "Garmin",
+    "slug": "garmin",
+    "problemCount": 5,
+    "easyCount": 5,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy",
+      "Sorting",
+      "Math"
+    ]
+  },
+  {
+    "name": "GoDaddy",
+    "slug": "godaddy",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Binary Search",
+      "Math",
+      "Array",
+      "Quicksort"
+    ]
+  },
+  {
+    "name": "Guidewire",
+    "slug": "guidewire",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 5,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Dynamic Programming",
+      "Graph Theory",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Gusto",
+    "slug": "gusto",
+    "problemCount": 5,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Math",
+      "Array",
+      "Hash Table",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "HP",
+    "slug": "hp",
+    "problemCount": 5,
+    "easyCount": 3,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Greedy",
+      "Bracket Sequences",
+      "Stack",
+      "Array"
+    ]
+  },
+  {
+    "name": "Hulu",
+    "slug": "hulu",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 3,
+    "topTopics": [
+      "Math",
+      "Stack",
+      "Recursion",
+      "String",
+      "Binary Tree"
+    ]
+  },
+  {
+    "name": "Nielsen",
+    "slug": "nielsen",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Hash Table",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Qualtrics",
+    "slug": "qualtrics",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Matrix",
+      "Simulation",
+      "Stack",
+      "Enumeration"
+    ]
+  },
+  {
+    "name": "Reddit",
+    "slug": "reddit",
+    "problemCount": 5,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Design",
+      "Hash Table",
+      "Data Stream",
+      "Array",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Remitly",
+    "slug": "remitly",
+    "problemCount": 5,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Dynamic Programming",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Riot Games",
+    "slug": "riot-games",
+    "problemCount": 5,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Matrix",
+      "Simulation",
+      "Counting"
+    ]
+  },
+  {
+    "name": "Shopify",
+    "slug": "shopify",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Hash Table",
+      "Design",
+      "String",
+      "Array",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Sony",
+    "slug": "sony",
+    "problemCount": 5,
+    "easyCount": 3,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Math",
+      "Hash Table",
+      "Counting",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Squarespace",
+    "slug": "squarespace",
+    "problemCount": 5,
+    "easyCount": 3,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Linked List",
+      "Sorting",
+      "Design"
+    ]
+  },
+  {
+    "name": "Teradata",
+    "slug": "teradata",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Sorting",
+      "Two Pointers",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "The Trade Desk",
+    "slug": "the-trade-desk",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Simulation",
+      "Trie"
+    ]
+  },
+  {
+    "name": "Toast",
+    "slug": "toast",
+    "problemCount": 5,
+    "easyCount": 3,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy",
+      "Graph Theory",
+      "Interactive"
+    ]
+  },
+  {
+    "name": "Tripadvisor",
+    "slug": "tripadvisor",
+    "problemCount": 5,
+    "easyCount": 3,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "String",
+      "Design",
+      "Stack",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "Wish",
+    "slug": "wish",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Database",
+      "Heap (Priority Queue)",
+      "Ordered Set",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "athenahealth",
+    "slug": "athenahealth",
+    "problemCount": 5,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Acko",
+    "slug": "acko",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topTopics": [
+      "Dynamic Programming",
+      "Combinatorics",
+      "Math",
+      "Array",
+      "Directed Acyclic Graph"
+    ]
+  },
+  {
+    "name": "Airbus SE",
+    "slug": "airbus-se",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Prefix Sum"
+    ]
+  },
+  {
+    "name": "Altimetrik",
+    "slug": "altimetrik",
+    "problemCount": 4,
+    "easyCount": 3,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Counting",
+      "Linked List",
+      "Recursion"
+    ]
+  },
+  {
+    "name": "Citrix",
+    "slug": "citrix",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Sorting",
+      "Array",
+      "Hash Table",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Cohesity",
+    "slug": "cohesity",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 3,
+    "topTopics": [
+      "Heap (Priority Queue)",
+      "Sorting",
+      "Array",
+      "Binary Search",
+      "Data Stream"
+    ]
+  },
+  {
+    "name": "Commvault",
+    "slug": "commvault",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Array",
+      "Hash Table",
+      "Dynamic Programming",
+      "Manacher"
+    ]
+  },
+  {
+    "name": "Delhivery",
+    "slug": "delhivery",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Database",
+      "Dynamic Programming",
+      "Binary Search",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "DevRev",
+    "slug": "devrev",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Heap (Priority Queue)",
+      "Design",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "EarnIn",
+    "slug": "earnin",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Linked List",
+      "Math",
+      "Recursion",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "FactSet",
+    "slug": "factset",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Stack",
+      "Greedy",
+      "Monotonic Stack",
+      "Array"
+    ]
+  },
+  {
+    "name": "Fortinet",
+    "slug": "fortinet",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Greedy",
+      "String",
+      "Counting",
+      "Hash Table",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Gameskraft",
+    "slug": "gameskraft",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 4,
+    "topTopics": [
+      "Depth-First Search",
+      "Dynamic Programming",
+      "Tree",
+      "Array",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "HPE",
+    "slug": "hpe",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Dynamic Programming",
+      "Math",
+      "Memoization",
+      "Array",
+      "Backtracking"
+    ]
+  },
+  {
+    "name": "Harness",
+    "slug": "harness",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sliding Window",
+      "String",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Honeywell",
+    "slug": "honeywell",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sliding Window",
+      "Sorting",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Liftoff",
+    "slug": "liftoff",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Matrix",
+      "Simulation",
+      "Algorithm X",
+      "Backtracking"
+    ]
+  },
+  {
+    "name": "MindTree",
+    "slug": "mindtree",
+    "problemCount": 4,
+    "easyCount": 4,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Math",
+      "Database",
+      "Simulation",
+      "Array",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Mindtickle",
+    "slug": "mindtickle",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 4,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Two Pointers",
+      "Counting",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Nordstrom",
+    "slug": "nordstrom",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Directed Acyclic Graph"
+    ]
+  },
+  {
+    "name": "Nykaa",
+    "slug": "nykaa",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "String",
+      "Array",
+      "Greedy",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Otter.ai",
+    "slug": "otterai",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Breadth-First Search",
+      "Heap (Priority Queue)",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Patreon",
+    "slug": "patreon",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Data Stream",
+      "Design",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Pony.ai",
+    "slug": "ponyai",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Sorting",
+      "Greedy",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Poshmark",
+    "slug": "poshmark",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Database",
+      "Array",
+      "Greedy",
+      "Monotonic Stack",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Pwc",
+    "slug": "pwc",
+    "problemCount": 4,
+    "easyCount": 3,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "String",
+      "Hash Table",
+      "Trie",
+      "Binary Search"
+    ]
+  },
+  {
+    "name": "Societe Generale",
+    "slug": "societe-generale",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Dynamic Programming",
+      "String",
+      "Array",
+      "Math",
+      "Memoization"
+    ]
+  },
+  {
+    "name": "Texas Instruments",
+    "slug": "texas-instruments",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Divide and Conquer",
+      "Heap (Priority Queue)",
+      "Quickselect",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Trexquant",
+    "slug": "trexquant",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Two Pointers",
+      "Binary Search",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "TuSimple",
+    "slug": "tusimple",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Combinatorics",
+      "Counting",
+      "Math"
+    ]
+  },
+  {
+    "name": "UBS",
+    "slug": "ubs",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "String",
+      "Sorting",
+      "Depth-First Search",
+      "Tree"
+    ]
+  },
+  {
+    "name": "Valve",
+    "slug": "valve",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Greedy",
+      "Queue",
+      "Counting",
+      "Design"
+    ]
+  },
+  {
+    "name": "Works Applications",
+    "slug": "works-applications",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Greedy",
+      "Two Pointers",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "ZipRecruiter",
+    "slug": "ziprecruiter",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Counting",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Zoom",
+    "slug": "zoom",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Database",
+      "Design",
+      "Doubly-Linked List",
+      "Hash Table",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "blinkit",
+    "slug": "blinkit",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Binary Tree",
+      "Breadth-First Search",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "thoughtspot",
+    "slug": "thoughtspot",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 3,
+    "topTopics": [
+      "Array",
+      "Depth-First Search",
+      "Tree",
+      "Hash Table",
+      "Bit Manipulation"
+    ]
+  },
+  {
+    "name": "AQR Capital Management",
+    "slug": "aqr-capital-management",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Linked List",
+      "Math",
+      "Recursion"
+    ]
+  },
+  {
+    "name": "Activision",
+    "slug": "activision",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Recursion",
+      "Stack",
+      "Array",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Airwallex",
+    "slug": "airwallex",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Monotonic Stack",
+      "Stack",
+      "Design",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "Apollo.io",
+    "slug": "apolloio",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Math",
+      "Stack",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "AppFolio",
+    "slug": "appfolio",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Design",
+      "Hash Table",
+      "Doubly-Linked List",
+      "Linked List",
+      "Data Stream"
+    ]
+  },
+  {
+    "name": "CME Group",
+    "slug": "cme-group",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "String",
+      "Trie",
+      "Divide and Conquer"
+    ]
+  },
+  {
+    "name": "Chime",
+    "slug": "chime",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Stack",
+      "Monotonic Stack",
+      "Data Stream",
+      "Design"
+    ]
+  },
+  {
+    "name": "Clari",
+    "slug": "clari",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Binary Tree",
+      "Tree",
+      "Array",
+      "Hash Table",
+      "Database"
+    ]
+  },
+  {
+    "name": "Cloudera",
+    "slug": "cloudera",
+    "problemCount": 3,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Bit Manipulation",
+      "String",
+      "Union-Find"
+    ]
+  },
+  {
+    "name": "DRW",
+    "slug": "drw",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "Hash Table",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Deliveroo",
+    "slug": "deliveroo",
+    "problemCount": 3,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Design",
+      "Hash Table",
+      "Doubly-Linked List",
+      "Linked List",
+      "Data Stream"
+    ]
+  },
+  {
+    "name": "DeltaX",
+    "slug": "deltax",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Hash Table",
+      "Math",
+      "String",
+      "Array",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "Freecharge",
+    "slug": "freecharge",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Array",
+      "Dynamic Programming",
+      "Design",
+      "Doubly-Linked List"
+    ]
+  },
+  {
+    "name": "GE Digital",
+    "slug": "ge-digital",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Enumeration",
+      "Math",
+      "Stack"
+    ]
+  },
+  {
+    "name": "GE Healthcare",
+    "slug": "ge-healthcare",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Simulation",
+      "Bellman–Ford Algorithm",
+      "Breadth-First Search",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "HiLabs",
+    "slug": "hilabs",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topTopics": [
+      "String",
+      "Bit Manipulation",
+      "Bitmask",
+      "Dynamic Programming",
+      "Recursion"
+    ]
+  },
+  {
+    "name": "Larsen & Toubro",
+    "slug": "larsen-toubro",
+    "problemCount": 3,
+    "easyCount": 3,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Math",
+      "String",
+      "Trie"
+    ]
+  },
+  {
+    "name": "NCR",
+    "slug": "ncr",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Hash Table",
+      "Design",
+      "Doubly-Linked List",
+      "Linked List",
+      "Array"
+    ]
+  },
+  {
+    "name": "Navan",
+    "slug": "navan",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Hash Table",
+      "Design",
+      "Doubly-Linked List",
+      "Linked List",
+      "Array"
+    ]
+  },
+  {
+    "name": "Navi",
+    "slug": "navi",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy",
+      "Binary Search",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Nextdoor",
+    "slug": "nextdoor",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Design",
+      "Doubly-Linked List",
+      "Hash Table",
+      "Linked List",
+      "String"
+    ]
+  },
+  {
+    "name": "Niantic",
+    "slug": "niantic",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Backtracking",
+      "Breadth-First Search",
+      "Sorting",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Odoo",
+    "slug": "odoo",
+    "problemCount": 3,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Stack",
+      "Array",
+      "Boyer–Moore Majority Vote Algorithm",
+      "Counting",
+      "Divide and Conquer"
+    ]
+  },
+  {
+    "name": "Postmates",
+    "slug": "postmates",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Sorting",
+      "String",
+      "Counting",
+      "Hash Table",
+      "Math"
+    ]
+  },
+  {
+    "name": "Samsara",
+    "slug": "samsara",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Sliding Window",
+      "Hash Table",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Sumo Logic",
+    "slug": "sumo-logic",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Union-Find",
+      "Depth-First Search",
+      "Graph Theory",
+      "String"
+    ]
+  },
+  {
+    "name": "Tech Mahindra",
+    "slug": "tech-mahindra",
+    "problemCount": 3,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Divide and Conquer",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Tencent",
+    "slug": "tencent",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Recursion",
+      "Stack",
+      "String",
+      "Array",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "ThoughtWorks",
+    "slug": "thoughtworks",
+    "problemCount": 3,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Hash Function",
+      "Rolling Hash",
+      "String Matching",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "ThousandEyes",
+    "slug": "thousandeyes",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Doubly-Linked List",
+      "Hash Table",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "Tiger Analytics",
+    "slug": "tiger-analytics",
+    "problemCount": 3,
+    "easyCount": 3,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Tinder",
+    "slug": "tinder",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topTopics": [
+      "Data Stream",
+      "Design",
+      "Heap (Priority Queue)",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Toptal",
+    "slug": "toptal",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topTopics": [
+      "Dynamic Programming",
+      "String",
+      "Brainteaser",
+      "Math",
+      "Probability and Statistics"
+    ]
+  },
+  {
+    "name": "Tower Research Capital",
+    "slug": "tower-research-capital",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "String",
+      "Bellman–Ford Algorithm"
+    ]
+  },
+  {
+    "name": "USAA",
+    "slug": "usaa",
+    "problemCount": 3,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Array",
+      "Trie",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "WorldQuant",
+    "slug": "worldquant",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topTopics": [
+      "Heap (Priority Queue)",
+      "Sorting",
+      "Two Pointers",
+      "Array",
+      "Data Stream"
+    ]
+  },
+  {
+    "name": "carwale",
+    "slug": "carwale",
+    "problemCount": 3,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Stack",
+      "String",
+      "Array",
+      "Dynamic Programming",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "ciena",
+    "slug": "ciena",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Database",
+      "Sliding Window"
+    ]
+  },
+  {
+    "name": "fourkites",
+    "slug": "fourkites",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "String",
+      "Bit Manipulation",
+      "Brainteaser"
+    ]
+  },
+  {
+    "name": "Amadeus",
+    "slug": "amadeus",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Sorting",
+      "String",
+      "Array",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "Analytics quotient",
+    "slug": "analytics-quotient",
+    "problemCount": 2,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Database"
+    ]
+  },
+  {
+    "name": "AppDynamics",
+    "slug": "appdynamics",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Sliding Window",
+      "String",
+      "Counting",
+      "Math"
+    ]
+  },
+  {
+    "name": "Bank of America",
+    "slug": "bank-of-america",
+    "problemCount": 2,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Bracket Sequences",
+      "Stack",
+      "String"
+    ]
+  },
+  {
+    "name": "BlackStone",
+    "slug": "blackstone",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "Euclidean Algorithm",
+      "Greatest Common Divisor",
+      "Math",
+      "Stack",
+      "String"
+    ]
+  },
+  {
+    "name": "Bridgewater Associates",
+    "slug": "bridgewater-associates",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Dynamic Programming",
+      "Array",
+      "Math"
+    ]
+  },
+  {
+    "name": "CARS24",
+    "slug": "cars24",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy",
+      "Hash Table",
+      "Math"
+    ]
+  },
+  {
+    "name": "CRED",
+    "slug": "cred",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Sliding Window",
+      "String",
+      "Array",
+      "Counting"
+    ]
+  },
+  {
+    "name": "Canonical",
+    "slug": "canonical",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Simulation",
+      "String",
+      "Array",
+      "Math",
+      "Stack"
+    ]
+  },
+  {
+    "name": "Cruise",
+    "slug": "cruise",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Directed Acyclic Graph",
+      "Graph Theory",
+      "Topological Sort"
+    ]
+  },
+  {
+    "name": "Dataminr",
+    "slug": "dataminr",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Math",
+      "Sorting",
+      "Matrix",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "EY",
+    "slug": "ey",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Divide and Conquer",
+      "Greedy",
+      "Quickselect"
+    ]
+  },
+  {
+    "name": "Fiverr",
+    "slug": "fiverr",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Math",
+      "Two Pointers",
+      "Backtracking",
+      "Bit Manipulation"
+    ]
+  },
+  {
+    "name": "Flexera",
+    "slug": "flexera",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Stack",
+      "String",
+      "Simulation",
+      "Greedy",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Groupon",
+    "slug": "groupon",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "Dynamic Programming",
+      "Binary Search",
+      "Heap (Priority Queue)"
+    ]
+  },
+  {
+    "name": "Grubhub",
+    "slug": "grubhub",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Matrix",
+      "Union-Find"
+    ]
+  },
+  {
+    "name": "Hotstar",
+    "slug": "hotstar",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Math"
+    ]
+  },
+  {
+    "name": "Houzz",
+    "slug": "houzz",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topTopics": [
+      "Math",
+      "Recursion",
+      "Stack",
+      "String"
+    ]
+  },
+  {
+    "name": "IVP",
+    "slug": "ivp",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Backtracking",
+      "Bit Manipulation",
+      "Bitmask"
+    ]
+  },
+  {
+    "name": "Informatica",
+    "slug": "informatica",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Design",
+      "Stack",
+      "Array",
+      "Breadth-First Search",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Jump Trading",
+    "slug": "jump-trading",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "Math",
+      "Floyd's Cycle Finding Algorithm",
+      "Hash Table",
+      "Two Pointers",
+      "Recursion"
+    ]
+  },
+  {
+    "name": "Kakao",
+    "slug": "kakao",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Backtracking",
+      "Bit Manipulation",
+      "Enumeration",
+      "Breadth-First Search"
+    ]
+  },
+  {
+    "name": "LINE",
+    "slug": "line",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topTopics": [
+      "Array",
+      "Heap (Priority Queue)",
+      "Monotonic Queue",
+      "Queue",
+      "Range Minimum/Maximum Query"
+    ]
+  },
+  {
+    "name": "Luxoft",
+    "slug": "luxoft",
+    "problemCount": 2,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Math",
+      "Linked List",
+      "Recursion"
+    ]
+  },
+  {
+    "name": "Machine Zone",
+    "slug": "machine-zone",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topTopics": [
+      "Database",
+      "Design",
+      "Ordered Set",
+      "Segment Tree"
+    ]
+  },
+  {
+    "name": "McKinsey",
+    "slug": "mckinsey",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "Heap (Priority Queue)",
+      "Breadth-First Search",
+      "Depth-First Search"
+    ]
+  },
+  {
+    "name": "Mixpanel",
+    "slug": "mixpanel",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Depth-First Search",
+      "Design",
+      "Iterator",
+      "Queue",
+      "Stack"
+    ]
+  },
+  {
+    "name": "National Payments Corporation of India",
+    "slug": "national-payments-corporation-of-india",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Prefix Sum"
+    ]
+  },
+  {
+    "name": "NetEase",
+    "slug": "netease",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Dynamic Programming",
+      "String",
+      "Array",
+      "Binary Search",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Netsuite",
+    "slug": "netsuite",
+    "problemCount": 2,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Database"
+    ]
+  },
+  {
+    "name": "Paycom",
+    "slug": "paycom",
+    "problemCount": 2,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Sorting",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Peloton",
+    "slug": "peloton",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Hash Table",
+      "Math",
+      "Randomized"
+    ]
+  },
+  {
+    "name": "PubMatic",
+    "slug": "pubmatic",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "RBC",
+    "slug": "rbc",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Matrix",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "Sentry",
+    "slug": "sentry",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Binary Search",
+      "Data Stream",
+      "Design",
+      "Queue"
+    ]
+  },
+  {
+    "name": "ShareChat",
+    "slug": "sharechat",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Binary Tree",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Hash Table",
+      "Tree"
+    ]
+  },
+  {
+    "name": "Snapdeal",
+    "slug": "snapdeal",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Binary Tree",
+      "DP on Trees",
+      "Depth-First Search",
+      "Tree",
+      "Array"
+    ]
+  },
+  {
+    "name": "Softwire",
+    "slug": "softwire",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Dynamic Programming",
+      "Manacher",
+      "Two Pointers",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "SoundHound",
+    "slug": "soundhound",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Binary Tree",
+      "Depth-First Search",
+      "Linked List",
+      "Tree"
+    ]
+  },
+  {
+    "name": "StackAdapt",
+    "slug": "stackadapt",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Design",
+      "Data Stream",
+      "Heap (Priority Queue)",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Stackline",
+    "slug": "stackline",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Graph Theory",
+      "Topological Sort",
+      "Array"
+    ]
+  },
+  {
+    "name": "Tanium",
+    "slug": "tanium",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "String",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Tesco",
+    "slug": "tesco",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Quicksort",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Thomson Reuters",
+    "slug": "thomson-reuters",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "String",
+      "Sliding Window",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Turvo",
+    "slug": "turvo",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "Array",
+      "Enumeration",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Unity",
+    "slug": "unity",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Math",
+      "Array",
+      "Number Theory",
+      "Game Theory",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Zalando",
+    "slug": "zalando",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Quicksort",
+      "Sorting",
+      "Greedy",
+      "String"
+    ]
+  },
+  {
+    "name": "Zendesk",
+    "slug": "zendesk",
+    "problemCount": 2,
+    "easyCount": 2,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Math",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Zluri",
+    "slug": "zluri",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "Monotonic Stack",
+      "Stack",
+      "Dynamic Programming"
+    ]
+  },
+  {
+    "name": "Zynga",
+    "slug": "zynga",
+    "problemCount": 2,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Linked List",
+      "Recursion",
+      "Array",
+      "Bucket Sort",
+      "Counting"
+    ]
+  },
+  {
+    "name": "instabase",
+    "slug": "instabase",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topTopics": [
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Graph Theory",
+      "Topological Sort",
+      "Array"
+    ]
+  },
+  {
+    "name": "peak6",
+    "slug": "peak6",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Enumeration",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "Avalara",
+    "slug": "avalara",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "Math",
+      "Number Theory"
+    ]
+  },
+  {
+    "name": "Braze",
+    "slug": "braze",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Matrix",
+      "Simulation",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "CTC",
+    "slug": "ctc",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "CVENT",
+    "slug": "cvent",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "Circle",
+    "slug": "circle",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Design",
+      "Hash Table",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "Cleartrip",
+    "slug": "cleartrip",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "0-1 BFS",
+      "Array",
+      "Breadth-First Search",
+      "Dijkstra's Algorithm",
+      "Graph Theory"
+    ]
+  },
+  {
+    "name": "CureFit",
+    "slug": "curefit",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Prefix Sum"
+    ]
+  },
+  {
+    "name": "Devsinc",
+    "slug": "devsinc",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Druva",
+    "slug": "druva",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Edelweiss Group",
+    "slug": "edelweiss-group",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Bit Manipulation",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "FPT",
+    "slug": "fpt",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Math",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "Fastenal",
+    "slug": "fastenal",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "Hash Table",
+      "Sorting",
+      "Stack",
+      "String"
+    ]
+  },
+  {
+    "name": "GSA Capital",
+    "slug": "gsa-capital",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Dynamic Programming",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Highspot",
+    "slug": "highspot",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Math",
+      "Stack",
+      "String"
+    ]
+  },
+  {
+    "name": "IIT Bombay",
+    "slug": "iit-bombay",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Bit Manipulation",
+      "Greedy",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "Juniper Networks",
+    "slug": "juniper-networks",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Backtracking"
+    ]
+  },
+  {
+    "name": "Lendingkart Technologies",
+    "slug": "lendingkart-technologies",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Greedy",
+      "String"
+    ]
+  },
+  {
+    "name": "Lenskart",
+    "slug": "lenskart",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topTopics": [
+      "String"
+    ]
+  },
+  {
+    "name": "Mapbox",
+    "slug": "mapbox",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Bit Manipulation",
+      "Counting",
+      "Sorting"
+    ]
+  },
+  {
+    "name": "Mobileye",
+    "slug": "mobileye",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Hash Table",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "Moengage",
+    "slug": "moengage",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Counting",
+      "Hash Table",
+      "String"
+    ]
+  },
+  {
+    "name": "National Instruments",
+    "slug": "national-instruments",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Stack",
+      "String"
+    ]
+  },
+  {
+    "name": "OKX",
+    "slug": "okx",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Breadth-First Search",
+      "Depth-First Search",
+      "Matrix",
+      "Union-Find"
+    ]
+  },
+  {
+    "name": "PayU",
+    "slug": "payu",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Math",
+      "Simulation"
+    ]
+  },
+  {
+    "name": "SOTI",
+    "slug": "soti",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Scale AI",
+    "slug": "scale-ai",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Greedy"
+    ]
+  },
+  {
+    "name": "Slice",
+    "slug": "slice",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Bubble Sort",
+      "Quicksort",
+      "Sorting",
+      "Two Pointers"
+    ]
+  },
+  {
+    "name": "Smartsheet",
+    "slug": "smartsheet",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table",
+      "Sorting",
+      "String"
+    ]
+  },
+  {
+    "name": "Synopsys",
+    "slug": "synopsys",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Veeva Systems",
+    "slug": "veeva-systems",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "String"
+    ]
+  },
+  {
+    "name": "Veritas",
+    "slug": "veritas",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Prefix Sum",
+      "String"
+    ]
+  },
+  {
+    "name": "Wealthfront",
+    "slug": "wealthfront",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Counting",
+      "Hash Table",
+      "String"
+    ]
+  },
+  {
+    "name": "Western Digital",
+    "slug": "western-digital",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Hash Table"
+    ]
+  },
+  {
+    "name": "Zillow",
+    "slug": "zillow",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Array",
+      "Math",
+      "Matrix"
+    ]
+  },
+  {
+    "name": "redbus",
+    "slug": "redbus",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Database"
+    ]
+  },
+  {
+    "name": "smartnews",
+    "slug": "smartnews",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topTopics": [
+      "Design",
+      "Doubly-Linked List",
+      "Hash Table",
+      "Linked List"
+    ]
+  },
+  {
+    "name": "zeta suite",
+    "slug": "zeta-suite",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": [
+      "Array"
+    ]
+  },
+  {
+    "name": "BILL Holdings",
+    "slug": "bill-holdings",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "BP",
+    "slug": "bp",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Bentley Systems",
+    "slug": "bentley-systems",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "BharatPe",
+    "slug": "bharatpe",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Blizzard",
+    "slug": "blizzard",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Block",
+    "slug": "block",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Bosch",
+    "slug": "bosch",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Brex",
+    "slug": "brex",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "CEDCOSS",
+    "slug": "cedcoss",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Celigo",
+    "slug": "celigo",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Coforge",
+    "slug": "coforge",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "ConsultAdd",
+    "slug": "consultadd",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Coveo",
+    "slug": "coveo",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Credit Karma",
+    "slug": "credit-karma",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "DXC Technology",
+    "slug": "dxc-technology",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Devtron",
+    "slug": "devtron",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Electronic Arts",
+    "slug": "electronic-arts",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Genpact",
+    "slug": "genpact",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Gojek",
+    "slug": "gojek",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Graviton",
+    "slug": "graviton",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Hertz",
+    "slug": "hertz",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Hiver",
+    "slug": "hiver",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "INDmoney",
+    "slug": "indmoney",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "J.P. Morgan",
+    "slug": "jp-morgan",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Komprise",
+    "slug": "komprise",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Licious",
+    "slug": "licious",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "MSCI",
+    "slug": "msci",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Miro",
+    "slug": "miro",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Mountblue",
+    "slug": "mountblue",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "NinjaCart",
+    "slug": "ninjacart",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Notion",
+    "slug": "notion",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Opendoor",
+    "slug": "opendoor",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Palantir Technologies",
+    "slug": "palantir-technologies",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "QBurst",
+    "slug": "qburst",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Roche",
+    "slug": "roche",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Tejas Networks",
+    "slug": "tejas-networks",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Turo",
+    "slug": "turo",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Vanguard",
+    "slug": "vanguard",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "WatchGuard",
+    "slug": "watchguard",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "WinZO",
+    "slug": "winzo",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  },
+  {
+    "name": "Yext",
+    "slug": "yext",
+    "problemCount": 0,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topTopics": []
+  }
+]

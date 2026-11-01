@@ -1,0 +1,2546 @@
+[
+  {
+    "name": "Array",
+    "slug": "array",
+    "problemCount": 1926,
+    "easyCount": 388,
+    "mediumCount": 1063,
+    "hardCount": 475,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "String",
+    "slug": "string",
+    "problemCount": 782,
+    "easyCount": 214,
+    "mediumCount": 395,
+    "hardCount": 173,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Hash Table",
+    "slug": "hash-table",
+    "problemCount": 736,
+    "easyCount": 168,
+    "mediumCount": 432,
+    "hardCount": 136,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Math",
+    "slug": "math",
+    "problemCount": 588,
+    "easyCount": 149,
+    "mediumCount": 287,
+    "hardCount": 152,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming",
+    "problemCount": 575,
+    "easyCount": 13,
+    "mediumCount": 289,
+    "hardCount": 273,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Sorting",
+    "slug": "sorting",
+    "problemCount": 478,
+    "easyCount": 90,
+    "mediumCount": 280,
+    "hardCount": 108,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Greedy",
+    "slug": "greedy",
+    "problemCount": 423,
+    "easyCount": 46,
+    "mediumCount": 286,
+    "hardCount": 91,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Depth-First Search",
+    "slug": "depth-first-search",
+    "problemCount": 321,
+    "easyCount": 39,
+    "mediumCount": 197,
+    "hardCount": 85,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Binary Search",
+    "slug": "binary-search",
+    "problemCount": 307,
+    "easyCount": 31,
+    "mediumCount": 171,
+    "hardCount": 105,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Matrix",
+    "slug": "matrix",
+    "problemCount": 254,
+    "easyCount": 36,
+    "mediumCount": 154,
+    "hardCount": 64,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Breadth-First Search",
+    "slug": "breadth-first-search",
+    "problemCount": 248,
+    "easyCount": 20,
+    "mediumCount": 160,
+    "hardCount": 68,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Bit Manipulation",
+    "slug": "bit-manipulation",
+    "problemCount": 244,
+    "easyCount": 48,
+    "mediumCount": 114,
+    "hardCount": 82,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Tree",
+    "slug": "tree",
+    "problemCount": 238,
+    "easyCount": 40,
+    "mediumCount": 146,
+    "hardCount": 52,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Two Pointers",
+    "slug": "two-pointers",
+    "problemCount": 225,
+    "easyCount": 62,
+    "mediumCount": 134,
+    "hardCount": 29,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Prefix Sum",
+    "slug": "prefix-sum",
+    "problemCount": 224,
+    "easyCount": 19,
+    "mediumCount": 143,
+    "hardCount": 62,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Heap (Priority Queue)",
+    "slug": "heap-priority-queue",
+    "problemCount": 202,
+    "easyCount": 16,
+    "mediumCount": 110,
+    "hardCount": 76,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Database",
+    "slug": "database",
+    "problemCount": 194,
+    "easyCount": 86,
+    "mediumCount": 78,
+    "hardCount": 30,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Counting",
+    "slug": "counting",
+    "problemCount": 182,
+    "easyCount": 59,
+    "mediumCount": 96,
+    "hardCount": 27,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Simulation",
+    "slug": "simulation",
+    "problemCount": 182,
+    "easyCount": 74,
+    "mediumCount": 93,
+    "hardCount": 15,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Stack",
+    "slug": "stack",
+    "problemCount": 170,
+    "easyCount": 23,
+    "mediumCount": 98,
+    "hardCount": 49,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Binary Tree",
+    "slug": "binary-tree",
+    "problemCount": 169,
+    "easyCount": 37,
+    "mediumCount": 118,
+    "hardCount": 14,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Graph Theory",
+    "slug": "graph-theory",
+    "problemCount": 167,
+    "easyCount": 3,
+    "mediumCount": 82,
+    "hardCount": 82,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Sliding Window",
+    "slug": "sliding-window",
+    "problemCount": 148,
+    "easyCount": 17,
+    "mediumCount": 93,
+    "hardCount": 38,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Design",
+    "slug": "design",
+    "problemCount": 130,
+    "easyCount": 13,
+    "mediumCount": 86,
+    "hardCount": 31,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Enumeration",
+    "slug": "enumeration",
+    "problemCount": 119,
+    "easyCount": 27,
+    "mediumCount": 60,
+    "hardCount": 32,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Backtracking",
+    "slug": "backtracking",
+    "problemCount": 108,
+    "easyCount": 3,
+    "mediumCount": 73,
+    "hardCount": 32,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Union-Find",
+    "slug": "union-find",
+    "problemCount": 92,
+    "easyCount": 1,
+    "mediumCount": 50,
+    "hardCount": 41,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Number Theory",
+    "slug": "number-theory",
+    "problemCount": 79,
+    "easyCount": 10,
+    "mediumCount": 35,
+    "hardCount": 34,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Linked List",
+    "slug": "linked-list",
+    "problemCount": 75,
+    "easyCount": 13,
+    "mediumCount": 54,
+    "hardCount": 8,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Segment Tree",
+    "slug": "segment-tree",
+    "problemCount": 70,
+    "easyCount": 2,
+    "mediumCount": 17,
+    "hardCount": 51,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Bloomberg",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Monotonic Stack",
+    "slug": "monotonic-stack",
+    "problemCount": 69,
+    "easyCount": 2,
+    "mediumCount": 42,
+    "hardCount": 25,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Ordered Set",
+    "slug": "ordered-set",
+    "problemCount": 69,
+    "easyCount": 3,
+    "mediumCount": 28,
+    "hardCount": 38,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Divide and Conquer",
+    "slug": "divide-and-conquer",
+    "problemCount": 56,
+    "easyCount": 5,
+    "mediumCount": 29,
+    "hardCount": 22,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Trie",
+    "slug": "trie",
+    "problemCount": 56,
+    "easyCount": 4,
+    "mediumCount": 28,
+    "hardCount": 24,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Combinatorics",
+    "slug": "combinatorics",
+    "problemCount": 50,
+    "easyCount": 3,
+    "mediumCount": 17,
+    "hardCount": 30,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Queue",
+    "slug": "queue",
+    "problemCount": 50,
+    "easyCount": 7,
+    "mediumCount": 23,
+    "hardCount": 20,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Bitmask",
+    "slug": "bitmask",
+    "problemCount": 48,
+    "easyCount": 0,
+    "mediumCount": 17,
+    "hardCount": 31,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Recursion",
+    "slug": "recursion",
+    "problemCount": 47,
+    "easyCount": 11,
+    "mediumCount": 22,
+    "hardCount": 14,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Bloomberg",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Geometry",
+    "slug": "geometry",
+    "problemCount": 42,
+    "easyCount": 9,
+    "mediumCount": 19,
+    "hardCount": 14,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Binary Search Tree",
+    "slug": "binary-search-tree",
+    "problemCount": 40,
+    "easyCount": 10,
+    "mediumCount": 26,
+    "hardCount": 4,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Memoization",
+    "slug": "memoization",
+    "problemCount": 40,
+    "easyCount": 3,
+    "mediumCount": 12,
+    "hardCount": 25,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Binary Indexed Tree",
+    "slug": "binary-indexed-tree",
+    "problemCount": 39,
+    "easyCount": 0,
+    "mediumCount": 11,
+    "hardCount": 28,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Hash Function",
+    "slug": "hash-function",
+    "problemCount": 39,
+    "easyCount": 4,
+    "mediumCount": 17,
+    "hardCount": 18,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Topological Sort",
+    "slug": "topological-sort",
+    "problemCount": 38,
+    "easyCount": 0,
+    "mediumCount": 15,
+    "hardCount": 23,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Shortest Path",
+    "slug": "shortest-path",
+    "problemCount": 35,
+    "easyCount": 0,
+    "mediumCount": 20,
+    "hardCount": 15,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "String Matching",
+    "slug": "string-matching",
+    "problemCount": 35,
+    "easyCount": 10,
+    "mediumCount": 11,
+    "hardCount": 14,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Microsoft",
+      "Meta"
+    ]
+  },
+  {
+    "name": "DP on Trees",
+    "slug": "dp-on-trees",
+    "problemCount": 30,
+    "easyCount": 2,
+    "mediumCount": 20,
+    "hardCount": 8,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Rolling Hash",
+    "slug": "rolling-hash",
+    "problemCount": 29,
+    "easyCount": 1,
+    "mediumCount": 14,
+    "hardCount": 14,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Uber",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Game Theory",
+    "slug": "game-theory",
+    "problemCount": 27,
+    "easyCount": 3,
+    "mediumCount": 14,
+    "hardCount": 10,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Bloomberg",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Data Stream",
+    "slug": "data-stream",
+    "problemCount": 24,
+    "easyCount": 6,
+    "mediumCount": 11,
+    "hardCount": 7,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Interactive",
+    "slug": "interactive",
+    "problemCount": 23,
+    "easyCount": 4,
+    "mediumCount": 13,
+    "hardCount": 6,
+    "topCompanies": [
+      "Google",
+      "Meta",
+      "Amazon",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Greatest Common Divisor",
+    "slug": "greatest-common-divisor",
+    "problemCount": 22,
+    "easyCount": 4,
+    "mediumCount": 7,
+    "hardCount": 11,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Euclidean Algorithm",
+    "slug": "euclidean-algorithm",
+    "problemCount": 20,
+    "easyCount": 4,
+    "mediumCount": 6,
+    "hardCount": 10,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Brainteaser",
+    "slug": "brainteaser",
+    "problemCount": 18,
+    "easyCount": 2,
+    "mediumCount": 15,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Monotonic Queue",
+    "slug": "monotonic-queue",
+    "problemCount": 18,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 12,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Directed Acyclic Graph",
+    "slug": "directed-acyclic-graph",
+    "problemCount": 17,
+    "easyCount": 0,
+    "mediumCount": 9,
+    "hardCount": 8,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Dijkstra's Algorithm",
+    "slug": "dijkstras-algorithm",
+    "problemCount": 16,
+    "easyCount": 0,
+    "mediumCount": 9,
+    "hardCount": 7,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Bracket Sequences",
+    "slug": "bracket-sequences",
+    "problemCount": 15,
+    "easyCount": 3,
+    "mediumCount": 10,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Knapsack Problem",
+    "slug": "knapsack-problem",
+    "problemCount": 15,
+    "easyCount": 0,
+    "mediumCount": 10,
+    "hardCount": 5,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Minimax",
+    "slug": "minimax",
+    "problemCount": 15,
+    "easyCount": 1,
+    "mediumCount": 7,
+    "hardCount": 7,
+    "topCompanies": [
+      "Google",
+      "Bloomberg",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Doubly-Linked List",
+    "slug": "doubly-linked-list",
+    "problemCount": 13,
+    "easyCount": 1,
+    "mediumCount": 7,
+    "hardCount": 5,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Merge Sort",
+    "slug": "merge-sort",
+    "problemCount": 13,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 9,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Binary Lifting",
+    "slug": "binary-lifting",
+    "problemCount": 12,
+    "easyCount": 0,
+    "mediumCount": 10,
+    "hardCount": 2,
+    "topCompanies": [
+      "Amazon",
+      "Meta",
+      "Google",
+      "Bloomberg",
+      "Atlassian"
+    ]
+  },
+  {
+    "name": "Prime Factorization",
+    "slug": "prime-factorization",
+    "problemCount": 12,
+    "easyCount": 1,
+    "mediumCount": 6,
+    "hardCount": 5,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Randomized",
+    "slug": "randomized",
+    "problemCount": 12,
+    "easyCount": 0,
+    "mediumCount": 9,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Meta",
+      "Amazon",
+      "Uber",
+      "LinkedIn"
+    ]
+  },
+  {
+    "name": "Lowest Common Ancestor",
+    "slug": "lowest-common-ancestor",
+    "problemCount": 11,
+    "easyCount": 0,
+    "mediumCount": 10,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Meta",
+      "Google",
+      "Atlassian",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Z Algorithm",
+    "slug": "z-algorithm",
+    "problemCount": 11,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 6,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Zero-Sum Game",
+    "slug": "zero-sum-game",
+    "problemCount": 11,
+    "easyCount": 0,
+    "mediumCount": 5,
+    "hardCount": 6,
+    "topCompanies": [
+      "Google",
+      "Bloomberg",
+      "Microsoft",
+      "Amazon",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Bipartite Graph",
+    "slug": "bipartite-graph",
+    "problemCount": 10,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 4,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Counting Sort",
+    "slug": "counting-sort",
+    "problemCount": 10,
+    "easyCount": 5,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Fermat's Little Theorem",
+    "slug": "fermats-little-theorem",
+    "problemCount": 10,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 10,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Knuth–Morris–Pratt Algorithm",
+    "slug": "knuthmorrispratt-algorithm",
+    "problemCount": 10,
+    "easyCount": 2,
+    "mediumCount": 3,
+    "hardCount": 5,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Microsoft",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Longest Increasing Subsequence",
+    "slug": "longest-increasing-subsequence",
+    "problemCount": 10,
+    "easyCount": 1,
+    "mediumCount": 5,
+    "hardCount": 4,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Iterator",
+    "slug": "iterator",
+    "problemCount": 9,
+    "easyCount": 1,
+    "mediumCount": 8,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Apple",
+      "Meta",
+      "Airbnb"
+    ]
+  },
+  {
+    "name": "Sieve Theory",
+    "slug": "sieve-theory",
+    "problemCount": 9,
+    "easyCount": 2,
+    "mediumCount": 5,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "0-1 Knapsack",
+    "slug": "0-1-knapsack",
+    "problemCount": 8,
+    "easyCount": 0,
+    "mediumCount": 5,
+    "hardCount": 3,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Polygons",
+    "slug": "polygons",
+    "problemCount": 8,
+    "easyCount": 4,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Primality Test",
+    "slug": "primality-test",
+    "problemCount": 8,
+    "easyCount": 2,
+    "mediumCount": 5,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Sweep Line",
+    "slug": "sweep-line",
+    "problemCount": 8,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 7,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Bidirectional Search",
+    "slug": "bidirectional-search",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 4,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Meta",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Concurrency",
+    "slug": "concurrency",
+    "problemCount": 7,
+    "easyCount": 1,
+    "mediumCount": 6,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "Apple",
+      "LinkedIn",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Flow Network",
+    "slug": "flow-network",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "SAP",
+      "Squarepoint Capital"
+    ]
+  },
+  {
+    "name": "Quickselect",
+    "slug": "quickselect",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 7,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Suffix Array",
+    "slug": "suffix-array",
+    "problemCount": 7,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 5,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Bloomberg",
+      "Coupang",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Boyer–Moore String-Search Algorithm",
+    "slug": "boyermoore-string-search-algorithm",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 3,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Bloomberg",
+      "Amazon",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Bucket Sort",
+    "slug": "bucket-sort",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 5,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Floyd's Cycle Finding Algorithm",
+    "slug": "floyds-cycle-finding-algorithm",
+    "problemCount": 6,
+    "easyCount": 2,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Least Common Multiple",
+    "slug": "least-common-multiple",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 2,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Info Edge",
+      "American Express"
+    ]
+  },
+  {
+    "name": "Longest Common Subsequence",
+    "slug": "longest-common-subsequence",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Matching (Graph)",
+    "slug": "matching-graph",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "DE Shaw",
+      "Mindtickle",
+      "Roblox",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Minimum Spanning Tree",
+    "slug": "minimum-spanning-tree",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 4,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Prime Number Sieve",
+    "slug": "prime-number-sieve",
+    "problemCount": 6,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Bloomberg",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Probability and Statistics",
+    "slug": "probability-and-statistics",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 6,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "Amazon",
+      "Bloomberg",
+      "Microstrategy"
+    ]
+  },
+  {
+    "name": "Quicksort",
+    "slug": "quicksort",
+    "problemCount": 6,
+    "easyCount": 4,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta",
+      "Apple"
+    ]
+  },
+  {
+    "name": "Sqrt Decomposition",
+    "slug": "sqrt-decomposition",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 2,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Bloomberg",
+      "Nutanix",
+      "MakeMyTrip"
+    ]
+  },
+  {
+    "name": "Treap",
+    "slug": "treap",
+    "problemCount": 6,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 5,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "Apple"
+    ]
+  },
+  {
+    "name": "A* Search",
+    "slug": "a-search",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Uber",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Cartesian Tree",
+    "slug": "cartesian-tree",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "MathWorks",
+      "PhonePe"
+    ]
+  },
+  {
+    "name": "Complete Knapsack",
+    "slug": "complete-knapsack",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Infosys",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Graph Coloring",
+    "slug": "graph-coloring",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 2,
+    "topCompanies": [
+      "Bloomberg",
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Heuristic Search",
+    "slug": "heuristic-search",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Uber",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Kosaraju's Algorithm",
+    "slug": "kosarajus-algorithm",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "BNY Mellon",
+      "Anduril"
+    ]
+  },
+  {
+    "name": "Pigeonhole Principle",
+    "slug": "pigeonhole-principle",
+    "problemCount": 5,
+    "easyCount": 1,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Successive Shortest Path Algorithm",
+    "slug": "successive-shortest-path-algorithm",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Media.net",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Tarjan's SCC Algorithm",
+    "slug": "tarjans-scc-algorithm",
+    "problemCount": 5,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "BNY Mellon",
+      "Anduril"
+    ]
+  },
+  {
+    "name": "Aho–Corasick Algorithm",
+    "slug": "ahocorasick-algorithm",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Jane Street",
+      "Gusto"
+    ]
+  },
+  {
+    "name": "Boyer–Moore Majority Vote Algorithm",
+    "slug": "boyermoore-majority-vote-algorithm",
+    "problemCount": 4,
+    "easyCount": 1,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Accenture",
+      "Amazon",
+      "Bloomberg",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Bubble Sort",
+    "slug": "bubble-sort",
+    "problemCount": 4,
+    "easyCount": 3,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Bloomberg",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Hungarian Algorithm",
+    "slug": "hungarian-algorithm",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Media.net",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Impartial Game",
+    "slug": "impartial-game",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Microsoft",
+      "tcs"
+    ]
+  },
+  {
+    "name": "Meet in the Middle",
+    "slug": "meet-in-the-middle",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 4,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Microsoft",
+      "Samsung",
+      "tcs"
+    ]
+  },
+  {
+    "name": "Reservoir Sampling",
+    "slug": "reservoir-sampling",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 4,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google",
+      "Meta",
+      "Nvidia",
+      "Amazon",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Shell",
+    "slug": "shell",
+    "problemCount": 4,
+    "easyCount": 2,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google",
+      "Meta",
+      "Bloomberg",
+      "Microsoft",
+      "Adobe"
+    ]
+  },
+  {
+    "name": "Suffix Automaton",
+    "slug": "suffix-automaton",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 3,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Coupang",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Suffix Tree",
+    "slug": "suffix-tree",
+    "problemCount": 4,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 3,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Coupang",
+      "Meta",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Algorithm X",
+    "slug": "algorithm-x",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 3,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Borůvka's Algorithm",
+    "slug": "borůvkas-algorithm",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Uber",
+      "Directi"
+    ]
+  },
+  {
+    "name": "Dinic's Algorithm",
+    "slug": "dinics-algorithm",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "SAP",
+      "Bloomberg",
+      "Amazon"
+    ]
+  },
+  {
+    "name": "Edmonds–Karp Algorithm",
+    "slug": "edmondskarp-algorithm",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "SAP",
+      "Bloomberg",
+      "Amazon"
+    ]
+  },
+  {
+    "name": "Eulerian Circuit",
+    "slug": "eulerian-circuit",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Adobe",
+      "Apple",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Eulerian Path",
+    "slug": "eulerian-path",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 3,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Adobe",
+      "Apple",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Inclusion-Exclusion Principle",
+    "slug": "inclusion-exclusion-principle",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "American Express",
+      "Google",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Kruskal's Algorithm",
+    "slug": "kruskals-algorithm",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Uber",
+      "Directi"
+    ]
+  },
+  {
+    "name": "Linear Algebra",
+    "slug": "linear-algebra",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Bloomberg",
+      "LinkedIn",
+      "Meta"
+    ]
+  },
+  {
+    "name": "MPM Algorithm",
+    "slug": "mpm-algorithm",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "SAP",
+      "Bloomberg",
+      "Amazon"
+    ]
+  },
+  {
+    "name": "Minimum-Cost Flow",
+    "slug": "minimum-cost-flow",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Nim Game",
+    "slug": "nim-game",
+    "problemCount": 3,
+    "easyCount": 1,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Bloomberg",
+      "Google",
+      "Microsoft",
+      "Samsung",
+      "Infosys"
+    ]
+  },
+  {
+    "name": "Prim's Algorithm",
+    "slug": "prims-algorithm",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Uber",
+      "Directi"
+    ]
+  },
+  {
+    "name": "Push-Relabel Algorithm",
+    "slug": "push-relabel-algorithm",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "SAP",
+      "Bloomberg",
+      "Amazon"
+    ]
+  },
+  {
+    "name": "Radix Sort",
+    "slug": "radix-sort",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 3,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Sprague–Grundy Theorem",
+    "slug": "spraguegrundy-theorem",
+    "problemCount": 3,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Sony",
+      "Bloomberg",
+      "Infosys",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "0-1 BFS",
+    "slug": "0-1-bfs",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Cleartrip",
+      "Docusign",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Bellman–Ford Algorithm",
+    "slug": "bellmanford-algorithm",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Uber",
+      "Apple"
+    ]
+  },
+  {
+    "name": "Brute-Force Search",
+    "slug": "brute-force-search",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Apple",
+      "Arista Networks"
+    ]
+  },
+  {
+    "name": "Bézout's Lemma",
+    "slug": "bézouts-lemma",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "American Express",
+      "Dropbox",
+      "Nokia"
+    ]
+  },
+  {
+    "name": "Extended Euclidean Algorithm",
+    "slug": "extended-euclidean-algorithm",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "American Express",
+      "Dropbox",
+      "Nokia"
+    ]
+  },
+  {
+    "name": "Floyd–Warshall Algorithm",
+    "slug": "floydwarshall-algorithm",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Microsoft",
+      "Uber",
+      "Apple"
+    ]
+  },
+  {
+    "name": "Hamiltonian Path",
+    "slug": "hamiltonian-path",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Bloomberg",
+      "Databricks",
+      "Goldman Sachs"
+    ]
+  },
+  {
+    "name": "Manacher",
+    "slug": "manacher",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Accenture",
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Maximum Flow",
+    "slug": "maximum-flow",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "SAP",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Maximum Matching",
+    "slug": "maximum-matching",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "SAP",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Perfect Matching",
+    "slug": "perfect-matching",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "DE Shaw",
+      "Mindtickle",
+      "Roblox",
+      "Amazon",
+      "Meta"
+    ]
+  },
+  {
+    "name": "Range Minimum/Maximum Query",
+    "slug": "range-minimummaximum-query",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topCompanies": [
+      "Adobe",
+      "Amazon",
+      "Apple",
+      "Bloomberg",
+      "Cisco"
+    ]
+  },
+  {
+    "name": "Rejection Sampling",
+    "slug": "rejection-sampling",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 2,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google",
+      "LinkedIn",
+      "Microsoft",
+      "TikTok",
+      "Yandex"
+    ]
+  },
+  {
+    "name": "Semi-Eulerian Graph",
+    "slug": "semi-eulerian-graph",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Adobe",
+      "Apple",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Sort",
+    "slug": "sort",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Cruise",
+      "Moveworks",
+      "Rippling",
+      "Amazon",
+      "Atlassian"
+    ]
+  },
+  {
+    "name": "Strongly Connected Component",
+    "slug": "strongly-connected-component",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 2,
+    "topCompanies": [
+      "Google",
+      "Amazon",
+      "Meta",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Ternary Search",
+    "slug": "ternary-search",
+    "problemCount": 2,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Articulation Point",
+    "slug": "articulation-point",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Biconnected Component",
+    "slug": "biconnected-component",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Akuna Capital",
+      "Amazon",
+      "Bloomberg",
+      "Flipkart",
+      "Google"
+    ]
+  },
+  {
+    "name": "Bridge (Graph)",
+    "slug": "bridge-graph",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Akuna Capital",
+      "Amazon",
+      "Bloomberg",
+      "Flipkart",
+      "Google"
+    ]
+  },
+  {
+    "name": "Convex Hull",
+    "slug": "convex-hull",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meesho"
+    ]
+  },
+  {
+    "name": "Dancing Links",
+    "slug": "dancing-links",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Apple",
+      "Bloomberg",
+      "Citadel",
+      "Confluent"
+    ]
+  },
+  {
+    "name": "Euler's Theorem",
+    "slug": "eulers-theorem",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Euler's Totient Function",
+    "slug": "eulers-totient-function",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Eulerian Graph",
+    "slug": "eulerian-graph",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google"
+    ]
+  },
+  {
+    "name": "K Shortest Path",
+    "slug": "k-shortest-path",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Google"
+    ]
+  },
+  {
+    "name": "K-D Tree",
+    "slug": "k-d-tree",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Apple",
+      "Asana",
+      "Axon",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Lexicographically Minimal String Rotation",
+    "slug": "lexicographically-minimal-string-rotation",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg"
+    ]
+  },
+  {
+    "name": "Lyndon Factorization",
+    "slug": "lyndon-factorization",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "IBM",
+      "MathWorks",
+      "Microsoft"
+    ]
+  },
+  {
+    "name": "Minimum Cut",
+    "slug": "minimum-cut",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google",
+      "Microsoft",
+      "SAP"
+    ]
+  },
+  {
+    "name": "Minimum Enclosing Circle",
+    "slug": "minimum-enclosing-circle",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Mixed Knapsack",
+    "slug": "mixed-knapsack",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Multiple Knapsack",
+    "slug": "multiple-knapsack",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "TuSimple"
+    ]
+  },
+  {
+    "name": "Nearest Pair of Points",
+    "slug": "nearest-pair-of-points",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Meta"
+    ]
+  },
+  {
+    "name": "Newton's Method",
+    "slug": "newtons-method",
+    "problemCount": 1,
+    "easyCount": 1,
+    "mediumCount": 0,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Apple",
+      "Bloomberg",
+      "Citadel",
+      "Goldman Sachs"
+    ]
+  },
+  {
+    "name": "Persistent Data Structure",
+    "slug": "persistent-data-structure",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Apple",
+      "Aurora",
+      "Coupang",
+      "Databricks"
+    ]
+  },
+  {
+    "name": "Planar Graph",
+    "slug": "planar-graph",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "TikTok",
+      "Uber"
+    ]
+  },
+  {
+    "name": "Sparse Table",
+    "slug": "sparse-table",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "American Express"
+    ]
+  },
+  {
+    "name": "Splay Tree",
+    "slug": "splay-tree",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Google"
+    ]
+  },
+  {
+    "name": "Timsort",
+    "slug": "timsort",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Bloomberg",
+      "DE Shaw",
+      "Flipkart",
+      "Google"
+    ]
+  },
+  {
+    "name": "Tournament Sort",
+    "slug": "tournament-sort",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 0,
+    "hardCount": 1,
+    "topCompanies": [
+      "Airbnb",
+      "Amazon",
+      "American Express",
+      "Anduril",
+      "Apple"
+    ]
+  },
+  {
+    "name": "Triangulation",
+    "slug": "triangulation",
+    "problemCount": 1,
+    "easyCount": 0,
+    "mediumCount": 1,
+    "hardCount": 0,
+    "topCompanies": [
+      "Amazon",
+      "Google",
+      "Meta",
+      "Microsoft",
+      "Uber"
+    ]
+  }
+]
