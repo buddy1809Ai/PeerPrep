@@ -20,10 +20,14 @@ import {
   BarChart2,
   Building,
   UserCheck,
-  FileText,
-  Star,
+  Lightbulb,
+  Eye,
+  Crown,
+  Zap,
   Download,
-  X
+  X,
+  CreditCard,
+  QrCode
 } from 'lucide-react';
 
 const SOCKET_SERVER_URL = typeof window !== 'undefined'
@@ -35,15 +39,26 @@ export default function App() {
   const [inRoom, setInRoom] = useState(false);
   const [roomId, setRoomId] = useState('trilogy-sde-round1');
   const [username, setUsername] = useState('Aman Gajbhiye');
-  const [role, setRole] = useState('interviewer'); // 'candidate' | 'interviewer'
+  const [role, setRole] = useState('candidate'); // 'candidate' | 'interviewer'
   const [users, setUsers] = useState([]);
   const [copied, setCopied] = useState(false);
+
+  // Pro Subscription State
+  const [isPro, setIsPro] = useState(false);
+  const [isPricingOpen, setIsPricingOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('₹29 Company Drive Pass');
+  const [upiId, setUpiId] = useState('aman@okaxis');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   // Filter & Problems State
   const [selectedCompany, setSelectedCompany] = useState('Trilogy Innovations');
   const [problemId, setProblemId] = useState('bitwise-xor-of-all-pairings');
   const [problems, setProblems] = useState([]);
   const [currentProblem, setCurrentProblem] = useState(null);
+
+  // Hints & Solution View State
+  const [revealedHints, setRevealedHints] = useState({});
+  const [showSolutionModal, setShowSolutionModal] = useState(false);
 
   // Editor & Language State
   const [code, setCode] = useState('');
@@ -79,6 +94,12 @@ export default function App() {
 
   const socketRef = useRef(null);
   const chatBottomRef = useRef(null);
+
+  // Check saved Pro status
+  useEffect(() => {
+    const savedPro = localStorage.getItem('peerprep_pro_member');
+    if (savedPro === 'true') setIsPro(true);
+  }, []);
 
   // Fetch problem list on load
   useEffect(() => {
@@ -166,7 +187,7 @@ export default function App() {
       setRunCount(prev => prev + 1);
       setActiveTab('terminal');
 
-      if (!err && (out.toLowerCase().includes('result:') || out.toLowerCase().includes('true') || out.includes('[0, 1]'))) {
+      if (!err && (out.toLowerCase().includes('expected: 13') || out.includes('Passed') || out.includes('[0, 1]'))) {
         confetti({ particleCount: 75, spread: 60, origin: { y: 0.7 } });
       }
     });
@@ -196,6 +217,8 @@ export default function App() {
 
   const handleProblemChange = (newProbId) => {
     setProblemId(newProbId);
+    setRevealedHints({});
+    setShowSolutionModal(false);
     if (socketRef.current) {
       socketRef.current.emit('problem-change', { roomId, problemId: newProbId });
     }
@@ -270,6 +293,32 @@ export default function App() {
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
+  const toggleHint = (idx) => {
+    setRevealedHints(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const copySolutionToEditor = () => {
+    if (currentProblem?.solution?.code) {
+      setCode(currentProblem.solution.code);
+      if (socketRef.current) {
+        socketRef.current.emit('code-change', { roomId, code: currentProblem.solution.code });
+      }
+      setShowSolutionModal(false);
+      confetti({ particleCount: 50, spread: 50 });
+    }
+  };
+
+  const handleSimulatePayment = () => {
+    setIsProcessingPayment(true);
+    setTimeout(() => {
+      setIsProcessingPayment(false);
+      setIsPro(true);
+      localStorage.setItem('peerprep_pro_member', 'true');
+      setIsPricingOpen(false);
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0.4 } });
+    }, 1200);
+  };
+
   const submitScorecard = async () => {
     try {
       await fetch(`${SOCKET_SERVER_URL}/api/evaluations`, {
@@ -338,27 +387,36 @@ ${interviewerNotes}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(99,102,241,0.18),rgba(255,255,255,0))]" />
         
         <div className="relative w-full max-w-md bg-slate-900/90 border border-slate-800 backdrop-blur-xl rounded-2xl shadow-2xl p-7">
-          <div className="flex items-center space-x-3 mb-5">
-            <div className="w-12 h-12 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-lg shadow-indigo-500/10">
-              <Code2 className="w-6 h-6" />
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center space-x-3">
+              <div className="w-11 h-11 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-lg shadow-indigo-500/10">
+                <Code2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                  PeerPrep <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">PRO</span>
+                </h1>
+                <p className="text-xs text-slate-400">Company-Wise LeetCode & Live Mock Interview Platform</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                PeerPrep <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">v2.0</span>
-              </h1>
-              <p className="text-xs text-slate-400">Real-Time Technical Mock Interviews & Assessment Platform</p>
-            </div>
+
+            <button
+              onClick={() => setIsPricingOpen(true)}
+              className="text-[11px] font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full flex items-center gap-1 hover:bg-amber-500/20 transition"
+            >
+              <Crown className="w-3.5 h-3.5" /> Pass
+            </button>
           </div>
 
-          <div className="mb-5 p-3 rounded-lg bg-indigo-950/40 border border-indigo-800/40 text-[11px] text-indigo-200 flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-lg bg-indigo-950/40 border border-indigo-800/40 text-[11px] text-indigo-200 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
-            <span>Featured Track: <strong>Trilogy Innovations</strong>, Amazon & Meta technical rounds.</span>
+            <span>Featured: <strong>Trilogy Innovations</strong>, Google & Amazon OA assessment drills.</span>
           </div>
 
           <form onSubmit={() => setInRoom(true)} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Your Full Name / Handle
+                Your Name / Handle
               </label>
               <input
                 type="text"
@@ -380,7 +438,7 @@ ${interviewerNotes}
                   onClick={() => setRoomId(`interview-${Math.floor(1000 + Math.random() * 9000)}`)}
                   className="text-[10px] text-indigo-400 hover:text-indigo-300 font-mono"
                 >
-                  Generate Random ID
+                  Generate ID
                 </button>
               </div>
               <input
@@ -411,7 +469,7 @@ ${interviewerNotes}
                   <Code2 className="w-4 h-4 text-indigo-400" />
                   <div>
                     <div className="text-xs font-bold">Candidate</div>
-                    <div className="text-[10px] text-slate-400">Solve & write code</div>
+                    <div className="text-[10px] text-slate-400">Solve & test code</div>
                   </div>
                 </button>
 
@@ -427,7 +485,7 @@ ${interviewerNotes}
                   <UserCheck className="w-4 h-4 text-amber-400" />
                   <div>
                     <div className="text-xs font-bold">Interviewer</div>
-                    <div className="text-[10px] text-slate-400">Evaluate & score rubric</div>
+                    <div className="text-[10px] text-slate-400">Score rubric & evaluate</div>
                   </div>
                 </button>
               </div>
@@ -441,10 +499,104 @@ ${interviewerNotes}
             </button>
           </form>
 
-          <div className="mt-5 pt-4 border-t border-slate-800/80 text-center">
-            <p className="text-[11px] text-slate-500">
-              Zero-latency dual-cursor synchronization • Isolated native sandboxing • Built by Aman Gajbhiye
-            </p>
+          <div className="mt-5 pt-4 border-t border-slate-800/80 text-center flex items-center justify-between text-[11px] text-slate-500">
+            <span>Isolated Sandboxing (JS, Python, Java, C++)</span>
+            <button onClick={() => setIsPricingOpen(true)} className="text-indigo-400 hover:underline">
+              {isPro ? '⭐ Pro Active' : 'Pricing Plans'}
+            </button>
+          </div>
+        </div>
+
+        {/* Pricing Modal */}
+        {isPricingOpen && renderPricingModal()}
+      </div>
+    );
+  }
+
+  // Pricing Modal Render Helper
+  function renderPricingModal() {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="relative w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 text-slate-200">
+          <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+            <div className="flex items-center gap-2">
+              <Crown className="w-5 h-5 text-amber-400" />
+              <h3 className="font-bold text-base text-white">PeerPrep Placement Season Passes</h3>
+            </div>
+            <button onClick={() => setIsPricingOpen(false)} className="text-slate-400 hover:text-white">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <p className="text-xs text-slate-400 mb-4">
+            Affordable sachet pricing for engineering students preparing for product company online assessments and tech interviews.
+          </p>
+
+          <div className="grid grid-cols-2 gap-3 mb-5">
+            <div
+              onClick={() => setSelectedPlan('₹29 Company Drive Pass')}
+              className={`p-4 rounded-xl border cursor-pointer transition ${
+                selectedPlan === '₹29 Company Drive Pass'
+                  ? 'bg-indigo-600/20 border-indigo-500 shadow-md'
+                  : 'bg-slate-950 border-slate-800 hover:border-slate-700'
+              }`}
+            >
+              <div className="text-xs text-indigo-400 font-semibold mb-1">Company Pass</div>
+              <div className="text-2xl font-black text-white">₹29 <span className="text-[11px] text-slate-500 font-normal">/ 7 Days</span></div>
+              <ul className="mt-2 text-[11px] text-slate-300 space-y-1">
+                <li>✓ Trilogy & Amazon Specific Tracks</li>
+                <li>✓ Hints & Optimal Solutions</li>
+                <li>✓ Unlimited Real-Time Rooms</li>
+              </ul>
+            </div>
+
+            <div
+              onClick={() => setSelectedPlan('₹99 All-Access Pass')}
+              className={`p-4 rounded-xl border cursor-pointer transition ${
+                selectedPlan === '₹99 All-Access Pass'
+                  ? 'bg-amber-500/20 border-amber-500 shadow-md'
+                  : 'bg-slate-950 border-slate-800 hover:border-slate-700'
+              }`}
+            >
+              <div className="text-xs text-amber-400 font-semibold mb-1">Season All-Access</div>
+              <div className="text-2xl font-black text-white">₹99 <span className="text-[11px] text-slate-500 font-normal">/ 30 Days</span></div>
+              <ul className="mt-2 text-[11px] text-slate-300 space-y-1">
+                <li>✓ All 470 Company Problem Sets</li>
+                <li>✓ Full AI Interviewer Rubric Scorecards</li>
+                <li>✓ Exportable PDF Assessment Reports</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* UPI Checkout Section */}
+          <div className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-slate-400 flex items-center gap-1.5">
+                <CreditCard className="w-4 h-4 text-indigo-400" /> Instant UPI Payment (GPay, PhonePe, Paytm)
+              </span>
+              <span className="font-bold text-white font-mono">{selectedPlan.split(' ')[0]}</span>
+            </div>
+
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={upiId}
+                onChange={e => setUpiId(e.target.value)}
+                placeholder="Enter your UPI ID (e.g. mobile@upi)"
+                className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"
+              />
+              <button
+                type="button"
+                onClick={handleSimulatePayment}
+                disabled={isProcessingPayment}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-4 py-1.5 rounded-lg font-semibold transition flex items-center gap-1 cursor-pointer disabled:opacity-50"
+              >
+                {isProcessingPayment ? 'Verifying UPI...' : 'Pay with UPI'}
+              </button>
+            </div>
+            <div className="text-[10px] text-slate-500 flex items-center gap-1">
+              <QrCode className="w-3 h-3 text-slate-400" /> Instant activation via Virtual UPI Gateway. Zero gateway commission for students.
+            </div>
           </div>
         </div>
       </div>
@@ -516,6 +668,19 @@ ${interviewerNotes}
 
         {/* Right Controls */}
         <div className="flex items-center gap-2">
+          {/* Subscription Button */}
+          <button
+            onClick={() => setIsPricingOpen(true)}
+            className={`text-xs px-2.5 py-1 rounded-md flex items-center gap-1 font-semibold transition ${
+              isPro 
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
+                : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm'
+            }`}
+          >
+            <Crown className="w-3.5 h-3.5" />
+            <span>{isPro ? 'Pro Active' : 'Pass ₹29'}</span>
+          </button>
+
           {/* Rubric Scorecard Button */}
           <button
             onClick={() => setIsScorecardOpen(true)}
@@ -560,8 +725,8 @@ ${interviewerNotes}
 
       {/* Main 3-Column Working Area */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel: Problem Details (31% Width) */}
-        <div className="w-[31%] border-r border-slate-800 bg-slate-900/60 flex flex-col overflow-y-auto">
+        {/* Left Panel: Problem Statement, Hints & Solutions (32% Width) */}
+        <div className="w-[32%] border-r border-slate-800 bg-slate-900/60 flex flex-col overflow-y-auto">
           {/* Company Filter & Problem Switcher */}
           <div className="p-3 border-b border-slate-800 space-y-2 bg-slate-950/40">
             <div className="flex items-center justify-between">
@@ -587,7 +752,7 @@ ${interviewerNotes}
               <select
                 value={problemId}
                 onChange={e => handleProblemChange(e.target.value)}
-                className="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-0.5 text-slate-200 focus:outline-none max-w-[200px]"
+                className="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-0.5 text-slate-200 focus:outline-none max-w-[210px]"
               >
                 {filteredProblems.map(p => (
                   <option key={p.id} value={p.id}>{p.title}</option>
@@ -597,7 +762,7 @@ ${interviewerNotes}
           </div>
 
           {currentProblem && (
-            <div className="p-5 space-y-4 text-sm">
+            <div className="p-4 space-y-4 text-sm">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-base font-bold text-white tracking-tight">{currentProblem.title}</h2>
                 <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium border ${
@@ -625,10 +790,10 @@ ${interviewerNotes}
               </div>
 
               {/* Examples */}
-              <div className="space-y-3 pt-1">
+              <div className="space-y-2 pt-1">
                 <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Examples:</h3>
                 {currentProblem.examples?.map((ex, idx) => (
-                  <div key={idx} className="bg-slate-950 border border-slate-800 rounded-lg p-3 space-y-1.5 text-xs font-mono">
+                  <div key={idx} className="bg-slate-950 border border-slate-800 rounded-lg p-2.5 space-y-1 text-xs font-mono">
                     <p className="text-slate-400"><strong className="text-indigo-400">Input:</strong> {ex.input}</p>
                     <p className="text-slate-400"><strong className="text-emerald-400">Output:</strong> {ex.output}</p>
                     {ex.explanation && (
@@ -637,12 +802,57 @@ ${interviewerNotes}
                   </div>
                 ))}
               </div>
+
+              {/* Hints Accordion */}
+              {currentProblem.hints && currentProblem.hints.length > 0 && (
+                <div className="space-y-2 pt-2 border-t border-slate-800">
+                  <div className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Algorithmic Hints ({currentProblem.hints.length})</span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {currentProblem.hints.map((hintText, hIdx) => (
+                      <div key={hIdx} className="border border-slate-800 rounded-lg overflow-hidden bg-slate-950/60">
+                        <button
+                          type="button"
+                          onClick={() => toggleHint(hIdx)}
+                          className="w-full p-2 text-left text-xs font-medium text-slate-400 hover:text-white flex items-center justify-between"
+                        >
+                          <span>Hint {hIdx + 1}</span>
+                          <span className="text-[10px] text-indigo-400 font-mono">
+                            {revealedHints[hIdx] ? 'Hide' : 'Reveal'}
+                          </span>
+                        </button>
+                        {revealedHints[hIdx] && (
+                          <div className="p-2.5 bg-slate-900 border-t border-slate-800/60 text-xs text-amber-200/90 leading-relaxed">
+                            {hintText}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Solution Button */}
+              {currentProblem.solution && (
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowSolutionModal(true)}
+                    className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>View Optimal Solution & Complexity</span>
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Center Panel: Monaco Editor (44% Width) */}
-        <div className="w-[44%] border-r border-slate-800 flex flex-col bg-[#1e1e1e]">
+        {/* Center Panel: Monaco Editor (43% Width) */}
+        <div className="w-[43%] border-r border-slate-800 flex flex-col bg-[#1e1e1e]">
           <div className="h-8 bg-slate-900 border-b border-slate-800 px-3 flex items-center justify-between text-xs text-slate-400">
             <span className="font-mono text-[11px] text-slate-300 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -815,6 +1025,70 @@ ${interviewerNotes}
           )}
         </div>
       </div>
+
+      {/* Solution Modal */}
+      {showSolutionModal && currentProblem?.solution && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 text-slate-200 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <Eye className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-bold text-base text-white">Optimal Solution & Complexity</h3>
+              </div>
+              <button onClick={() => setShowSolutionModal(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg font-mono">
+                  <span className="text-slate-400">Time Complexity:</span>{' '}
+                  <span className="text-emerald-400 font-bold">{currentProblem.solution.timeComplexity}</span>
+                </div>
+                <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg font-mono">
+                  <span className="text-slate-400">Space Complexity:</span>{' '}
+                  <span className="text-emerald-400 font-bold">{currentProblem.solution.spaceComplexity}</span>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-300 leading-relaxed">
+                <strong>Algorithmic Explanation:</strong> {currentProblem.solution.explanation}
+              </div>
+
+              <div>
+                <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                  Optimal Reference Code:
+                </div>
+                <pre className="p-3 bg-slate-950 border border-slate-800 rounded-lg font-mono text-xs text-indigo-200 overflow-x-auto whitespace-pre-wrap">
+                  {currentProblem.solution.code}
+                </pre>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={copySolutionToEditor}
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg font-medium transition flex items-center justify-center gap-1.5"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                  <span>Insert Solution Into Editor</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowSolutionModal(false)}
+                  className="px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-lg font-medium transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pricing Modal */}
+      {isPricingOpen && renderPricingModal()}
 
       {/* Structured Interviewer Evaluation Rubrics Modal */}
       {isScorecardOpen && (
