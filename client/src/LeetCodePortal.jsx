@@ -23,9 +23,12 @@ import {
   Award,
   Layers,
   ChevronDown,
-  X
+  X,
+  Grid
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import ALL_COMPANIES from './data/companies.json';
+import ALL_TOPICS from './data/topics.json';
 
 export function LeetCodePortal({
   onSelectProblem,
@@ -41,6 +44,8 @@ export function LeetCodePortal({
   const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [companySearch, setCompanySearch] = useState('');
+  const [showAllCompaniesGrid, setShowAllCompaniesGrid] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 20;
 
@@ -52,7 +57,7 @@ export function LeetCodePortal({
   const [totalProblems, setTotalProblems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  // User Solved Tracking in localStorage - Clean 0 Activity
+  // User Solved Tracking in localStorage
   const [solvedStatus, setSolvedStatus] = useState(() => {
     try {
       const stored = localStorage.getItem('peerprep_user_solved_status');
@@ -137,7 +142,26 @@ export function LeetCodePortal({
     return filteredProblems.slice(start, start + pageSize);
   }, [filteredProblems, page, pageSize]);
 
-  // 365-Day LeetCode Activity Heatmap (Static clean zero activity)
+  // Active Company Metadata
+  const activeCompanyMeta = useMemo(() => {
+    if (selectedCompany === 'All') return null;
+    return ALL_COMPANIES.find(c => c.name.toLowerCase() === selectedCompany.toLowerCase()) || {
+      name: selectedCompany,
+      problemCount: totalProblems,
+      easyCount: Math.round(totalProblems * 0.25),
+      mediumCount: Math.round(totalProblems * 0.55),
+      hardCount: Math.round(totalProblems * 0.20)
+    };
+  }, [selectedCompany, totalProblems]);
+
+  // Filter 470 companies for search
+  const filtered470Companies = useMemo(() => {
+    if (!companySearch.trim()) return ALL_COMPANIES;
+    const s = companySearch.toLowerCase();
+    return ALL_COMPANIES.filter(c => c.name.toLowerCase().includes(s));
+  }, [companySearch]);
+
+  // 365-Day LeetCode Activity Heatmap
   const heatmapData = useMemo(() => {
     const days = [];
     const today = new Date();
@@ -190,7 +214,8 @@ export function LeetCodePortal({
 
   const [hoveredDate, setHoveredDate] = useState(null);
 
-  const popularCompanies = [
+  // Quick Top Companies
+  const quickCompanies = [
     { name: 'Trilogy', label: 'Trilogy Innovations', count: 6, hot: true },
     { name: 'Google', label: 'Google', count: 2344 },
     { name: 'Amazon', label: 'Amazon', count: 2011 },
@@ -200,6 +225,9 @@ export function LeetCodePortal({
     { name: 'Uber', label: 'Uber', count: 512 },
     { name: 'Apple', label: 'Apple', count: 490 },
     { name: 'Goldman Sachs', label: 'Goldman Sachs', count: 340 },
+    { name: 'Nvidia', label: 'Nvidia', count: 195 },
+    { name: 'Citadel', label: 'Citadel', count: 87 },
+    { name: 'Netflix', label: 'Netflix', count: 72 },
     { name: 'All', label: 'All 470 Companies', count: 3392 }
   ];
 
@@ -231,7 +259,7 @@ export function LeetCodePortal({
               <Code2 className="w-5 h-5 text-slate-950" />
             </div>
             <span className="font-extrabold text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
-              PeerPrep <span className="text-amber-400 font-mono text-[10px] sm:text-xs px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30">LeetCode Hub</span>
+              PeerPrep <span className="text-amber-400 font-mono text-[10px] sm:text-xs px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30">470 Companies Bank</span>
             </span>
           </div>
 
@@ -269,11 +297,6 @@ export function LeetCodePortal({
             <span>{currentStreak} Days Streak</span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300">
-            <CheckCircle2 className={`w-3.5 h-3.5 ${solvedCount > 0 ? 'text-emerald-400' : 'text-slate-500'}`} />
-            <span>Goal: {Math.min(solvedCount, 5)} / 5 Today</span>
-          </div>
-
           <button
             onClick={onOpenPricing}
             className="text-xs font-semibold text-amber-300 bg-amber-500/20 border border-amber-500/40 px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-amber-500/30 transition shadow-sm cursor-pointer"
@@ -294,13 +317,13 @@ export function LeetCodePortal({
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-semibold">
                 <Sparkles className="w-3 h-3 text-amber-400" />
-                Trilogy Innovations • Innovation Catalyst Special Bank
+                Trilogy Innovations • Innovation Catalyst Question Bank
               </div>
               <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white">
-                470 Tech Companies • 3,392 LeetCode PYQs & Topic Directory
+                All 470 Tech Companies • 3,392 LeetCode Questions Categorized
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-                Practice verified company-wise past interview problems. Each problem provides clean function signatures, 3-level progressive hints, optimal O(N) solutions, and instant loading into the Monaco live coding editor.
+                Browse verified interview problems across 470 companies. Each question features clean starter code signatures, 3 progressive hints, optimal $O(N)$ solutions, and instant loading into the live Monaco editor.
               </p>
             </div>
 
@@ -321,145 +344,66 @@ export function LeetCodePortal({
           </div>
         </div>
 
-        {/* LeetCode Activity Heatmap Card */}
-        <div className="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-5 shadow-lg backdrop-blur-sm space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                <Calendar className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  LeetCode Submissions Heatmap
-                  <span className="text-[11px] font-mono font-medium text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
-                    {solvedCount} submissions in past year
-                  </span>
-                </h3>
-                <p className="text-xs text-slate-400">Start solving problems to light up your daily activity streak</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 text-xs font-mono">
-              <div>
-                <span className="text-slate-500 block text-[10px]">CURRENT STREAK</span>
-                <span className="text-slate-200 font-bold text-sm">{currentStreak} days</span>
-              </div>
-              <div className="border-l border-slate-800 pl-4">
-                <span className="text-slate-500 block text-[10px]">LONGEST STREAK</span>
-                <span className="text-slate-200 font-bold text-sm">{currentStreak} days</span>
-              </div>
-              <div className="border-l border-slate-800 pl-4">
-                <span className="text-slate-500 block text-[10px]">TOTAL SOLVED</span>
-                <span className="text-emerald-400 font-bold text-sm">{solvedCount} / 3,392</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Interactive Heatmap Matrix */}
-          <div className="overflow-x-auto pb-2">
-            <div className="min-w-[760px]">
-              <div className="flex text-[10px] text-slate-500 font-mono mb-1.5 pl-6 gap-8">
-                <span>Nov</span>
-                <span>Dec</span>
-                <span>Jan</span>
-                <span>Feb</span>
-                <span>Mar</span>
-                <span>Apr</span>
-                <span>May</span>
-                <span>Jun</span>
-                <span>Jul</span>
-                <span>Aug</span>
-                <span>Sep</span>
-                <span>Oct</span>
-                <span>Nov</span>
-              </div>
-
-              <div className="flex gap-1 items-start">
-                <div className="flex flex-col gap-1 text-[9px] text-slate-500 font-mono pr-2 h-[86px] justify-between">
-                  <span>Mon</span>
-                  <span>Wed</span>
-                  <span>Fri</span>
-                </div>
-
-                <div className="flex gap-1 flex-1">
-                  {heatmapData.map((week, wIdx) => (
-                    <div key={wIdx} className="flex flex-col gap-1">
-                      {week.map((day, dIdx) => {
-                        let bg = 'bg-slate-900 border-slate-800/80';
-                        if (day.level === 1) bg = 'bg-emerald-950 border-emerald-900/60';
-                        if (day.level === 2) bg = 'bg-emerald-700 border-emerald-600/60';
-                        if (day.level === 3) bg = 'bg-emerald-500 border-emerald-400/80 shadow-sm shadow-emerald-500/20';
-                        if (day.level === 4) bg = 'bg-emerald-400 border-emerald-300 shadow-md shadow-emerald-400/40';
-                        if (day.empty) bg = 'bg-transparent border-transparent';
-
-                        return (
-                          <div
-                            key={dIdx}
-                            onMouseEnter={() => !day.empty && setHoveredDate(day)}
-                            onMouseLeave={() => setHoveredDate(null)}
-                            title={day.empty ? '' : `${day.date}: ${day.count} problems solved`}
-                            className={`w-2.5 h-2.5 rounded-sm border transition-all duration-150 cursor-pointer ${bg} ${
-                              !day.empty ? 'hover:scale-125 hover:z-20' : ''
-                            }`}
-                          />
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-3 mt-2 border-t border-slate-800/60">
-                <div className="flex items-center gap-2">
-                  <span className="text-slate-400">Activity:</span>
-                  <span className="font-semibold text-emerald-400">
-                    {hoveredDate ? `${hoveredDate.count} problems solved on ${hoveredDate.date}` : 'Hover squares to view submissions (0 initial activity)'}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-1.5 font-mono text-[10px]">
-                  <span>Less</span>
-                  <span className="w-2.5 h-2.5 rounded-sm bg-slate-900 border border-slate-800" />
-                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-950 border border-emerald-900" />
-                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-700 border border-emerald-600" />
-                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 border border-emerald-400" />
-                  <span className="w-2.5 h-2.5 rounded-sm bg-emerald-400 border border-emerald-300" />
-                  <span>More</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Company Quick-Filter Pills */}
-        <div className="space-y-2.5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <Building2 className="w-3.5 h-3.5 text-indigo-400" /> Target Company PYQ Banks
-            </span>
-            
+        {/* 470 Company Browser & Selector Shelf */}
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-3.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-slate-400">
-                Active: <strong className="text-indigo-300">{selectedCompany}</strong> ({totalProblems} questions)
+              <Building2 className="w-4 h-4 text-indigo-400" />
+              <h3 className="text-sm font-bold text-white">
+                470 Tech Companies Directory
+              </h3>
+              <span className="text-[10px] font-mono bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30">
+                470 Companies Available
               </span>
-              {(selectedCompany !== 'All' || selectedTopic !== 'All' || searchQuery) && (
-                <button
-                  onClick={() => {
-                    setSelectedCompany('All');
-                    setSelectedTopic('All');
-                    setSearchQuery('');
-                    setPage(1);
-                  }}
-                  className="text-[10px] text-rose-400 hover:text-rose-300 flex items-center gap-1 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded cursor-pointer"
-                >
-                  <X className="w-3 h-3" /> Reset
-                </button>
-              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Search any of 470 companies */}
+              <div className="relative w-56">
+                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2" />
+                <input
+                  type="text"
+                  value={companySearch}
+                  onChange={e => setCompanySearch(e.target.value)}
+                  placeholder="Search 470 companies..."
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-2.5 py-1 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+
+              {/* Instant Select Dropdown with all 470 companies */}
+              <select
+                value={selectedCompany}
+                onChange={e => {
+                  setSelectedCompany(e.target.value);
+                  setPage(1);
+                }}
+                className="bg-slate-950 border border-slate-800 text-xs rounded-lg px-2.5 py-1 text-indigo-300 font-semibold focus:outline-none max-w-[160px] cursor-pointer"
+              >
+                <option value="All">All 470 Companies (3,392)</option>
+                {ALL_COMPANIES.map(c => (
+                  <option key={c.name} value={c.name}>
+                    {c.name} ({c.problemCount})
+                  </option>
+                ))}
+              </select>
+
+              <button
+                onClick={() => setShowAllCompaniesGrid(!showAllCompaniesGrid)}
+                className={`text-xs px-2.5 py-1 rounded-lg border transition flex items-center gap-1 cursor-pointer ${
+                  showAllCompaniesGrid
+                    ? 'bg-indigo-600 text-white border-indigo-500'
+                    : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-750'
+                }`}
+              >
+                <Grid className="w-3.5 h-3.5" />
+                <span>{showAllCompaniesGrid ? 'Hide Grid' : 'Browse All 470'}</span>
+              </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-            {popularCompanies.map(comp => (
+          {/* Quick Company Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+            {quickCompanies.map(comp => (
               <button
                 key={comp.name}
                 onClick={() => {
@@ -471,7 +415,7 @@ export function LeetCodePortal({
                     ? comp.hot
                       ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-md shadow-amber-500/10'
                       : 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20'
-                    : 'bg-slate-900 hover:bg-slate-850 text-slate-300 border-slate-800 hover:border-slate-700'
+                    : 'bg-slate-950 hover:bg-slate-850 text-slate-300 border-slate-800 hover:border-slate-700'
                 }`}
               >
                 {comp.hot && <Sparkles className="w-3 h-3 text-amber-400 fill-amber-400" />}
@@ -486,16 +430,80 @@ export function LeetCodePortal({
               </button>
             ))}
           </div>
+
+          {/* Expandable 470 Company Grid Drawer */}
+          {showAllCompaniesGrid && (
+            <div className="mt-3 p-4 bg-slate-950 rounded-xl border border-slate-800 max-h-72 overflow-y-auto space-y-2">
+              <div className="flex items-center justify-between text-xs text-slate-400 pb-2 border-b border-slate-800">
+                <span>Showing <strong>{filtered470Companies.length}</strong> companies matching "{companySearch}"</span>
+                <span className="text-[10px] text-slate-500">Click any company to load questions</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
+                {filtered470Companies.map(comp => (
+                  <button
+                    key={comp.name}
+                    onClick={() => {
+                      setSelectedCompany(comp.name);
+                      setShowAllCompaniesGrid(false);
+                      setPage(1);
+                    }}
+                    className={`text-left p-2 rounded-lg border text-xs transition cursor-pointer flex flex-col justify-between ${
+                      selectedCompany.toLowerCase() === comp.name.toLowerCase()
+                        ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 font-bold'
+                        : 'bg-slate-900 border-slate-800/80 hover:border-slate-700 text-slate-300 hover:bg-slate-850'
+                    }`}
+                  >
+                    <span className="truncate font-medium">{comp.name}</span>
+                    <span className="text-[10px] font-mono text-slate-500 mt-1">{comp.problemCount} problems</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Selected Company Spotlight Card */}
+          {activeCompanyMeta && (
+            <div className="bg-slate-950/80 rounded-xl p-3 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center font-bold text-indigo-300">
+                  {selectedCompany.slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-white flex items-center gap-2">
+                    {activeCompanyMeta.name}
+                    <span className="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 px-2 py-0.2 rounded border border-emerald-500/20">
+                      {totalProblems} Questions Loaded
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    Difficulty Breakdown: Easy ({activeCompanyMeta.easyCount || 0}) • Medium ({activeCompanyMeta.mediumCount || 0}) • Hard ({activeCompanyMeta.hardCount || 0})
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  setSelectedCompany('All');
+                  setSelectedTopic('All');
+                  setSearchQuery('');
+                  setPage(1);
+                }}
+                className="text-[11px] text-slate-400 hover:text-white px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 transition flex items-center gap-1 w-fit cursor-pointer"
+              >
+                <RotateCcw className="w-3 h-3" /> Reset to All 470 Companies
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Topic Categorization Shelf - Instant Topic Switch without Empty Screen */}
+        {/* Topic Categorization Shelf */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-amber-400" /> Data Structures & Algorithmic Topics
             </span>
             <span className="text-[11px] text-slate-400">
-              Select topic to view all matching questions
+              Select topic to filter questions
             </span>
           </div>
 
@@ -505,7 +513,6 @@ export function LeetCodePortal({
                 key={topic}
                 onClick={() => {
                   if (topic !== 'All' && selectedCompany === 'Trilogy') {
-                    // Trilogy only has 6 questions. Switching topic automatically broadens to All companies
                     setSelectedCompany('All');
                   }
                   setSelectedTopic(topic);
@@ -580,16 +587,15 @@ export function LeetCodePortal({
           </div>
         </div>
 
-        {/* LeetCode-Style Problems Table - Stays Stable (No Layout Shifts) */}
+        {/* LeetCode-Style Problems Table */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-          {/* Subtle loading line without table height jump */}
           <div className="h-0.5 w-full bg-slate-800">
             {isLoading && <div className="h-full bg-indigo-500 animate-pulse w-full" />}
           </div>
 
           <div className="px-5 py-3 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
             <span>
-              Showing <strong className="text-white">{filteredProblems.length}</strong> matching questions (Total: {totalProblems})
+              Showing <strong className="text-white">{filteredProblems.length}</strong> questions for <strong className="text-indigo-300">{selectedCompany}</strong> (Total: {totalProblems})
             </span>
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-indigo-400">Click ⚡ "Solve in Live IDE" to code in Monaco editor</span>
@@ -614,8 +620,8 @@ export function LeetCodePortal({
                   <tr>
                     <td colSpan={7} className="py-16 text-center text-slate-400">
                       <BookOpen className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                      <div className="font-semibold text-slate-300">No problems found for selected filters</div>
-                      <div className="text-xs text-slate-400 mt-1">Try resetting company or topic filter</div>
+                      <div className="font-semibold text-slate-300">No questions found for {selectedCompany}</div>
+                      <div className="text-xs text-slate-400 mt-1">Try resetting filters or selecting another company</div>
                     </td>
                   </tr>
                 ) : (
