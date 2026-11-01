@@ -544,7 +544,7 @@ ${interviewerNotes}
               onClick={() => setMainView('leetcode')}
               className="text-[10px] font-bold text-amber-300 bg-amber-500/20 hover:bg-amber-500/40 px-2 py-1 rounded border border-amber-500/40 transition cursor-pointer"
             >
-              Explore Bank & Heatmap →
+              Explore Question Bank →
             </button>
           </div>
 
@@ -555,7 +555,7 @@ ${interviewerNotes}
             className="w-full mb-3 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-indigo-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-amber-300 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md shadow-amber-500/10 cursor-pointer"
           >
             <Flame className="w-4 h-4 text-orange-400 fill-orange-400" />
-            <span>Practice 470-Company LeetCode Questions & Heatmap →</span>
+            <span>Practice 470-Company LeetCode Questions →</span>
           </button>
 
           <form onSubmit={() => { setInRoom(true); setMainView("room"); }} className="space-y-4">
@@ -1008,7 +1008,7 @@ ${interviewerNotes}
             className="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-semibold cursor-pointer"
           >
             <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
-            <span>LeetCode Hub & Heatmap</span>
+            <span>470-Company LeetCode Bank</span>
           </button>
 
           {/* 470-Company Explorer Button */}
