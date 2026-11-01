@@ -165,16 +165,52 @@ export function LeetCodePortal({
       limit: '200'
     });
 
-    fetch(`${serverUrl}/api/company-directory?${params}`)
-      .then(res => res.json())
+    const activeServerUrl = serverUrl || import.meta.env.VITE_API_URL || 
+      (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:5000'
+        : 'https://server-rho-nine-82.vercel.app');
+
+    fetch(`${activeServerUrl}/api/company-directory?${params}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then(data => {
         cacheRef.current[cacheKey] = data;
         setProblems(data.problems || []);
         setTotalProblems(data.totalMatching || 0);
         setIsLoading(false);
       })
-      .catch(err => {
-        console.error('Failed to fetch LeetCode company directory:', err);
+      .catch(async (err) => {
+        console.warn('Backend company-directory fetch error, falling back to static /problems.json:', err.message);
+        try {
+          const fallbackRes = await fetch('/problems.json');
+          if (fallbackRes.ok) {
+            const allStatic = await fallbackRes.json();
+            let matches = allStatic;
+            if (selectedCompany && selectedCompany !== 'All') {
+              matches = matches.filter(p => p.companies && p.companies.some(c => 
+                c.toLowerCase() === selectedCompany.toLowerCase() ||
+                (selectedCompany.toLowerCase().includes('trilogy') && c.toLowerCase().includes('trilogy'))
+              ));
+            }
+            if (selectedTopic && selectedTopic !== 'All') {
+              matches = matches.filter(p => p.topics && p.topics.includes(selectedTopic));
+            }
+            if (selectedDifficulty && selectedDifficulty !== 'All') {
+              matches = matches.filter(p => p.difficulty && p.difficulty.toLowerCase() === selectedDifficulty.toLowerCase());
+            }
+            if (searchQuery.trim()) {
+              const q = searchQuery.trim().toLowerCase();
+              matches = matches.filter(p => (p.title && p.title.toLowerCase().includes(q)) || (p.slug && p.slug.toLowerCase().includes(q)));
+            }
+            setProblems(matches);
+            setTotalProblems(matches.length);
+            cacheRef.current[cacheKey] = { totalMatching: matches.length, problems: matches };
+          }
+        } catch (fallbackErr) {
+          console.error('Static fallback also failed:', fallbackErr);
+        }
         setIsLoading(false);
       });
   }, [cacheKey, serverUrl]);

@@ -35,9 +35,12 @@ import {
   Flame
 } from 'lucide-react';
 
-const SOCKET_SERVER_URL = typeof window !== 'undefined'
-  ? (window.location.port === '5173' ? 'http://localhost:5000' : window.location.origin)
-  : 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? (window.location.port === '5173' ? 'http://localhost:5000' : window.location.origin)
+    : 'https://server-rho-nine-82.vercel.app');
+
+const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_URL || API_BASE_URL;
 
 export default function App() {
   // Room & User State
@@ -491,7 +494,7 @@ ${interviewerNotes}
     return (
       <>
         <LeetCodePortal
-          serverUrl={SOCKET_SERVER_URL}
+          serverUrl={API_BASE_URL}
           inRoom={inRoom}
           roomId={roomId}
           onSelectProblem={handleSolveFromLeetCode}

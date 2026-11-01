@@ -4,6 +4,7 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { exec } = require('child_process');
 const crypto = require('crypto');
 
@@ -687,7 +688,7 @@ const EXEC_TIMEOUT = 7000; // 7 seconds timeout
 function runLocalCode(language, code) {
   return new Promise((resolve) => {
     const runId = 'run_' + crypto.randomBytes(4).toString('hex');
-    const tempDir = path.join(__dirname, 'temp_runs', runId);
+    const tempDir = path.join(os.tmpdir(), 'peerprep_runs', runId);
     
     try {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -710,7 +711,7 @@ function runLocalCode(language, code) {
     } else if (language === 'python') {
       filePath = path.join(tempDir, 'solution.py');
       fs.writeFileSync(filePath, code, 'utf8');
-      runCommand = 'python solution.py';
+      runCommand = process.platform === 'win32' ? 'python solution.py' : 'python3 solution.py';
     } else if (language === 'java') {
       const match = code.match(/public\\s+class\\s+([A-Za-z0-9_]+)/);
       const className = match ? match[1] : 'Solution';
@@ -720,7 +721,7 @@ function runLocalCode(language, code) {
     } else if (language === 'cpp') {
       filePath = path.join(tempDir, 'solution.cpp');
       fs.writeFileSync(filePath, code, 'utf8');
-      runCommand = 'g++ -O2 solution.cpp -o solution.exe && solution.exe';
+      runCommand = process.platform === 'win32' ? 'g++ -O2 solution.cpp -o solution.exe && solution.exe' : 'g++ -O2 solution.cpp -o solution && ./solution';
     } else {
       try { fs.rmSync(tempDir, { recursive: true, force: true }); } catch (_) {}
       return resolve({
@@ -897,3 +898,5 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`🚀 PeerPrep Real-Time Engine running on port ${PORT}`);
 });
+
+module.exports = app;
