@@ -663,6 +663,8 @@ ${interviewerNotes}
 
   // 470-Company & 3,392 LeetCode Question Explorer Modal
   function renderCompanyCatalogModal() {
+    return null;
+    /* eslint-disable-next-line */
     const popularCompanies = ['Trilogy', 'Google', 'Amazon', 'Meta', 'Microsoft', 'Bloomberg', 'Uber', 'Apple', 'Goldman Sachs', 'All'];
 
     return (
@@ -960,7 +962,7 @@ ${interviewerNotes}
 
           {/* 470-Company Explorer Button */}
           <button
-            onClick={() => setIsCatalogOpen(true)}
+            onClick={() => setMainView('leetcode')}
             className="bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-medium cursor-pointer"
           >
             <Building className="w-3.5 h-3.5" />
@@ -1098,7 +1100,7 @@ ${interviewerNotes}
 
                 <button
                   type="button"
-                  onClick={() => setIsCatalogOpen(true)}
+                  onClick={() => setMainView('leetcode')}
                   title="Browse full 3,392 questions"
                   className="text-[10px] bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30"
                 >

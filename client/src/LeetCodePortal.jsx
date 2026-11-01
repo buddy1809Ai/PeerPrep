@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Flame,
   Calendar,
@@ -44,14 +44,15 @@ export function LeetCodePortal({
   const [page, setPage] = useState(1);
   const pageSize = 20;
 
+  // In-Memory Instant Cache Ref for 0ms transitions
+  const cacheRef = useRef({});
+
   // Data State
   const [problems, setProblems] = useState([]);
   const [totalProblems, setTotalProblems] = useState(0);
-  const [companiesList, setCompaniesList] = useState([]);
-  const [topicsList, setTopicsList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // User Solved Tracking in localStorage - Start Fresh with 0 Activity
+  // User Solved Tracking in localStorage - Clean 0 Activity
   const [solvedStatus, setSolvedStatus] = useState(() => {
     try {
       const stored = localStorage.getItem('peerprep_user_solved_status');
@@ -78,37 +79,45 @@ export function LeetCodePortal({
         localStorage.setItem('peerprep_user_solved_status', JSON.stringify(updated));
       } catch (_) {}
       if (nextStatus === 'solved') {
-        confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 } });
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
       }
       return updated;
     });
   };
 
-  // Fetch Directory Data
+  // Instant Fetch with Client In-Memory Caching (Zero Network Lag on repeated clicks)
+  const cacheKey = `${selectedCompany}_${selectedTopic}_${selectedDifficulty}_${searchQuery.trim()}`;
+
   useEffect(() => {
+    if (cacheRef.current[cacheKey]) {
+      setProblems(cacheRef.current[cacheKey].problems);
+      setTotalProblems(cacheRef.current[cacheKey].totalMatching);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     const params = new URLSearchParams({
       company: selectedCompany === 'All' ? '' : selectedCompany,
       topic: selectedTopic === 'All' ? '' : selectedTopic,
       difficulty: selectedDifficulty === 'All' ? '' : selectedDifficulty,
-      search: searchQuery,
+      search: searchQuery.trim(),
       limit: '150'
     });
 
     fetch(`${serverUrl}/api/company-directory?${params}`)
       .then(res => res.json())
       .then(data => {
+        cacheRef.current[cacheKey] = data;
         setProblems(data.problems || []);
         setTotalProblems(data.totalMatching || 0);
-        if (data.topCompanies && companiesList.length === 0) setCompaniesList(data.topCompanies);
-        if (data.topTopics && topicsList.length === 0) setTopicsList(data.topTopics);
         setIsLoading(false);
       })
       .catch(err => {
         console.error('Failed to fetch LeetCode company directory:', err);
         setIsLoading(false);
       });
-  }, [selectedCompany, selectedTopic, selectedDifficulty, searchQuery]);
+  }, [cacheKey, serverUrl]);
 
   // Client Pagination & Status Filtering
   const filteredProblems = useMemo(() => {
@@ -128,7 +137,7 @@ export function LeetCodePortal({
     return filteredProblems.slice(start, start + pageSize);
   }, [filteredProblems, page, pageSize]);
 
-  // 365-Day LeetCode Activity Heatmap - Completely Clean Initial State (No fake activity)
+  // 365-Day LeetCode Activity Heatmap (Static clean zero activity)
   const heatmapData = useMemo(() => {
     const days = [];
     const today = new Date();
@@ -141,7 +150,6 @@ export function LeetCodePortal({
       const dateStr = d.toISOString().split('T')[0];
       const dayOfWeek = d.getDay();
       
-      // Clean zero activity for new candidate. If candidate solved problems today, light up today!
       const isToday = dateStr === todayStr;
       const count = isToday ? solvedTodayCount : 0;
       let level = 0;
@@ -154,12 +162,10 @@ export function LeetCodePortal({
         date: dateStr,
         dayOfWeek,
         count,
-        level,
-        isToday
+        level
       });
     }
 
-    // Group into 53 weeks (columns) x 7 days (rows)
     const weeks = [];
     let currentWeek = [];
     const firstDayOfWeek = days[0].dayOfWeek;
@@ -184,7 +190,6 @@ export function LeetCodePortal({
 
   const [hoveredDate, setHoveredDate] = useState(null);
 
-  // Quick Company Tabs
   const popularCompanies = [
     { name: 'Trilogy', label: 'Trilogy Innovations', count: 6, hot: true },
     { name: 'Google', label: 'Google', count: 2344 },
@@ -198,7 +203,6 @@ export function LeetCodePortal({
     { name: 'All', label: 'All 470 Companies', count: 3392 }
   ];
 
-  // Quick Topic Tabs
   const topTopics = [
     'All',
     'Array',
@@ -214,12 +218,11 @@ export function LeetCodePortal({
     'Graph'
   ];
 
-  // Real Stats Counters
   const solvedCount = Object.values(solvedStatus).filter(s => s === 'solved').length;
   const currentStreak = solvedCount > 0 ? 1 : 0;
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 text-slate-100 flex flex-col font-sans overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen w-full bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
       {/* Top Header Bar */}
       <header className="h-14 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 shrink-0">
         <div className="flex items-center gap-3 sm:gap-4">
@@ -227,11 +230,9 @@ export function LeetCodePortal({
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-slate-950 font-bold shadow-md shadow-orange-500/20">
               <Code2 className="w-5 h-5 text-slate-950" />
             </div>
-            <div>
-              <span className="font-extrabold text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
-                PeerPrep <span className="text-amber-400 font-mono text-[10px] sm:text-xs px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30">LeetCode Hub</span>
-              </span>
-            </div>
+            <span className="font-extrabold text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
+              PeerPrep <span className="text-amber-400 font-mono text-[10px] sm:text-xs px-1.5 py-0.5 rounded bg-amber-400/10 border border-amber-400/30">LeetCode Hub</span>
+            </span>
           </div>
 
           <div className="hidden md:flex items-center gap-2 ml-4 pl-4 border-l border-slate-800">
@@ -263,19 +264,16 @@ export function LeetCodePortal({
         </div>
 
         <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* Streak Badge */}
           <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300">
             <Flame className={`w-3.5 h-3.5 ${currentStreak > 0 ? 'text-orange-400 fill-orange-400 animate-pulse' : 'text-slate-500'}`} />
             <span>{currentStreak} Days Streak</span>
           </div>
 
-          {/* Daily Goal Badge */}
           <div className="hidden sm:flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg text-xs font-semibold text-slate-300">
             <CheckCircle2 className={`w-3.5 h-3.5 ${solvedCount > 0 ? 'text-emerald-400' : 'text-slate-500'}`} />
             <span>Goal: {Math.min(solvedCount, 5)} / 5 Today</span>
           </div>
 
-          {/* Pricing Pass Button */}
           <button
             onClick={onOpenPricing}
             className="text-xs font-semibold text-amber-300 bg-amber-500/20 border border-amber-500/40 px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-amber-500/30 transition shadow-sm cursor-pointer"
@@ -286,7 +284,7 @@ export function LeetCodePortal({
         </div>
       </header>
 
-      {/* Main Scrollable Content Container */}
+      {/* Main Content Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6 pb-36">
         
         {/* Banner: Trilogy Innovations Innovation Catalyst PYQ Highlight */}
@@ -323,7 +321,7 @@ export function LeetCodePortal({
           </div>
         </div>
 
-        {/* LeetCode Activity Heatmap Card - Clean 0 Activity for New User */}
+        {/* LeetCode Activity Heatmap Card */}
         <div className="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-5 shadow-lg backdrop-blur-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
             <div className="flex items-center gap-3">
@@ -341,7 +339,6 @@ export function LeetCodePortal({
               </div>
             </div>
 
-            {/* Quick Metrics */}
             <div className="flex items-center gap-4 text-xs font-mono">
               <div>
                 <span className="text-slate-500 block text-[10px]">CURRENT STREAK</span>
@@ -361,7 +358,6 @@ export function LeetCodePortal({
           {/* Interactive Heatmap Matrix */}
           <div className="overflow-x-auto pb-2">
             <div className="min-w-[760px]">
-              {/* Month Header row */}
               <div className="flex text-[10px] text-slate-500 font-mono mb-1.5 pl-6 gap-8">
                 <span>Nov</span>
                 <span>Dec</span>
@@ -379,14 +375,12 @@ export function LeetCodePortal({
               </div>
 
               <div className="flex gap-1 items-start">
-                {/* Day of week labels */}
                 <div className="flex flex-col gap-1 text-[9px] text-slate-500 font-mono pr-2 h-[86px] justify-between">
                   <span>Mon</span>
                   <span>Wed</span>
                   <span>Fri</span>
                 </div>
 
-                {/* Weeks Grid */}
                 <div className="flex gap-1 flex-1">
                   {heatmapData.map((week, wIdx) => (
                     <div key={wIdx} className="flex flex-col gap-1">
@@ -415,10 +409,9 @@ export function LeetCodePortal({
                 </div>
               </div>
 
-              {/* Heatmap Footer Legend & Hover Tooltip */}
               <div className="flex items-center justify-between text-[11px] text-slate-400 pt-3 mt-2 border-t border-slate-800/60">
                 <div className="flex items-center gap-2">
-                  <span className="text-slate-400">Activity on {hoveredDate ? hoveredDate.date : 'Selected Day'}:</span>
+                  <span className="text-slate-400">Activity:</span>
                   <span className="font-semibold text-emerald-400">
                     {hoveredDate ? `${hoveredDate.count} problems solved on ${hoveredDate.date}` : 'Hover squares to view submissions (0 initial activity)'}
                   </span>
@@ -438,7 +431,7 @@ export function LeetCodePortal({
           </div>
         </div>
 
-        {/* Company Quick-Filter Pills & Dropdown */}
+        {/* Company Quick-Filter Pills */}
         <div className="space-y-2.5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
@@ -495,14 +488,14 @@ export function LeetCodePortal({
           </div>
         </div>
 
-        {/* Topic Categorization Shelf */}
+        {/* Topic Categorization Shelf - Instant Topic Switch without Empty Screen */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-amber-400" /> Data Structures & Algorithmic Topics
             </span>
             <span className="text-[11px] text-slate-400">
-              Filter by DSA concept
+              Select topic to view all matching questions
             </span>
           </div>
 
@@ -511,6 +504,10 @@ export function LeetCodePortal({
               <button
                 key={topic}
                 onClick={() => {
+                  if (topic !== 'All' && selectedCompany === 'Trilogy') {
+                    // Trilogy only has 6 questions. Switching topic automatically broadens to All companies
+                    setSelectedCompany('All');
+                  }
                   setSelectedTopic(topic);
                   setPage(1);
                 }}
@@ -528,7 +525,6 @@ export function LeetCodePortal({
 
         {/* Problem Table Filter Toolbar */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
-          {/* Search bar */}
           <div className="relative w-full md:w-80">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             <input
@@ -543,9 +539,7 @@ export function LeetCodePortal({
             />
           </div>
 
-          {/* Difficulty & Status Tabs */}
           <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto">
-            {/* Difficulty Tabs */}
             <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
               {['All', 'Easy', 'Medium', 'Hard'].map(d => (
                 <button
@@ -565,7 +559,6 @@ export function LeetCodePortal({
               ))}
             </div>
 
-            {/* Status Tabs */}
             <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
               {['All', 'Solved', 'Attempted', 'Todo'].map(s => (
                 <button
@@ -587,8 +580,13 @@ export function LeetCodePortal({
           </div>
         </div>
 
-        {/* LeetCode-Style Problems Table */}
+        {/* LeetCode-Style Problems Table - Stays Stable (No Layout Shifts) */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+          {/* Subtle loading line without table height jump */}
+          <div className="h-0.5 w-full bg-slate-800">
+            {isLoading && <div className="h-full bg-indigo-500 animate-pulse w-full" />}
+          </div>
+
           <div className="px-5 py-3 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
             <span>
               Showing <strong className="text-white">{filteredProblems.length}</strong> matching questions (Total: {totalProblems})
@@ -598,7 +596,7 @@ export function LeetCodePortal({
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-h-[400px]">
             <table className="w-full text-left text-xs text-slate-300">
               <thead className="bg-slate-950/60 text-slate-400 uppercase text-[10px] font-mono tracking-wider border-b border-slate-800">
                 <tr>
@@ -611,20 +609,13 @@ export function LeetCodePortal({
                   <th className="py-3 px-4 w-36 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-sans">
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={7} className="py-16 text-center text-slate-400 font-mono">
-                      <div className="inline-block w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mb-2" />
-                      <div>Loading LeetCode Question Bank...</div>
-                    </td>
-                  </tr>
-                ) : displayedProblems.length === 0 ? (
+              <tbody className={`divide-y divide-slate-800/60 font-sans transition-opacity duration-150 ${isLoading ? 'opacity-50' : 'opacity-100'}`}>
+                {displayedProblems.length === 0 && !isLoading ? (
                   <tr>
                     <td colSpan={7} className="py-16 text-center text-slate-400">
                       <BookOpen className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                      <div className="font-semibold text-slate-300">No problems found</div>
-                      <div className="text-xs text-slate-400 mt-1">Try clearing filters or changing company/topic</div>
+                      <div className="font-semibold text-slate-300">No problems found for selected filters</div>
+                      <div className="text-xs text-slate-400 mt-1">Try resetting company or topic filter</div>
                     </td>
                   </tr>
                 ) : (
@@ -640,7 +631,6 @@ export function LeetCodePortal({
 
                     return (
                       <tr key={prob.id} className="hover:bg-slate-800/40 transition group">
-                        {/* Status Checkbox */}
                         <td className="py-3 px-4 text-center">
                           <button
                             onClick={() => toggleStatus(prob.id)}
@@ -657,7 +647,6 @@ export function LeetCodePortal({
                           </button>
                         </td>
 
-                        {/* Title & Topics */}
                         <td className="py-3 px-4">
                           <div className="font-semibold text-slate-100 group-hover:text-indigo-300 transition flex items-center gap-2">
                             <span>{prob.title}</span>
@@ -678,7 +667,11 @@ export function LeetCodePortal({
                               {prob.topics.slice(0, 3).map((t, idx) => (
                                 <span
                                   key={idx}
-                                  onClick={() => setSelectedTopic(t)}
+                                  onClick={() => {
+                                    if (selectedCompany === 'Trilogy') setSelectedCompany('All');
+                                    setSelectedTopic(t);
+                                    setPage(1);
+                                  }}
                                   className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition cursor-pointer"
                                 >
                                   {t}
@@ -691,13 +684,15 @@ export function LeetCodePortal({
                           )}
                         </td>
 
-                        {/* Companies */}
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-1 flex-wrap max-w-[200px]">
                             {prob.companies && prob.companies.slice(0, 3).map((comp, i) => (
                               <span
                                 key={i}
-                                onClick={() => setSelectedCompany(comp)}
+                                onClick={() => {
+                                  setSelectedCompany(comp);
+                                  setPage(1);
+                                }}
                                 className={`text-[10px] px-1.5 py-0.5 rounded font-medium cursor-pointer transition ${
                                   comp.toLowerCase() === selectedCompany.toLowerCase()
                                     ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/30'
@@ -713,7 +708,6 @@ export function LeetCodePortal({
                           </div>
                         </td>
 
-                        {/* Frequency Heat Bar */}
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-2">
                             <div className="w-16 h-1.5 rounded-full bg-slate-800 overflow-hidden">
@@ -726,19 +720,16 @@ export function LeetCodePortal({
                           </div>
                         </td>
 
-                        {/* Acceptance Rate */}
                         <td className="py-3 px-4 font-mono text-slate-400 text-[11px]">
                           {prob.acceptanceRate ? `${prob.acceptanceRate}%` : '54.2%'}
                         </td>
 
-                        {/* Difficulty */}
                         <td className="py-3 px-4">
                           <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${diffColor}`}>
                             {prob.difficulty}
                           </span>
                         </td>
 
-                        {/* Action: Solve in Live IDE */}
                         <td className="py-3 px-4 text-right">
                           <button
                             type="button"
