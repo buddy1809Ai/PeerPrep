@@ -1,4 +1,4 @@
-# 👥 PeerPrep - Real-Time Collaborative Coding & Mock Interview Platform
+# 👥 PeerPrep — Real-Time Mock Interviews & Collaborative Technical Assessment Platform
 
 [![Node.js](https://img.shields.io/badge/Node.js-v20%2B-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express-4.x-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
@@ -8,64 +8,75 @@
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**PeerPrep** is a high-performance, real-time collaborative coding and mock interview platform designed for software engineering candidates. It replicates FAANG/tier-1 technical interview rounds with zero-latency dual-cursor synchronization, an embedded VS Code Monaco editor, remote multi-language code execution, curated algorithmic problem banks, and live peer feedback.
+**Developer:** Aman Gajbhiye  
+**Tech Stack:** React 19, Node.js, Express, WebSockets (Socket.io), Monaco Editor, Tailwind CSS, Native Multi-Language Sandboxing  
+
+**PeerPrep** is an engineering-grade, real-time collaborative coding and mock interview platform designed to replicate FAANG and tier-1 product company technical interview rounds (including **Trilogy Innovations**, Amazon, Google, Meta). It delivers sub-50ms dual-cursor synchronization, an embedded VS Code Monaco editor, an in-house isolated multi-language compiler sandbox, role-based evaluation rubrics (Candidate vs. Interviewer), and automated scorecard exports.
 
 ---
 
-## ⚡ Key Features
+## ⚡ Core Features
 
-- **🔄 Real-Time Bidirectional Code Sync:** Sub-50ms synchronized typing across peers utilizing room-scoped Socket.io WebSockets.
-- **💻 VS Code Monaco Editor:** Rich coding experience featuring syntax highlighting, intelligent auto-completion, line numbers, and theme customization (`vs-dark`).
-- **🚀 Multi-Language Remote Execution:** Isolated compilation and execution for **JavaScript (Node.js)**, **Python 3**, **Java**, and **C++** powered by the Piston Sandbox API.
-- **📚 Curated Algorithmic Problem Bank:** Integrated LeetCode-style problem descriptions, time/space constraints, and pre-populated function boilerplate.
-- **⏱️ Standardized 45-Minute Interview Timer:** Real-time interview countdown clock to simulate rigorous technical phone screens.
-- **📊 Synchronized Terminal & Test Runner:** Live console outputs, execution timing (ms), and visual celebration confetti triggers on accepted test cases.
-- **💬 Real-Time In-Room Chat & Presence:** Live participant roster and persistent in-room chat for technical discussion and feedback.
+- **🔄 Sub-50ms Real-Time Code Sync:** Live bidirectional code editing across peers powered by room-scoped Socket.io WebSockets.
+- **💻 Embedded VS Code Monaco Editor:** Syntax highlighting, smart bracket matching, customizable keybindings, and automatic layout for JavaScript, Python 3, Java, and C++.
+- **🔒 Isolated In-House Execution Engine:** Native sandboxed compiler execution using isolated ephemeral run containers with strict 7-second hard wall-clock timeout protection, memory limits, and automated filesystem reclamation.
+- **🏢 Curated Company Tracks (Trilogy Innovations & FAANG):** Pre-populated problem banks with official constraints, examples, and starter templates—featuring high-frequency **Trilogy Innovations** bit-manipulation and logic problems.
+- **📋 Structured Interviewer Rubric & Scorecards:** Comprehensive 4-tier rubric evaluation (Problem Formulation, Big-O Complexity, Code Cleanliness, and Communication) with instant composite scoring and one-click `.txt` report export.
+- **⏱️ Standardized 45-Minute Interview Timer:** Real-time interview countdown clock to simulate rigorous phone screens.
+- **📊 Real-Time Candidate Analytics:** Live tracking of code run attempts, compiler latency (ms), execution history, and session velocity.
+- **💬 Persistent In-Room Peer Chat:** Real-time text messaging alongside code editor with timestamps and participant rosters.
 
 ---
 
-## 🛠️ Architecture & Tech Stack
-
-### System Overview
+## 🏛️ System Architecture
 
 ```mermaid
 flowchart TD
-    subgraph Client ["Frontend (React 19 + Vite + Tailwind v4)"]
+    subgraph Client ["Client Layer (React 19 + Monaco Editor)"]
         UI["Collaborative Workspace UI"]
         Monaco["Monaco Code Editor"]
-        Timer["45-Min Interview Timer"]
-        Chat["In-Room Chat Panel"]
+        Timer["45-Min Interview Countdown"]
+        Rubric["Interviewer Evaluation Scorecard"]
+        Analytics["Candidate Speed & Run Analytics"]
         SocketClient["Socket.io Client"]
     end
 
-    subgraph Server ["Backend (Node.js + Express)"]
-        SocketServer["Socket.io WebSocket Engine"]
+    subgraph Server ["Server Engine (Node.js + Express)"]
+        SocketServer["Socket.io WebSocket Engine (Sub-50ms Sync)"]
         RoomManager["In-Memory Room State Manager"]
-        ProblemBank["DSA Problem Catalog"]
-        ExecProxy["Code Execution Service"]
+        ProblemCatalog["Company Problem Catalog (Trilogy / FAANG)"]
+        EvalStore["Evaluation & Scorecard Store (/api/evaluations)"]
+        ExecEngine["Native Execution Sandbox Manager"]
     end
 
-    subgraph ExecutionSandbox ["Remote Execution Engine"]
-        Piston["Piston Code Execution API\n(Python, Java, C++, JS)"]
+    subgraph Sandbox ["Isolated Process Isolation"]
+        TempRuns["Ephemeral Sandbox (/temp_runs/run_<id>)"]
+        Compilers["Native Compilers (g++, javac, python, node)"]
+        Timeout["Hard Wall-Clock Killswitch (7s)"]
     end
 
     UI --> Monaco
     Monaco <--> SocketClient
     SocketClient <==> |WebSockets (ws://)| SocketServer
     SocketServer <--> RoomManager
-    SocketServer --> ProblemBank
-    SocketClient --> |POST /api/execute| ExecProxy
-    ExecProxy <--> |Sandbox Request| Piston
+    SocketServer --> ProblemCatalog
+    UI --> |POST /api/evaluations| EvalStore
+    UI --> |POST /api/execute| ExecEngine
+    ExecEngine --> TempRuns
+    TempRuns --> Compilers
+    Compilers --> Timeout
 ```
 
-### WebSocket Event Protocol
+---
+
+## 📋 WebSocket Event Protocol
 
 | Event Name | Direction | Payload | Description |
 | :--- | :--- | :--- | :--- |
-| `join-room` | Client ➔ Server | `{ roomId, username }` | Joins or initializes a collaborative session |
+| `join-room` | Client ➔ Server | `{ roomId, username, role }` | Joins or initializes a collaborative session with RBAC |
 | `room-state` | Server ➔ Client | `{ code, language, problemId, users, messages }` | Synchronizes room state to newly connected peer |
 | `code-change` | Client ➔ Server | `{ roomId, code }` | Broadcasts buffer changes to room participants |
-| `code-update` | Server ➔ Client | `newCode` | Updates peer's editor model without echo |
+| `code-update` | Server ➔ Client | `newCode` | Updates peer's editor model without local echo |
 | `language-change` | Client ➔ Server | `{ roomId, language }` | Switches compiler language and injects template |
 | `problem-change` | Client ➔ Server | `{ roomId, problemId }` | Changes active problem across both screens |
 | `send-message` | Client ➔ Server | `{ roomId, message, username }` | Broadcasts peer chat message |
@@ -73,89 +84,41 @@ flowchart TD
 
 ---
 
-## 🚀 Quick Start Guide
+## 🏃 Run Instructions
 
-### Prerequisites
-- **Node.js:** v18.0.0 or higher
-- **npm:** v9.0.0 or higher
-
-### 1. Clone the Repository
+### 1. Single Command Full-Stack Production Mode
+Runs both the compiled React frontend and the Express WebSocket engine together on port 5000:
 ```bash
-git clone https://github.com/buddy1809Ai/PeerPrep.git
-cd PeerPrep
+cd server
+npm install
+node server.js
 ```
+Open **`http://localhost:5000`** in your browser.
 
-### 2. Setup and Start Backend Server
+### 2. Independent Development Mode
+Terminal 1 (Backend WebSocket Engine):
 ```bash
 cd server
 npm install
 npm start
 ```
-The server will boot on `http://localhost:5000`.
 
-### 3. Setup and Start Frontend Client
-In a new terminal window:
+Terminal 2 (Frontend with Vite Hot Reload):
 ```bash
 cd client
 npm install
 npm run dev
 ```
-The client will be running at `http://localhost:5173`.
-
-### 4. Experience Real-Time Collaboration
-1. Open `http://localhost:5173` in your browser.
-2. Enter room ID (e.g. `mock-interview-101`) and your name.
-3. Open a second browser tab (or Incognito window) at `http://localhost:5173` and join the same room.
-4. Type code in one window—watch it stream instantly to the other window!
-5. Hit **"Run Code"** to execute your solution and sync the terminal output across both screens.
+Open **`http://localhost:5173`** in your browser.
 
 ---
 
-## 📁 Repository Structure
-
-```
-PeerPrep/
-├── client/                     # Frontend Single Page Application
-│   ├── public/                 # Static assets & icons
-│   ├── src/
-│   │   ├── assets/             # Images and styles
-│   │   ├── App.css             # Monaco & utility styles
-│   │   ├── App.jsx             # Main collaborative application component
-│   │   ├── index.css           # Tailwind CSS v4 styling & dark theme
-│   │   └── main.jsx            # React root mount
-│   ├── index.html              # HTML entry template
-│   ├── package.json            # Frontend dependencies & scripts
-│   └── vite.config.js          # Vite configuration with Tailwind plugin
-│
-├── server/                     # Backend WebSocket & API Engine
-│   ├── server.js               # Express + Socket.io server & Piston proxy
-│   └── package.json            # Backend dependencies & scripts
-│
-├── .gitignore                  # Git ignore rules
-└── README.md                   # Project documentation
-```
-
----
-
-## 🔮 Roadmap
-
-- [ ] **WebRTC 1-on-1 Audio/Video Calling:** Built-in video and voice streams directly inside the interview room.
-- [ ] **AI Mock Interviewer Evaluation:** Automated code complexity (Big-O time/space) analysis and behavioral feedback.
-- [ ] **Custom Room Access Controls:** Password-protected rooms and spectator mode for interview observers.
-- [ ] **MongoDB Persistence:** User authentication, historical interview scorecards, and session replay.
-
----
-
-## 👨‍💻 Author
-
-**Aman Manoj Gajbhiye**
-- B.Tech in Artificial Intelligence & Data Science, YCCE Nagpur (CGPA: 9.03)
-- GitHub: [@buddy1809Ai](https://github.com/buddy1809Ai)
-- LinkedIn: [aman-gajbhiye-218887304](https://www.linkedin.com/in/aman-gajbhiye-218887304)
-- Email: [amangajbhiye2806@gmail.com](mailto:amangajbhiye2806@gmail.com)
+## 🛡️ Security & Sandbox Architecture
+1. **Isolated Execution Contexts:** Each execution compiles inside an ephemeral unique directory (`server/temp_runs/run_<random_id>`) with automated filesystem cleanup.
+2. **7-Second Hard Timeout:** Wall-clock process timeouts automatically kill runaway while loops and fork bombs.
+3. **RBAC & Interview Integrity:** Distinct Candidate and Interviewer roles preserve interview separation and structured rubric scoring.
 
 ---
 
 ## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License. Engineered by Aman Gajbhiye.
