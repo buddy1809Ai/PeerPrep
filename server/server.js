@@ -138,6 +138,14 @@ app.get('/api/company-directory', (req, res) => {
   });
 });
 
+// Single Problem Details API
+app.get('/api/problems/:id', (req, res) => {
+  const { id } = req.params;
+  const problem = getFullProblem(id, FULL_PROBLEMS);
+  if (!problem) return res.status(404).json({ error: 'Problem not found' });
+  res.json(problem);
+});
+
 // Structured Interviewer Evaluation Rubrics API
 app.post('/api/evaluations', (req, res) => {
   const {
@@ -257,6 +265,240 @@ function runLocalCode(language, code) {
     });
   });
 }
+
+
+
+function extractArgsFromInput(inputStr) {
+  if (!inputStr) return [];
+  const parts = [];
+  let current = '';
+  let depth = 0;
+  for (let i = 0; i < inputStr.length; i++) {
+    const char = inputStr[i];
+    if (char === '[' || char === '{' || char === '(') depth++;
+    else if (char === ']' || char === '}' || char === ')') depth--;
+    else if (char === ',' && depth === 0) {
+      parts.push(current.trim());
+      current = '';
+      continue;
+    }
+    current += char;
+  }
+  if (current.trim()) parts.push(current.trim());
+
+  return parts.map(part => {
+    const eqIdx = part.indexOf('=');
+    if (eqIdx !== -1) {
+      return part.slice(eqIdx + 1).trim();
+    }
+    return part.trim();
+  });
+}
+
+app.post('/api/judge', async (req, res) => {
+  const { problemId, language, code, mode = 'run', customInput } = req.body;
+  if (!code || !language) {
+    return res.status(400).json({ error: 'Code and language are required' });
+  }
+
+  const problem = getFullProblem(problemId, FULL_PROBLEMS);
+  if (!problem) {
+    return res.status(404).json({ error: 'Problem not found' });
+  }
+
+  try {
+    const tests = (problem.testCases && problem.testCases.length > 0)
+      ? problem.testCases
+      : (problem.examples || []).map((ex, i) => ({ id: i + 1, input: ex.input, expectedOutput: ex.output }));
+
+    // Prepare code with automated evaluation harness if applicable
+    let codeToExecute = code;
+    let hasHarness = false;
+
+    if (language === 'javascript') {
+      const fnMatch = code.match(/function\s+([a-zA-Z0-9_$]+)\s*\(/) || code.match(/(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=\s*(?:function|\()/);
+      if (fnMatch) {
+        const fnName = fnMatch[1];
+        const harnessCases = mode === 'run' ? tests.slice(0, 1) : tests;
+        const testInvocations = harnessCases.map((t, idx) => {
+          const args = extractArgsFromInput(t.input);
+          return `try {
+            const res_${idx} = ${fnName}(${args.join(', ')});
+            __harness_results.push({ id: ${t.id || idx + 1}, output: JSON.stringify(res_${idx}) });
+          } catch (e) {
+            __harness_results.push({ id: ${t.id || idx + 1}, error: e.message });
+          }`;
+        }).join('\n');
+
+        codeToExecute += `\n;(() => {
+          const __harness_results = [];
+          try {
+            if (typeof ${fnName} === 'function') {
+              ${testInvocations}
+              console.log('__PEERPREP_TEST_RESULTS__' + JSON.stringify(__harness_results));
+            }
+          } catch (err) {
+            console.log('__PEERPREP_TEST_ERROR__' + err.message);
+          }
+        })();\n`;
+        hasHarness = true;
+      }
+    } else if (language === 'python') {
+      const pyFnMatch = code.match(/def\s+([a-zA-Z0-9_]+)\s*\(/);
+      if (pyFnMatch) {
+        const pyFnName = pyFnMatch[1];
+        const harnessCases = mode === 'run' ? tests.slice(0, 1) : tests;
+        const testInvocations = harnessCases.map((t, idx) => {
+          const args = extractArgsFromInput(t.input);
+          return `        try:
+            res_${idx} = ${pyFnName}(${args.join(', ')})
+            __harness_results.append({'id': ${t.id || idx + 1}, 'output': json.dumps(res_${idx})})
+        except Exception as e:
+            __harness_results.append({'id': ${t.id || idx + 1}, 'error': str(e)})`;
+        }).join('\n');
+
+        codeToExecute += `\nimport json
+try:
+    if '${pyFnName}' in globals() and callable(globals()['${pyFnName}']):
+        __harness_results = []
+${testInvocations}
+        print('__PEERPREP_TEST_RESULTS__' + json.dumps(__harness_results))
+except Exception as e:
+    print('__PEERPREP_TEST_ERROR__' + str(e))\n`;
+        hasHarness = true;
+      }
+    }
+
+    const rawResult = await runLocalCode(language, codeToExecute);
+    const { output, isError, executionTimeMs } = rawResult;
+
+    // Separate user output from internal harness output
+    let userOutput = output;
+    let harnessResults = null;
+
+    if (output.includes('__PEERPREP_TEST_RESULTS__')) {
+      const parts = output.split('__PEERPREP_TEST_RESULTS__');
+      userOutput = parts[0].trim();
+      try {
+        harnessResults = JSON.parse(parts[1].trim().split('\n')[0]);
+      } catch (_) {}
+    }
+
+    // Timeout check
+    if (output && output.includes('Execution Timed Out')) {
+      return res.json({
+        success: false,
+        mode,
+        verdict: 'Time Limit Exceeded',
+        executionTimeMs,
+        passedTests: 0,
+        totalTests: tests.length,
+        testResults: tests.map(t => ({ id: t.id, status: 'Failed', input: t.input, expected: t.expectedOutput, actual: 'Time Limit Exceeded (7.0s)' })),
+        rawOutput: output,
+        error: output
+      });
+    }
+
+    // Compilation Error check
+    if (isError && (output.includes('SyntaxError') || output.includes('cannot find symbol') || output.includes('error:') || output.includes('IndentationError'))) {
+      return res.json({
+        success: false,
+        mode,
+        verdict: 'Compilation Error',
+        executionTimeMs,
+        passedTests: 0,
+        totalTests: tests.length,
+        testResults: tests.map(t => ({ id: t.id, status: 'Failed', input: t.input, expected: t.expectedOutput, actual: output.slice(0, 300) })),
+        rawOutput: output,
+        error: output
+      });
+    }
+
+    // Runtime Error check
+    if (isError) {
+      return res.json({
+        success: false,
+        mode,
+        verdict: 'Runtime Error',
+        executionTimeMs,
+        passedTests: 0,
+        totalTests: tests.length,
+        testResults: tests.map(t => ({ id: t.id, status: 'Failed', input: t.input, expected: t.expectedOutput, actual: output.slice(0, 300) })),
+        rawOutput: output,
+        error: output
+      });
+    }
+
+    // Evaluate test results
+    const testResults = [];
+    let allPassed = true;
+
+    for (let i = 0; i < tests.length; i++) {
+      const t = tests[i];
+      const cleanExpected = (t.expectedOutput || '').trim();
+      let casePassed = false;
+      let actualVal = '';
+
+      if (harnessResults) {
+        const hRes = harnessResults.find(r => r.id === (t.id || i + 1));
+        if (hRes) {
+          if (hRes.error) {
+            actualVal = 'Runtime Error: ' + hRes.error;
+            casePassed = false;
+          } else {
+            actualVal = hRes.output !== undefined ? String(hRes.output) : '';
+            const cleanActual = actualVal.replace(/\s+/g, '');
+            const cleanExp = cleanExpected.replace(/\s+/g, '');
+            casePassed = cleanActual === cleanExp;
+          }
+        }
+      }
+
+      if (!harnessResults || actualVal === '') {
+        const hasExpectedInOutput = output.includes(cleanExpected) || 
+          (cleanExpected.startsWith('[') && cleanExpected.endsWith(']') && output.replace(/\s+/g, '').includes(cleanExpected.replace(/\s+/g, ''))) ||
+          (cleanExpected.startsWith('"') && cleanExpected.endsWith('"') && output.includes(cleanExpected.replace(/"/g, '')));
+        casePassed = hasExpectedInOutput && !output.toLowerCase().includes('error');
+        actualVal = casePassed ? t.expectedOutput : (userOutput.slice(0, 300) || 'Output did not match expected');
+      }
+
+      if (!casePassed) allPassed = false;
+
+      testResults.push({
+        id: t.id || i + 1,
+        status: casePassed ? 'Passed' : 'Failed',
+        input: t.input,
+        expected: t.expectedOutput,
+        actual: actualVal
+      });
+    }
+
+    const passedCount = testResults.filter(r => r.status === 'Passed').length;
+    let verdict = 'Wrong Answer';
+    if (mode === 'run') {
+      verdict = (passedCount > 0 || !isError) ? 'Accepted' : 'Wrong Answer';
+    } else {
+      verdict = allPassed ? 'Accepted' : 'Wrong Answer';
+    }
+
+    return res.json({
+      success: true,
+      mode,
+      verdict,
+      executionTimeMs,
+      passedCount,
+      passedTests: passedCount,
+      totalCount: testResults.length,
+      totalTests: testResults.length,
+      testResults,
+      rawOutput: userOutput || output,
+      error: null
+    });
+  } catch (err) {
+    console.error('Judge evaluation error:', err.message);
+    res.status(500).json({ error: 'Judge execution failed', details: err.message });
+  }
+});
 
 app.post('/api/execute', async (req, res) => {
   const { language, code } = req.body;

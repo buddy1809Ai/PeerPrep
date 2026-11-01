@@ -1,110 +1,108 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Editor from '@monaco-editor/react';
 import { io } from 'socket.io-client';
 import confetti from 'canvas-confetti';
 import { LeetCodePortal } from './LeetCodePortal';
+import { MarkdownRenderer } from './components/MarkdownRenderer';
 import { getFullProblem, PROBLEMS, generateProblemDetails } from './problemUtils';
-import { 
-  Play, 
-  RotateCcw, 
-  Copy, 
-  Check, 
-  Users, 
-  Clock, 
-  MessageSquare, 
-  Terminal, 
-  Sparkles, 
-  BookOpen, 
+import {
+  Play,
+  Send,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  RotateCcw,
+  Maximize2,
+  Minimize2,
+  Save,
+  ExternalLink,
   ChevronRight,
   ChevronLeft,
+  BookOpen,
+  Building,
+  Sparkles,
+  Crown,
+  Award,
+  Terminal,
+  MessageSquare,
+  BarChart2,
   Code2,
   LogOut,
-  Award,
-  BarChart2,
-  Building,
-  UserCheck,
+  Clock,
   Lightbulb,
   Eye,
-  Crown,
-  Zap,
-  Download,
-  X,
-  CreditCard,
-  QrCode,
-  Search,
-  ExternalLink,
-  Layers,
-  Flame
+  Check,
+  Copy,
+  Plus,
+  ChevronDown,
+  ChevronUp,
+  Users,
+  Flame,
+  Zap
 } from 'lucide-react';
 
-const isLocalhost = typeof window !== 'undefined' && 
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_URL || 
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000'
+    : 'https://server-rho-nine-82.vercel.app');
 
-const API_BASE_URL = isLocalhost
-  ? (window.location.port === '5173' ? 'http://localhost:5000' : window.location.origin)
-  : (import.meta.env.VITE_API_URL || 'https://server-rho-nine-82.vercel.app');
-
-const SOCKET_SERVER_URL = isLocalhost
-  ? (window.location.port === '5173' ? 'http://localhost:5000' : window.location.origin)
-  : (import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || 'https://server-rho-nine-82.vercel.app');
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000'
+    : 'https://server-rho-nine-82.vercel.app');
 
 export default function App() {
-  // Room & User State
+  // Navigation & View Mode
+  const [mainView, setMainView] = useState('leetcode'); // 'leetcode' | 'room'
   const [inRoom, setInRoom] = useState(false);
-  const [mainView, setMainView] = useState('lobby'); // 'lobby' | 'leetcode' | 'room'
-  const [roomId, setRoomId] = useState('trilogy-sde-round1');
+  const [roomId, setRoomId] = useState('interview-101');
   const [username, setUsername] = useState('Aman Gajbhiye');
-  const [role, setRole] = useState('candidate'); // 'candidate' | 'interviewer'
-  const [users, setUsers] = useState([]);
+  const [role, setRole] = useState('candidate');
   const [copied, setCopied] = useState(false);
 
-  // Pro Subscription State
-  const [isPro, setIsPro] = useState(false);
-  const [isPricingOpen, setIsPricingOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('₹29 Company Drive Pass');
-  const [upiId, setUpiId] = useState('aman@okaxis');
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-
-  // Company Catalog Modal State (3,392 LeetCode Questions Across 470 Companies)
-  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-  const [catalogCompany, setCatalogCompany] = useState('Trilogy');
-  const [catalogSearch, setCatalogSearch] = useState('');
-  const [catalogDifficulty, setCatalogDifficulty] = useState('All');
-  const [catalogProblems, setCatalogProblems] = useState([]);
-  const [catalogTotal, setCatalogTotal] = useState(0);
-  const [isCatalogLoading, setIsCatalogLoading] = useState(false);
-
-  // Filter & Problems State
+  // Workspace Problem State
+  const [problems, setProblems] = useState(PROBLEMS);
+  const [currentProblem, setCurrentProblem] = useState(PROBLEMS[0]);
+  const [problemId, setProblemId] = useState(PROBLEMS[0].id);
   const [selectedCompany, setSelectedCompany] = useState('Trilogy Innovations');
-  const [problemId, setProblemId] = useState('bitwise-xor-of-all-pairings');
-  const [problems, setProblems] = useState([]);
-  const [currentProblem, setCurrentProblem] = useState(null);
-
-  // Hints & Solution View State
   const [revealedHints, setRevealedHints] = useState({});
   const [showSolutionModal, setShowSolutionModal] = useState(false);
 
-  // Editor & Language State
-  const [code, setCode] = useState('');
+  // Editor State
   const [language, setLanguage] = useState('javascript');
+  const [code, setCode] = useState(PROBLEMS[0].starterCode.javascript);
+  const [users, setUsers] = useState([]);
+  const [autosaveNotice, setAutosaveNotice] = useState('Autosaved');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Execution & Terminal State
+  // Pricing & Pro Pass
+  const [isPricingOpen, setIsPricingOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState('Single Mock Pass (₹29)');
+  const [isPro, setIsPro] = useState(false);
+
+  // Online Judge & Test Execution State
   const [output, setOutput] = useState('');
   const [isError, setIsError] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [executionTime, setExecutionTime] = useState(null);
-  const [activeTab, setActiveTab] = useState('terminal'); // 'terminal' | 'chat' | 'analytics'
   const [runCount, setRunCount] = useState(0);
+  const [judgeVerdict, setJudgeVerdict] = useState(null); // 'Accepted' | 'Wrong Answer' | 'Compilation Error' | 'Runtime Error' | 'Time Limit Exceeded' | null
+  const [testResults, setTestResults] = useState([]);
+  const [selectedTestCaseIdx, setSelectedTestCaseIdx] = useState(0);
+  const [customInput, setCustomInput] = useState('');
+  const [bottomTab, setBottomTab] = useState('testcases'); // 'testcases' | 'results' | 'terminal' | 'chat' | 'editorial'
+  const [isConsoleExpanded, setIsConsoleExpanded] = useState(true);
 
-  // Chat State
+  // Live Chat State
   const [messages, setMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
 
-  // Interview Timer State (45 Minutes)
+  // 45-Minute Interview Timer State
   const [timeLeft, setTimeLeft] = useState(45 * 60);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
-  // Evaluation Rubric Modal State
+  // Rubric Scorecard State
   const [isScorecardOpen, setIsScorecardOpen] = useState(false);
   const [rubricScores, setRubricScores] = useState({
     approach: 5,
@@ -113,7 +111,7 @@ export default function App() {
     communication: 4
   });
   const [recommendation, setRecommendation] = useState('Strong Hire');
-  const [interviewerNotes, setInterviewerNotes] = useState('Demonstrated deep mastery of bitwise properties and mathematical edge cases. Articulated O(N+M) time complexity clearly and handled parity cancellations gracefully.');
+  const [interviewerNotes, setInterviewerNotes] = useState('Demonstrated clear algorithmic reasoning and optimal time complexity.');
   const [scorecardSubmitted, setScorecardSubmitted] = useState(false);
 
   const socketRef = useRef(null);
@@ -125,13 +123,13 @@ export default function App() {
   const allCatalogRef = useRef([]);
   const [remoteCursor, setRemoteCursor] = useState(null);
 
-  // Check saved Pro status
+  // Load Pro Status
   useEffect(() => {
     const savedPro = localStorage.getItem('peerprep_pro_member');
     if (savedPro === 'true') setIsPro(true);
   }, []);
 
-  // Primary Problem Selection Handler (Universal across all 3,392 questions)
+  // Universal Problem Selector with Draft Restoration
   const selectProblem = (probOrSlug, broadcast = true) => {
     const resolved = getFullProblem(probOrSlug, allCatalogRef.current);
     if (!resolved) return;
@@ -140,9 +138,27 @@ export default function App() {
     setProblemId(resolved.id);
     setRevealedHints({});
     setShowSolutionModal(false);
+    setJudgeVerdict(null);
+    setTestResults([]);
+    setSelectedTestCaseIdx(0);
 
-    const starter = (resolved.starterCode && resolved.starterCode[language]) || 
-      (resolved.starterCode && resolved.starterCode['javascript']) || '';
+    // Check for saved local draft for this problem + language
+    const draftKey = `peerprep_draft_${resolved.id}_${language}`;
+    let starter = '';
+    try {
+      const savedDraft = localStorage.getItem(draftKey);
+      if (savedDraft && savedDraft.trim().length > 0) {
+        starter = savedDraft;
+        setAutosaveNotice('Draft Restored');
+      }
+    } catch (_) {}
+
+    if (!starter) {
+      starter = (resolved.starterCode && resolved.starterCode[language]) || 
+        (resolved.starterCode && resolved.starterCode['javascript']) || '';
+      setAutosaveNotice('Default Template');
+    }
+
     setCode(starter);
     if (editorRef.current) {
       editorRef.current.setValue(starter);
@@ -159,7 +175,7 @@ export default function App() {
     }
   };
 
-  // Load All 3,392 LeetCode Questions and handle URL query param (?problem=slug)
+  // Load All 3,392 LeetCode Questions from public dataset
   useEffect(() => {
     fetch('/problems.json')
       .then(res => res.json())
@@ -190,7 +206,7 @@ export default function App() {
       });
   }, []);
 
-  // Browser Back/Forward navigation listener
+  // Popstate listener for Browser Back & Forward navigation
   useEffect(() => {
     const handlePopState = () => {
       const pSlug = new URLSearchParams(window.location.search).get('problem');
@@ -204,75 +220,42 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [language]);
 
-  // Fetch from 470-Company Directory API
-  const fetchCatalogProblems = (company = catalogCompany, search = catalogSearch, diff = catalogDifficulty) => {
-    setIsCatalogLoading(true);
-    const params = new URLSearchParams({
-      company: company === 'All' ? '' : company,
-      search,
-      difficulty: diff === 'All' ? '' : diff,
-      limit: '80'
-    });
-
-    fetch(`${SOCKET_SERVER_URL}/api/company-directory?${params}`)
-      .then(res => res.json())
-      .then(data => {
-        setCatalogProblems(data.problems || []);
-        setCatalogTotal(data.totalMatching || 0);
-        setIsCatalogLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to load catalog:', err);
-        setIsCatalogLoading(false);
-      });
-  };
-
+  // Keyboard Shortcuts: Ctrl+Enter (Run) & Ctrl+Shift+Enter (Submit)
   useEffect(() => {
-    if (isCatalogOpen) {
-      fetchCatalogProblems(catalogCompany, catalogSearch, catalogDifficulty);
-    }
-  }, [isCatalogOpen, catalogCompany, catalogDifficulty]);
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'Enter') {
+        e.preventDefault();
+        handleRunCode();
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Enter') {
+        e.preventDefault();
+        handleSubmitCode();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [code, language, currentProblem, isRunning, isSubmitting]);
 
-  // Timer Countdown Effect
-  useEffect(() => {
-    let timer = null;
-    if (isTimerRunning && timeLeft > 0) {
-      timer = setInterval(() => setTimeLeft(prev => Math.max(0, prev - 1)), 1000);
-    } else if (timeLeft === 0) {
-      setIsTimerRunning(false);
-    }
-    return () => clearInterval(timer);
-  }, [isTimerRunning, timeLeft]);
-
-  const toggleTimer = () => {
-    const next = !isTimerRunning;
-    setIsTimerRunning(next);
-    if (socketRef.current) {
-      socketRef.current.emit('timer-toggle', { roomId, running: next });
-    }
-  };
-
-  const resetTimer = () => {
-    setTimeLeft(45 * 60);
-    setIsTimerRunning(false);
-    if (socketRef.current) {
-      socketRef.current.emit('timer-reset', { roomId, seconds: 45 * 60 });
-    }
-  };
-
-  // Socket Connection Management
+  // Real-Time Socket.io Connection & Room Synchronization
   useEffect(() => {
     if (!inRoom) return;
 
-    const socket = io(SOCKET_SERVER_URL);
+    const socket = io(SOCKET_SERVER_URL, {
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5,
+      timeout: 10000
+    });
     socketRef.current = socket;
 
-    socket.emit('join-room', { roomId, username, role });
+    socket.emit('join-room', { roomId, username, role, problemId });
 
     socket.on('room-state', (state) => {
-      if (state.code) setCode(state.code);
       if (state.language) setLanguage(state.language);
-      if (state.problemId) setProblemId(state.problemId);
+      if (state.problemId && state.problemId !== problemId) {
+        setProblemId(state.problemId);
+        const p = getFullProblem(state.problemId, allCatalogRef.current);
+        if (p) setCurrentProblem(p);
+      }
+      if (state.code) setCode(state.code);
       if (state.users) setUsers(state.users);
       if (state.messages) setMessages(state.messages);
       if (state.timerSeconds !== undefined) {
@@ -377,11 +360,6 @@ export default function App() {
       setExecutionTime(executionTimeMs);
       setIsRunning(false);
       setRunCount(prev => prev + 1);
-      setActiveTab('terminal');
-
-      if (!err && (out.toLowerCase().includes('expected: 13') || out.includes('Passed') || out.includes('[0, 1]'))) {
-        confetti({ particleCount: 75, spread: 60, origin: { y: 0.7 } });
-      }
     });
 
     return () => {
@@ -391,19 +369,28 @@ export default function App() {
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, activeTab]);
+  }, [messages, bottomTab]);
 
   const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
 
+    // Verify initial code matches current problem
+    if (currentProblem && currentProblem.starterCode) {
+      const draftKey = `peerprep_draft_${currentProblem.id}_${language}`;
+      const saved = localStorage.getItem(draftKey);
+      const initialCode = (saved && saved.trim().length > 0) 
+        ? saved 
+        : (currentProblem.starterCode[language] || currentProblem.starterCode['javascript']);
+      if (initialCode && editor.getValue() !== initialCode) {
+        editor.setValue(initialCode);
+      }
+    }
+
     editor.onDidChangeModelContent(() => {
       if (isRemoteUpdateRef.current) return;
       const newVal = editor.getValue();
-      setCode(newVal);
-      if (socketRef.current) {
-        socketRef.current.emit('code-change', { roomId, code: newVal });
-      }
+      handleEditorChange(newVal);
     });
 
     editor.onDidChangeCursorPosition((e) => {
@@ -423,6 +410,14 @@ export default function App() {
 
   const handleEditorChange = (newVal) => {
     setCode(newVal);
+    setAutosaveNotice('Saving...');
+    if (currentProblem && currentProblem.id) {
+      const draftKey = `peerprep_draft_${currentProblem.id}_${language}`;
+      try {
+        localStorage.setItem(draftKey, newVal);
+        setAutosaveNotice('Autosaved');
+      } catch (_) {}
+    }
     if (socketRef.current) {
       socketRef.current.emit('code-change', { roomId, code: newVal });
     }
@@ -430,11 +425,26 @@ export default function App() {
 
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
-    if (currentProblem && currentProblem.starterCode) {
-      const newTemplate = currentProblem.starterCode[newLang] || currentProblem.starterCode['javascript'] || '';
-      setCode(newTemplate);
+    if (currentProblem) {
+      const draftKey = `peerprep_draft_${currentProblem.id}_${newLang}`;
+      let targetCode = '';
+      try {
+        const savedDraft = localStorage.getItem(draftKey);
+        if (savedDraft && savedDraft.trim().length > 0) {
+          targetCode = savedDraft;
+          setAutosaveNotice('Draft Restored');
+        }
+      } catch (_) {}
+
+      if (!targetCode) {
+        targetCode = (currentProblem.starterCode && currentProblem.starterCode[newLang]) || 
+          (currentProblem.starterCode && currentProblem.starterCode['javascript']) || '';
+        setAutosaveNotice('Default Template');
+      }
+
+      setCode(targetCode);
       if (editorRef.current) {
-        editorRef.current.setValue(newTemplate);
+        editorRef.current.setValue(targetCode);
       }
     }
     if (socketRef.current) {
@@ -442,92 +452,197 @@ export default function App() {
     }
   };
 
+  const handleResetCode = () => {
+    if (!currentProblem) return;
+    const defaultStarter = (currentProblem.starterCode && currentProblem.starterCode[language]) ||
+      (currentProblem.starterCode && currentProblem.starterCode['javascript']) || '';
+    const draftKey = `peerprep_draft_${currentProblem.id}_${language}`;
+    try {
+      localStorage.removeItem(draftKey);
+    } catch (_) {}
+    setCode(defaultStarter);
+    if (editorRef.current) {
+      editorRef.current.setValue(defaultStarter);
+    }
+    setAutosaveNotice('Reset to Default');
+  };
+
   const handleProblemChange = (newProbId) => {
     selectProblem(newProbId);
   };
 
   const handlePrevProblem = () => {
-    const list = filteredProblems && filteredProblems.length > 0 
-      ? filteredProblems 
-      : (allCatalogRef.current.length > 0 ? allCatalogRef.current : problems);
-    if (!list || list.length === 0) return;
-    const currIdx = list.findIndex(p => p.id === problemId || p.slug === problemId);
-    const prevIdx = currIdx > 0 ? currIdx - 1 : list.length - 1;
-    selectProblem(list[prevIdx]);
+    const list = filteredProblems && filteredProblems.length > 0 ? filteredProblems : problems;
+    const idx = list.findIndex(p => p.id === currentProblem?.id || p.slug === currentProblem?.slug);
+    if (idx > 0) {
+      selectProblem(list[idx - 1]);
+    } else if (list.length > 0) {
+      selectProblem(list[list.length - 1]);
+    }
   };
 
   const handleNextProblem = () => {
-    const list = filteredProblems && filteredProblems.length > 0 
-      ? filteredProblems 
-      : (allCatalogRef.current.length > 0 ? allCatalogRef.current : problems);
-    if (!list || list.length === 0) return;
-    const currIdx = list.findIndex(p => p.id === problemId || p.slug === problemId);
-    const nextIdx = currIdx >= 0 && currIdx < list.length - 1 ? currIdx + 1 : 0;
-    selectProblem(list[nextIdx]);
+    const list = filteredProblems && filteredProblems.length > 0 ? filteredProblems : problems;
+    const idx = list.findIndex(p => p.id === currentProblem?.id || p.slug === currentProblem?.slug);
+    if (idx >= 0 && idx < list.length - 1) {
+      selectProblem(list[idx + 1]);
+    } else if (list.length > 0) {
+      selectProblem(list[0]);
+    }
   };
 
-  // Launch problem from full LeetCode portal into live Monaco room
-  const handleSolveFromLeetCode = (prob) => {
-    selectProblem(prob);
+  const handleSolveFromLeetCode = (problem) => {
+    selectProblem(problem);
     setInRoom(true);
     setMainView('room');
-    confetti({ particleCount: 60, spread: 60 });
+  };
+
+  const toggleTimer = () => {
+    const nextState = !isTimerRunning;
+    setIsTimerRunning(nextState);
+    if (socketRef.current) {
+      socketRef.current.emit('timer-toggle', { roomId, timerRunning: nextState, timerSeconds: timeLeft });
+    }
+  };
+
+  const resetTimer = () => {
+    const initialSeconds = 45 * 60;
+    setTimeLeft(initialSeconds);
+    setIsTimerRunning(false);
+    if (socketRef.current) {
+      socketRef.current.emit('timer-reset', { roomId, timerSeconds: initialSeconds });
+    }
   };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
+    const newMsg = {
+      id: Date.now().toString(),
+      username,
+      role,
+      text: chatInput.trim(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages(prev => [...prev, newMsg]);
     if (socketRef.current) {
-      socketRef.current.emit('send-message', {
-        roomId,
-        message: chatInput.trim(),
-        username
-      });
-      setChatInput('');
+      socketRef.current.emit('send-message', { roomId, message: newMsg });
     }
+    setChatInput('');
   };
 
+  // RUN: Executes visible sample test cases without confetti or marking solved
   const handleRunCode = async () => {
+    if (!currentProblem || isRunning || isSubmitting) return;
     setIsRunning(true);
-    setOutput('Running test suite & executing code inside isolated sandbox...');
-    setActiveTab('terminal');
+    setBottomTab('results');
+    setIsConsoleExpanded(true);
 
     try {
-      const res = await fetch(`${SOCKET_SERVER_URL}/api/execute`, {
+      const res = await fetch(`${API_BASE_URL}/api/judge`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ language, code })
+        body: JSON.stringify({
+          problemId: currentProblem.id,
+          language,
+          code,
+          mode: 'run',
+          customInput: selectedTestCaseIdx === -1 ? customInput : null
+        })
       });
-      const data = await res.json();
 
+      const data = await res.json();
       if (res.ok) {
-        setOutput(data.output);
-        setIsError(data.isError);
+        setOutput(data.rawOutput || '');
+        setIsError(data.verdict !== 'Accepted');
         setExecutionTime(data.executionTimeMs);
+        setTestResults(data.testResults || []);
+        setJudgeVerdict(data.verdict || 'Finished');
         setRunCount(prev => prev + 1);
 
         if (socketRef.current) {
           socketRef.current.emit('code-executed', {
             roomId,
-            output: data.output,
-            isError: data.isError,
+            output: data.rawOutput,
+            isError: data.verdict !== 'Accepted',
             executionTimeMs: data.executionTimeMs
           });
-        }
-
-        if (!data.isError) {
-          confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
         }
       } else {
         setOutput(data.error || 'Execution failed.');
         setIsError(true);
+        setJudgeVerdict('Execution Error');
       }
     } catch (err) {
       setOutput('Failed to reach code execution engine: ' + err.message);
       setIsError(true);
+      setJudgeVerdict('Connection Error');
     } finally {
       setIsRunning(false);
+    }
+  };
+
+  // SUBMIT: Official Evaluation - Confetti & Solved status update ONLY on Accepted
+  const handleSubmitCode = async () => {
+    if (!currentProblem || isRunning || isSubmitting) return;
+    setIsSubmitting(true);
+    setBottomTab('results');
+    setIsConsoleExpanded(true);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/judge`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          problemId: currentProblem.id,
+          language,
+          code,
+          mode: 'submit'
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setOutput(data.rawOutput || '');
+        setIsError(data.verdict !== 'Accepted');
+        setExecutionTime(data.executionTimeMs);
+        setTestResults(data.testResults || []);
+        setJudgeVerdict(data.verdict);
+
+        // ONLY trigger celebratory confetti on genuinely Accepted submission!
+        if (data.verdict === 'Accepted') {
+          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+
+          // Update user solved status in localStorage
+          try {
+            const stored = localStorage.getItem('peerprep_user_solved_status');
+            const statusMap = stored ? JSON.parse(stored) : {};
+            statusMap[currentProblem.id] = 'solved';
+            localStorage.setItem('peerprep_user_solved_status', JSON.stringify(statusMap));
+
+            // Update solved events for contribution heatmap
+            const storedEv = localStorage.getItem('peerprep_user_solved_events');
+            let events = storedEv ? JSON.parse(storedEv) : [];
+            const today = new Date().toISOString().split('T')[0];
+            if (!events.some(e => e.problemId === currentProblem.id && e.date === today)) {
+              events.push({ problemId: currentProblem.id, date: today, timestamp: Date.now() });
+              localStorage.setItem('peerprep_user_solved_events', JSON.stringify(events));
+            }
+          } catch (_) {}
+        }
+      } else {
+        setOutput(data.error || 'Submission failed.');
+        setIsError(true);
+        setJudgeVerdict('Submission Failed');
+      }
+    } catch (err) {
+      setOutput('Failed to reach judge engine: ' + err.message);
+      setIsError(true);
+      setJudgeVerdict('Connection Error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -548,20 +663,18 @@ export default function App() {
   };
 
   const copySolutionToEditor = () => {
-    if (currentProblem?.solution?.code) {
-      setCode(currentProblem.solution.code);
-      if (socketRef.current) {
-        socketRef.current.emit('code-change', { roomId, code: currentProblem.solution.code });
+    if (currentProblem && currentProblem.solution) {
+      const solCode = currentProblem.solution.code;
+      setCode(solCode);
+      if (editorRef.current) {
+        editorRef.current.setValue(solCode);
       }
       setShowSolutionModal(false);
-      confetti({ particleCount: 50, spread: 50 });
     }
   };
 
   const handleSimulatePayment = () => {
-    setIsProcessingPayment(true);
     setTimeout(() => {
-      setIsProcessingPayment(false);
       setIsPro(true);
       localStorage.setItem('peerprep_pro_member', 'true');
       setIsPricingOpen(false);
@@ -569,9 +682,20 @@ export default function App() {
     }, 1200);
   };
 
-  const submitScorecard = async () => {
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen().catch(() => {});
+      setIsFullscreen(false);
+    }
+  };
+
+  const handleScorecardSubmit = async (e) => {
+    e.preventDefault();
     try {
-      await fetch(`${SOCKET_SERVER_URL}/api/evaluations`, {
+      await fetch(`${API_BASE_URL}/api/evaluations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -594,9 +718,9 @@ export default function App() {
   };
 
   const exportScorecardText = () => {
-    const total = rubricScores.approach + rubricScores.complexity + rubricScores.cleanliness + rubricScores.communication;
+    const total = Object.values(rubricScores).reduce((a, b) => a + b, 0);
     const report = `=====================================================
-PEERPREP OFFICIAL CANDIDATE EVALUATION REPORT
+PEERPREP TECHNICAL INTERVIEW EVALUATION SCORECARD
 =====================================================
 Room ID: ${roomId}
 Timestamp: ${new Date().toLocaleString()}
@@ -626,7 +750,7 @@ ${interviewerNotes}
     a.click();
   };
 
-  const filteredProblems = React.useMemo(() => {
+  const filteredProblems = useMemo(() => {
     const source = allCatalogRef.current.length > 0 ? allCatalogRef.current : problems;
     if (selectedCompany === 'All Companies' || selectedCompany === 'All') {
       return source.slice(0, 300);
@@ -647,7 +771,6 @@ ${interviewerNotes}
     });
     return matches.length > 0 ? matches : source.slice(0, 100);
   }, [problems, selectedCompany]);
-
 
   // Full LeetCode Company Directory & Heatmap View
   if (mainView === 'leetcode') {
@@ -691,7 +814,7 @@ ${interviewerNotes}
 
             <button
               onClick={() => setIsPricingOpen(true)}
-              className="text-[11px] font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full flex items-center gap-1 hover:bg-amber-500/20 transition"
+              className="text-[11px] font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full flex items-center gap-1 hover:bg-amber-500/20 transition cursor-pointer"
             >
               <Crown className="w-3.5 h-3.5" /> Pass ₹29
             </button>
@@ -710,7 +833,6 @@ ${interviewerNotes}
               Explore Question Bank →
             </button>
           </div>
-
           
           <button
             type="button"
@@ -754,407 +876,57 @@ ${interviewerNotes}
                 required
                 value={roomId}
                 onChange={e => setRoomId(e.target.value)}
-                placeholder="e.g. trilogy-sde-round1"
+                placeholder="e.g. trilogy-mock-01"
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 font-mono"
               />
             </div>
 
-            {/* Role Selection */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                Select Your Role (RBAC)
+                Select Your Role
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setRole('candidate')}
-                  className={`p-2.5 rounded-lg border text-left transition flex items-center gap-2 ${
+                  className={`py-2.5 px-3 rounded-lg border text-xs font-semibold transition cursor-pointer ${
                     role === 'candidate'
-                      ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-sm'
-                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                      ? 'bg-indigo-600/30 border-indigo-500 text-indigo-300'
+                      : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:bg-slate-900'
                   }`}
                 >
-                  <Code2 className="w-4 h-4 text-indigo-400" />
-                  <div>
-                    <div className="text-xs font-bold">Candidate</div>
-                    <div className="text-[10px] text-slate-400">Solve & test code</div>
-                  </div>
+                  Candidate
                 </button>
-
                 <button
                   type="button"
                   onClick={() => setRole('interviewer')}
-                  className={`p-2.5 rounded-lg border text-left transition flex items-center gap-2 ${
+                  className={`py-2.5 px-3 rounded-lg border text-xs font-semibold transition cursor-pointer ${
                     role === 'interviewer'
-                      ? 'bg-amber-500/20 border-amber-500 text-white shadow-sm'
-                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                      ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+                      : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:bg-slate-900'
                   }`}
                 >
-                  <UserCheck className="w-4 h-4 text-amber-400" />
-                  <div>
-                    <div className="text-xs font-bold">Interviewer</div>
-                    <div className="text-[10px] text-slate-400">Score rubric & evaluate</div>
-                  </div>
+                  Interviewer
                 </button>
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full mt-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-medium py-3 rounded-lg text-sm shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-lg shadow-lg shadow-indigo-600/30 transition text-sm cursor-pointer mt-2"
             >
-              Enter Live Technical Room <ChevronRight className="w-4 h-4" />
+              Enter Interview Workspace
             </button>
           </form>
-
-          <div className="mt-5 pt-4 border-t border-slate-800/80 text-center flex items-center justify-between text-[11px] text-slate-500">
-            <span>Isolated Sandboxing (JS, Python, Java, C++)</span>
-            <button onClick={() => setIsPricingOpen(true)} className="text-indigo-400 hover:underline">
-              {isPro ? '⭐ Pro Active' : 'Pricing Plans'}
-            </button>
-          </div>
         </div>
-
-        {/* Pricing Modal */}
         {isPricingOpen && renderPricingModal()}
-
-        {/* 470-Company LeetCode Catalog Modal */}
-        {isCatalogOpen && renderCompanyCatalogModal()}
-      </div>
-    );
-  }
-
-  // 470-Company & 3,392 LeetCode Question Explorer Modal
-  function renderCompanyCatalogModal() {
-    return null;
-    /* eslint-disable-next-line */
-    const popularCompanies = ['Trilogy', 'Google', 'Amazon', 'Meta', 'Microsoft', 'Bloomberg', 'Uber', 'Apple', 'Goldman Sachs', 'All'];
-
-    return (
-      <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
-        <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden text-slate-200">
-          {/* Header */}
-          <div className="p-4 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-950/70">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-                <Building className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="font-bold text-base text-white flex items-center gap-2">
-                  Company-Wise Question Bank
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-normal">
-                    3,392 Problems • 470 Companies
-                  </span>
-                </h3>
-                <p className="text-[11px] text-slate-400">Filter by company, search topics, or load directly into the live mock interview room.</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setIsCatalogOpen(false)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Filter Bar */}
-          <div className="p-3.5 border-b border-slate-800 bg-slate-950/40 space-y-3 shrink-0">
-            {/* Quick Company Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-              <span className="text-slate-500 text-[10px] font-semibold uppercase tracking-wider shrink-0 mr-1">Top Tech:</span>
-              {popularCompanies.map(comp => (
-                <button
-                  key={comp}
-                  type="button"
-                  onClick={() => {
-                    setCatalogCompany(comp);
-                    fetchCatalogProblems(comp, catalogSearch, catalogDifficulty);
-                  }}
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition flex items-center gap-1 ${
-                    catalogCompany.toLowerCase() === comp.toLowerCase()
-                      ? comp === 'Trilogy' 
-                        ? 'bg-amber-500 text-slate-950 font-bold shadow' 
-                        : 'bg-indigo-600 text-white font-semibold'
-                      : 'bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200'
-                  }`}
-                >
-                  {comp === 'Trilogy' && <Flame className="w-3 h-3 text-amber-950 fill-current" />}
-                  {comp}
-                </button>
-              ))}
-            </div>
-
-            {/* Search Input & Difficulty Selector */}
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  value={catalogSearch}
-                  onChange={e => {
-                    setCatalogSearch(e.target.value);
-                    fetchCatalogProblems(catalogCompany, e.target.value, catalogDifficulty);
-                  }}
-                  placeholder="Search 3,392 LeetCode questions by title, keyword, or topic (e.g. XOR, Tree, DP, Graph)..."
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                />
-              </div>
-
-              {/* Difficulty Filter */}
-              <div className="flex gap-1">
-                {['All', 'Easy', 'Medium', 'Hard'].map(diff => (
-                  <button
-                    key={diff}
-                    type="button"
-                    onClick={() => {
-                      setCatalogDifficulty(diff);
-                      fetchCatalogProblems(catalogCompany, catalogSearch, diff);
-                    }}
-                    className={`px-2.5 py-1 text-xs rounded-lg transition ${
-                      catalogDifficulty === diff
-                        ? 'bg-slate-800 text-white font-semibold border border-slate-700'
-                        : 'bg-slate-950 border border-slate-800 text-slate-500 hover:text-slate-300'
-                    }`}
-                  >
-                    {diff}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Problem List Display */}
-          <div className="flex-1 overflow-y-auto p-3.5 space-y-2">
-            <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 mb-1">
-              <span>Showing <strong>{catalogProblems.length}</strong> matching questions (Total: {catalogTotal})</span>
-              <span className="text-indigo-400">Click "Load into Room" to start coding live</span>
-            </div>
-
-            {isCatalogLoading ? (
-              <div className="text-center py-12 text-slate-500 text-xs font-mono">
-                Searching 3,392 LeetCode problems...
-              </div>
-            ) : catalogProblems.length === 0 ? (
-              <div className="text-center py-12 text-slate-500 text-xs">
-                No problems found matching your filters. Try selecting "All" or a different keyword.
-              </div>
-            ) : (
-              catalogProblems.map((prob, idx) => (
-                <div
-                  key={prob.id || idx}
-                  className="p-3 bg-slate-950 border border-slate-800/80 rounded-xl hover:border-slate-700 transition flex items-center justify-between gap-3 group"
-                >
-                  <div className="space-y-1 min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-xs font-bold text-white tracking-tight truncate group-hover:text-indigo-300 transition">
-                        {prob.title}
-                      </h4>
-                      <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-semibold border ${
-                        prob.difficulty === 'Hard'
-                          ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                          : prob.difficulty === 'Medium'
-                          ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                      }`}>
-                        {prob.difficulty}
-                      </span>
-                      {prob.acceptanceRate && (
-                        <span className="text-[10px] text-slate-500 font-mono">
-                          {prob.acceptanceRate}% accept
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
-                      {(prob.companies || []).slice(0, 3).map((c, cIdx) => (
-                        <span key={cIdx} className="px-1.5 py-0.2 rounded bg-indigo-950/60 text-indigo-300 border border-indigo-800/40 font-mono">
-                          {c}
-                        </span>
-                      ))}
-                      {(prob.topics || []).slice(0, 2).map((t, tIdx) => (
-                        <span key={tIdx} className="px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {prob.url ? (
-                      <a
-                        href={prob.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="Solve on official LeetCode"
-                        className="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shadow-sm cursor-pointer whitespace-nowrap"
-                      >
-                        <span>Solve on LeetCode</span>
-                        <ExternalLink className="w-3 h-3 stroke-[2.5]" />
-                      </a>
-                    ) : (
-                      <span className="text-[10px] text-slate-500 italic">Original link unavailable</span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => handleLoadFromCatalog(prob)}
-                      className="text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 font-medium px-2.5 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1 cursor-pointer"
-                    >
-                      <Zap className="w-3 h-3" /> Pair IDE
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Pricing Modal Render Helper with Aman Gajbhiye's Live UPI QR & Payment Details
-  function renderPricingModal() {
-    const amount = selectedPlan.includes('29') ? '29' : '99';
-    const upiLink = `upi://pay?pa=9730949538@axl&pn=Aman%20Gajbhiye&am=${amount}&cu=INR&tn=PeerPrep%20${encodeURIComponent(selectedPlan)}`;
-
-    return (
-      <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-6 text-slate-200 my-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                <Crown className="w-4 h-4" />
-              </div>
-              <div>
-                <h3 className="font-bold text-base text-white">PeerPrep Student Pro Pass</h3>
-                <p className="text-[11px] text-slate-400">Direct instant UPI payment to creator</p>
-              </div>
-            </div>
-            <button onClick={() => setIsPricingOpen(false)} className="text-slate-400 hover:text-white p-1 rounded-lg">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Plan Options */}
-          <div className="grid grid-cols-2 gap-2.5 mb-4">
-            <div
-              onClick={() => setSelectedPlan('₹29 Company Drive Pass')}
-              className={`p-3 rounded-xl border cursor-pointer transition ${
-                selectedPlan === '₹29 Company Drive Pass'
-                  ? 'bg-indigo-600/20 border-indigo-500 shadow-md ring-1 ring-indigo-500/50'
-                  : 'bg-slate-950 border-slate-800 hover:border-slate-700'
-              }`}
-            >
-              <div className="text-[10px] text-indigo-400 font-semibold mb-0.5">Company Drive Pass</div>
-              <div className="text-xl font-black text-white">₹29 <span className="text-[10px] text-slate-500 font-normal">/ 7 Days</span></div>
-              <div className="text-[10px] text-slate-400 mt-1">Trilogy & Top Tech PYQs + 3-Level Hints</div>
-            </div>
-
-            <div
-              onClick={() => setSelectedPlan('₹99 All-Access Pass')}
-              className={`p-3 rounded-xl border cursor-pointer transition ${
-                selectedPlan === '₹99 All-Access Pass'
-                  ? 'bg-amber-500/20 border-amber-500 shadow-md ring-1 ring-amber-500/50'
-                  : 'bg-slate-950 border-slate-800 hover:border-slate-700'
-              }`}
-            >
-              <div className="text-[10px] text-amber-400 font-semibold mb-0.5">Placement Season Pass</div>
-              <div className="text-xl font-black text-white">₹99 <span className="text-[10px] text-slate-500 font-normal">/ 30 Days</span></div>
-              <div className="text-[10px] text-slate-400 mt-1">All 470 Companies + Rubric Scorecards</div>
-            </div>
-          </div>
-
-          {/* Aman Gajbhiye's Live UPI & QR Code Card */}
-          <div className="bg-slate-950 rounded-xl border border-slate-800 p-4 space-y-3.5">
-            {/* Payee Info Box */}
-            <div className="flex items-center justify-between bg-slate-900/90 rounded-lg p-2.5 border border-slate-800">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-sm font-bold text-indigo-300">
-                  AG
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                    Aman Gajbhiye
-                    <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded border border-emerald-500/30">Verified Payee</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 font-mono">Bank of Maharashtra • 6729</div>
-                </div>
-              </div>
-
-              <div className="text-right">
-                <span className="text-[10px] text-slate-500 block uppercase">Pay Amount</span>
-                <span className="text-base font-extrabold text-emerald-400 font-mono">₹{amount}</span>
-              </div>
-            </div>
-
-            {/* QR Code Section */}
-            <div className="text-center space-y-2">
-              <div className="relative inline-block bg-black p-2 rounded-2xl shadow-2xl border-2 border-indigo-500/40">
-                <img
-                  src="/qr_code.png"
-                  alt="Aman Gajbhiye PhonePe UPI QR"
-                  className="w-48 h-48 object-contain rounded-xl block mx-auto"
-                />
-              </div>
-
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-300 font-mono bg-slate-900/80 py-1.5 px-3 rounded-lg border border-slate-800 max-w-xs mx-auto">
-                <span className="text-slate-400">UPI ID:</span>
-                <strong className="text-indigo-300 select-all">9730949538@axl</strong>
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText('9730949538@axl');
-                    confetti({ particleCount: 30, spread: 50 });
-                  }}
-                  className="ml-1 text-[10px] text-indigo-400 hover:text-indigo-200 underline cursor-pointer"
-                >
-                  Copy
-                </button>
-              </div>
-
-              <p className="text-[10px] text-slate-400">
-                Scan with any app: <strong>PhonePe • Google Pay • Paytm • BHIM • Cred</strong>
-              </p>
-            </div>
-
-            {/* Mobile Instant Deep Link & Action Buttons */}
-            <div className="space-y-2 pt-1">
-              <a
-                href={upiLink}
-                className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition cursor-pointer"
-              >
-                <QrCode className="w-4 h-4" />
-                <span>Pay ₹{amount} via UPI App (PhonePe / GPay)</span>
-              </a>
-
-              <button
-                type="button"
-                onClick={handleSimulatePayment}
-                disabled={isProcessingPayment}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-              >
-                {isProcessingPayment ? (
-                  <>
-                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Verifying UPI Payment...</span>
-                  </>
-                ) : (
-                  <>
-                    <Check className="w-4 h-4" />
-                    <span>I Have Paid ₹{amount} → Instant Pro Activation</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }
 
   // 2. Main Live Collaborative Interview Room
+  const filename = language === 'javascript' ? 'solution.js' : language === 'python' ? 'solution.py' : language === 'java' ? 'Solution.java' : 'solution.cpp';
+
   return (
     <div className="h-screen w-screen flex flex-col bg-slate-950 text-slate-100 overflow-hidden font-sans">
       {/* Top Header */}
@@ -1167,23 +939,13 @@ ${interviewerNotes}
             <span className="font-bold text-sm tracking-tight hidden sm:inline">PeerPrep</span>
           </div>
 
-
-          {/* Full LeetCode Portal & Heatmap Switcher */}
+          {/* Full LeetCode Portal Switcher */}
           <button
             onClick={() => setMainView('leetcode')}
             className="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-semibold cursor-pointer"
           >
             <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
             <span>470-Company LeetCode Bank</span>
-          </button>
-
-          {/* 470-Company Explorer Button */}
-          <button
-            onClick={() => setMainView('leetcode')}
-            className="bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-medium cursor-pointer"
-          >
-            <Building className="w-3.5 h-3.5" />
-            <span>Company Bank (3,392)</span>
           </button>
 
           {/* Room ID Badge & Copy */}
@@ -1193,7 +955,7 @@ ${interviewerNotes}
             <button
               onClick={copyRoomId}
               title="Copy Room ID"
-              className="ml-1 text-slate-400 hover:text-slate-200 transition"
+              className="ml-1 text-slate-400 hover:text-slate-200 transition cursor-pointer"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
@@ -1236,12 +998,12 @@ ${interviewerNotes}
           </button>
         </div>
 
-        {/* Right Controls */}
+        {/* Right Controls: Language, Run, Submit, Fullscreen */}
         <div className="flex items-center gap-2">
           {/* Subscription Button */}
           <button
             onClick={() => setIsPricingOpen(true)}
-            className={`text-xs px-2.5 py-1 rounded-md flex items-center gap-1 font-semibold transition ${
+            className={`text-xs px-2.5 py-1 rounded-md flex items-center gap-1 font-semibold transition cursor-pointer ${
               isPro 
                 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
                 : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm'
@@ -1254,7 +1016,7 @@ ${interviewerNotes}
           {/* Rubric Scorecard Button */}
           <button
             onClick={() => setIsScorecardOpen(true)}
-            className="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-medium"
+            className="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-medium cursor-pointer"
           >
             <Award className="w-3.5 h-3.5" />
             <span>Scorecard</span>
@@ -1268,35 +1030,66 @@ ${interviewerNotes}
           >
             <option value="javascript">JavaScript (Node.js)</option>
             <option value="python">Python 3</option>
-            <option value="java">Java</option>
-            <option value="cpp">C++</option>
+            <option value="java">Java (JDK)</option>
+            <option value="cpp">C++ (GCC)</option>
           </select>
 
-          {/* Run Code Button */}
+          {/* Reset Code Button */}
+          <button
+            onClick={handleResetCode}
+            title="Reset code to original starter template"
+            className="bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded-md text-xs border border-slate-700 transition cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Run Code Button (Visible sample test cases) */}
           <button
             onClick={handleRunCode}
-            disabled={isRunning}
-            className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-medium px-3.5 py-1 rounded-md text-xs shadow-md shadow-emerald-600/20 flex items-center gap-1.5 transition cursor-pointer"
+            disabled={isRunning || isSubmitting}
+            title="Run visible test cases (Ctrl + Enter)"
+            className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 font-semibold px-3 py-1 rounded-md text-xs shadow-sm flex items-center gap-1.5 transition cursor-pointer disabled:opacity-50"
           >
-            <Play className="w-3.5 h-3.5 fill-current" />
-            {isRunning ? 'Running...' : 'Run Code'}
+            <Play className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
+            <span>{isRunning ? 'Running...' : 'Run'}</span>
+            <span className="text-[9px] text-slate-400 font-mono hidden md:inline">Ctrl+⏎</span>
+          </button>
+
+          {/* Submit Solution Button (Official Evaluation Suite) */}
+          <button
+            onClick={handleSubmitCode}
+            disabled={isRunning || isSubmitting}
+            title="Submit solution for official evaluation (Ctrl + Shift + Enter)"
+            className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-bold px-3.5 py-1 rounded-md text-xs shadow-md shadow-emerald-600/20 flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <Send className="w-3.5 h-3.5 fill-current" />
+            <span>{isSubmitting ? 'Evaluating...' : 'Submit'}</span>
+          </button>
+
+          {/* Fullscreen Toggle */}
+          <button
+            onClick={toggleFullscreen}
+            title="Toggle Fullscreen"
+            className="text-slate-400 hover:text-white p-1.5 rounded transition cursor-pointer"
+          >
+            {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
           </button>
 
           {/* Leave Room Button */}
           <button
             onClick={() => setInRoom(false)}
             title="Exit Room"
-            className="text-slate-400 hover:text-rose-400 p-1.5 rounded transition"
+            className="text-slate-400 hover:text-rose-400 p-1.5 rounded transition cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>
         </div>
       </header>
 
-      {/* Main 3-Column Working Area */}
+      {/* Main Coding Workspace */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel: Problem Statement, Hints & Solutions (32% Width) */}
-        <div className="w-[32%] border-r border-slate-800 bg-slate-900/60 flex flex-col overflow-y-auto">
+        {/* Left Panel: Problem Statement, Hints, Editorial (38% Width) */}
+        <div className="w-[38%] border-r border-slate-800 bg-slate-900/60 flex flex-col overflow-y-auto">
           {/* Company Filter & Problem Switcher */}
           <div className="p-3 border-b border-slate-800 space-y-2 bg-slate-950/40">
             <div className="flex items-center justify-between">
@@ -1319,7 +1112,7 @@ ${interviewerNotes}
                   type="button"
                   onClick={() => setMainView('leetcode')}
                   title="Browse full 3,392 questions"
-                  className="text-[10px] bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30"
+                  className="text-[10px] bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30 cursor-pointer"
                 >
                   Browse 470+
                 </button>
@@ -1367,6 +1160,7 @@ ${interviewerNotes}
 
           {currentProblem && (
             <div className="p-4 space-y-4 text-sm">
+              {/* Problem Title & Difficulty Badge */}
               <div className="flex items-center justify-between gap-2">
                 {currentProblem.url ? (
                   <a
@@ -1374,15 +1168,15 @@ ${interviewerNotes}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-base font-bold text-white hover:text-amber-400 tracking-tight transition inline-flex items-center gap-1.5 group/header"
-                    title={`Open original "${currentProblem.title}" on LeetCode`}
+                    title={`Open official "${currentProblem.title}" on LeetCode`}
                   >
                     <span>{currentProblem.title}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover/header:text-amber-400 transition" />
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover/header:text-amber-400 transition stroke-[2.5]" />
                   </a>
                 ) : (
                   <h2 className="text-base font-bold text-white tracking-tight">{currentProblem.title}</h2>
                 )}
-                <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium border ${
+                <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
                   currentProblem.difficulty === 'Hard'
                     ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                     : currentProblem.difficulty === 'Medium'
@@ -1393,9 +1187,9 @@ ${interviewerNotes}
                 </span>
               </div>
 
-              {/* Company, Topic Tags & Prominent Solve on LeetCode Button */}
+              {/* Company Tags, Category & Prominent Solve on LeetCode Button */}
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-semibold">
                     {currentProblem.company}
                   </span>
@@ -1408,30 +1202,69 @@ ${interviewerNotes}
                     href={currentProblem.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-lg text-xs shadow-md shadow-amber-500/10 hover:shadow-amber-500/25 transition flex items-center gap-1.5 cursor-pointer"
+                    className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-lg text-xs shadow-md shadow-amber-500/10 hover:shadow-amber-500/25 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
                     title={`Solve "${currentProblem.title}" on LeetCode`}
                   >
                     <span>Solve on LeetCode</span>
                     <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
                   </a>
                 ) : (
-                  <span className="text-[10px] text-slate-500 italic">Original problem link unavailable</span>
+                  <span className="text-[10px] text-slate-500 italic">Original link unavailable</span>
                 )}
               </div>
 
-              <div className="text-slate-300 text-xs leading-relaxed whitespace-pre-wrap">
-                {currentProblem.description}
+              {/* Markdown Rendered Problem Description */}
+              <div className="pt-1">
+                <MarkdownRenderer content={currentProblem.description} />
               </div>
 
+              {/* Input & Output Format */}
+              {(currentProblem.inputFormat || currentProblem.outputFormat) && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-xs">
+                  {currentProblem.inputFormat && (
+                    <div className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5">
+                      <div className="text-[10px] text-slate-500 uppercase tracking-wider font-sans font-semibold mb-1 flex items-center gap-1">
+                        <Terminal className="w-3 h-3 text-indigo-400" /> Input Signature
+                      </div>
+                      <div className="text-slate-300 text-[11px] font-mono">{currentProblem.inputFormat}</div>
+                    </div>
+                  )}
+                  {currentProblem.outputFormat && (
+                    <div className="bg-slate-950/80 border border-slate-800/80 rounded-lg p-2.5">
+                      <div className="text-[10px] text-slate-500 uppercase tracking-wider font-sans font-semibold mb-1 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Return Format
+                      </div>
+                      <div className="text-slate-300 text-[11px] font-mono">{currentProblem.outputFormat}</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Examples */}
-              <div className="space-y-2 pt-1">
-                <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Examples:</h3>
+              <div className="space-y-2.5 pt-1">
+                <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Code2 className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Examples ({currentProblem.examples?.length || 0}):</span>
+                </h3>
                 {currentProblem.examples?.map((ex, idx) => (
-                  <div key={idx} className="bg-slate-950 border border-slate-800 rounded-lg p-2.5 space-y-1 text-xs font-mono">
-                    <p className="text-slate-400"><strong className="text-indigo-400">Input:</strong> {ex.input}</p>
-                    <p className="text-slate-400"><strong className="text-emerald-400">Output:</strong> {ex.output}</p>
+                  <div key={idx} className="bg-slate-950 border border-slate-800/90 rounded-xl p-3 space-y-1.5 text-xs font-mono shadow-sm">
+                    <div className="flex items-center justify-between border-b border-slate-800/60 pb-1 text-[11px]">
+                      <span className="font-semibold text-slate-400 font-sans">Example {idx + 1}</span>
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard.writeText(ex.input)}
+                        title="Copy input"
+                        className="text-[10px] text-slate-500 hover:text-slate-300 flex items-center gap-1 font-sans cursor-pointer transition"
+                      >
+                        <Copy className="w-3 h-3" /> Copy
+                      </button>
+                    </div>
+                    <p className="text-slate-300"><strong className="text-indigo-400 font-semibold font-sans">Input: </strong>{ex.input}</p>
+                    <p className="text-slate-300"><strong className="text-emerald-400 font-semibold font-sans">Output: </strong>{ex.output}</p>
                     {ex.explanation && (
-                      <p className="text-slate-500 text-[11px]">Explanation: {ex.explanation}</p>
+                      <p className="text-slate-400 text-[11px] font-sans pt-0.5 border-t border-slate-900 leading-relaxed">
+                        <strong className="text-slate-500 font-semibold">Explanation: </strong>{ex.explanation}
+                      </p>
                     )}
                   </div>
                 ))}
@@ -1440,11 +1273,15 @@ ${interviewerNotes}
               {/* Constraints */}
               {currentProblem.constraints && currentProblem.constraints.length > 0 && (
                 <div className="space-y-1.5 pt-1">
-                  <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Constraints:</h3>
-                  <div className="bg-slate-950/70 border border-slate-800/80 rounded-lg p-2.5 space-y-1 text-xs font-mono text-slate-300">
+                  <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Constraints:</span>
+                  </h3>
+                  <div className="bg-slate-950/80 border border-slate-800/90 rounded-xl p-3 space-y-1 text-xs font-mono text-slate-300">
                     {currentProblem.constraints.map((c, idx) => (
-                      <p key={idx} className="flex items-center gap-1.5">
-                        <span className="text-indigo-400">•</span> {c}
+                      <p key={idx} className="flex items-center gap-2">
+                        <span className="text-indigo-400">•</span>
+                        <span>{c}</span>
                       </p>
                     ))}
                   </div>
@@ -1464,7 +1301,7 @@ ${interviewerNotes}
                         <button
                           type="button"
                           onClick={() => toggleHint(hIdx)}
-                          className="w-full p-2 text-left text-xs font-medium text-slate-400 hover:text-white flex items-center justify-between"
+                          className="w-full p-2 text-left text-xs font-medium text-slate-400 hover:text-white flex items-center justify-between cursor-pointer"
                         >
                           <span>Hint {hIdx + 1}</span>
                           <span className="text-[10px] text-indigo-400 font-mono">
@@ -1472,7 +1309,7 @@ ${interviewerNotes}
                           </span>
                         </button>
                         {revealedHints[hIdx] && (
-                          <div className="p-2.5 bg-slate-900 border-t border-slate-800/60 text-xs text-amber-200/90 leading-relaxed">
+                          <div className="p-2.5 bg-slate-900 border-t border-slate-800/60 text-xs text-amber-200/90 leading-relaxed font-sans">
                             {hintText}
                           </div>
                         )}
@@ -1488,7 +1325,7 @@ ${interviewerNotes}
                   <button
                     type="button"
                     onClick={() => setShowSolutionModal(true)}
-                    className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition"
+                    className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition cursor-pointer"
                   >
                     <Eye className="w-3.5 h-3.5 text-indigo-400" />
                     <span>View Optimal Solution & Complexity</span>
@@ -1499,24 +1336,34 @@ ${interviewerNotes}
           )}
         </div>
 
-        {/* Center Panel: Monaco Editor (43% Width) */}
-        <div className="w-[43%] border-r border-slate-800 flex flex-col bg-[#1e1e1e]">
-          <div className="h-8 bg-slate-900 border-b border-slate-800 px-3 flex items-center justify-between text-xs text-slate-400">
-            <span className="font-mono text-[11px] text-slate-300 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              solution.{language === 'javascript' ? 'js' : language === 'python' ? 'py' : language === 'java' ? 'java' : 'cpp'}
-            </span>
-            {remoteCursor ? (
-              <span className="text-[10px] flex items-center gap-1.5 text-indigo-300 bg-indigo-950/70 border border-indigo-500/40 px-2 py-0.5 rounded font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" />
-                {remoteCursor.username} ({remoteCursor.role}): Ln {remoteCursor.position?.lineNumber}, Col {remoteCursor.position?.column}
+        {/* Right Area: Monaco Editor + Bottom Testcase & Online Judge Panel (62% Width) */}
+        <div className="flex-1 flex flex-col bg-[#1e1e1e] overflow-hidden">
+          {/* Editor Header Bar with Tab & Status */}
+          <div className="h-9 bg-slate-900 border-b border-slate-800 px-3 flex items-center justify-between text-xs text-slate-400 shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="bg-slate-950 px-2.5 py-1 rounded text-slate-200 font-mono text-[11px] border border-slate-800 flex items-center gap-1.5 font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                {filename}
               </span>
-            ) : (
-              <span className="text-[10px] text-slate-500">Live Dual-Cursor Sync (Active)</span>
-            )}
+              <span className="text-[10px] text-slate-500 font-mono">
+                ● {autosaveNotice}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              {remoteCursor ? (
+                <span className="text-[10px] flex items-center gap-1.5 text-indigo-300 bg-indigo-950/70 border border-indigo-500/40 px-2 py-0.5 rounded font-mono">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" />
+                  {remoteCursor.username} ({remoteCursor.role})
+                </span>
+              ) : (
+                <span className="text-[10px] text-slate-500 font-mono">Live Pair Sync Active</span>
+              )}
+            </div>
           </div>
 
-          <div className="flex-1">
+          {/* Monaco Editor Container */}
+          <div className="flex-1 min-h-[220px]">
             <Editor
               height="100%"
               language={language === 'cpp' ? 'cpp' : language}
@@ -1532,337 +1379,594 @@ ${interviewerNotes}
                 lineNumbers: 'on',
                 tabSize: 2,
                 automaticLayout: true,
-                padding: { top: 12 }
+                padding: { top: 10 },
+                wordWrap: 'on'
               }}
             />
           </div>
-        </div>
 
-        {/* Right Panel: Terminal, Chat, Analytics (25% Width) */}
-        <div className="w-[25%] flex flex-col bg-slate-950">
-          {/* Tabs Navigation */}
-          <div className="h-10 border-b border-slate-800 bg-slate-900/60 flex items-center px-2">
-            <button
-              onClick={() => setActiveTab('terminal')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded transition ${
-                activeTab === 'terminal' 
-                  ? 'bg-slate-800 text-white' 
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Terminal className="w-3.5 h-3.5" /> Output
-              {executionTime && (
-                <span className="text-[9px] text-indigo-400 font-mono">({executionTime}ms)</span>
-              )}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('chat')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded transition ml-1 ${
-                activeTab === 'chat' 
-                  ? 'bg-slate-800 text-white' 
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <MessageSquare className="w-3.5 h-3.5" /> Chat
-              {messages.length > 0 && (
-                <span className="text-[9px] bg-indigo-500/30 text-indigo-300 px-1 rounded-full">
-                  {messages.length}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded transition ml-1 ${
-                activeTab === 'analytics' 
-                  ? 'bg-slate-800 text-white' 
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <BarChart2 className="w-3.5 h-3.5" /> Analytics
-            </button>
-          </div>
-
-          {/* Tab 1: Terminal Window */}
-          {activeTab === 'terminal' && (
-            <div className="flex-1 p-3 overflow-y-auto font-mono text-xs text-slate-300 flex flex-col">
-              <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800 text-[11px] text-slate-400">
-                <span>Isolated Sandbox Output</span>
-                <span className={isError ? 'text-rose-400' : output ? 'text-emerald-400' : 'text-slate-500'}>
-                  {isError ? 'Exit with error' : output ? 'Passed' : 'Idle'}
-                </span>
-              </div>
-              <pre className={`flex-1 whitespace-pre-wrap font-mono text-xs ${isError ? 'text-rose-400' : 'text-slate-200'}`}>
-                {output || 'Click "Run Code" above to execute against test suite in isolated sandbox.'}
-              </pre>
-            </div>
-          )}
-
-          {/* Tab 2: Live Chat Room */}
-          {activeTab === 'chat' && (
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="flex-1 p-3 overflow-y-auto space-y-2 text-xs">
-                {messages.length === 0 ? (
-                  <p className="text-slate-500 text-center text-[11px] py-4">No messages yet. Real-time peer chat active.</p>
-                ) : (
-                  messages.map(m => (
-                    <div
-                      key={m.id}
-                      className={`p-2 rounded-lg max-w-[85%] ${
-                        m.username === username
-                          ? 'ml-auto bg-indigo-600/30 text-indigo-100 border border-indigo-500/30'
-                          : 'bg-slate-900 text-slate-200 border border-slate-800'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
-                        <span className="font-semibold text-indigo-300">{m.username}</span>
-                        <span>{m.time}</span>
-                      </div>
-                      <p className="text-xs">{m.text}</p>
-                    </div>
-                  ))
-                )}
-                <div ref={chatBottomRef} />
-              </div>
-
-              {/* Chat Input */}
-              <form onSubmit={handleSendMessage} className="p-2 border-t border-slate-800 bg-slate-900/50 flex gap-1.5">
-                <input
-                  type="text"
-                  value={chatInput}
-                  onChange={e => setChatInput(e.target.value)}
-                  placeholder="Type a message..."
-                  className="flex-1 bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                />
+          {/* Bottom Test Cases & Online Judge Console Panel */}
+          <div className={`border-t border-slate-800 bg-slate-950 flex flex-col transition-all duration-150 ${
+            isConsoleExpanded ? 'h-64' : 'h-9'
+          }`}>
+            {/* Console Tab Header */}
+            <div className="h-9 bg-slate-900 border-b border-slate-800 px-3 flex items-center justify-between text-xs text-slate-400 shrink-0">
+              <div className="flex items-center gap-1">
                 <button
-                  type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded text-xs transition"
+                  type="button"
+                  onClick={() => { setBottomTab('testcases'); setIsConsoleExpanded(true); }}
+                  className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                    bottomTab === 'testcases' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+                  }`}
                 >
-                  Send
+                  <Code2 className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Test Cases</span>
                 </button>
-              </form>
-            </div>
-          )}
 
-          {/* Tab 3: Performance Analytics */}
-          {activeTab === 'analytics' && (
-            <div className="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
-              <div className="p-3 bg-slate-900 border border-slate-800 rounded-lg space-y-2">
-                <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Candidate Speed Metrics</div>
-                <div className="grid grid-cols-2 gap-2 pt-1 font-mono">
-                  <div className="bg-slate-950 p-2 rounded border border-slate-800">
-                    <div className="text-[10px] text-slate-500">Run Attempts</div>
-                    <div className="text-base font-bold text-white">{runCount}</div>
-                  </div>
-                  <div className="bg-slate-950 p-2 rounded border border-slate-800">
-                    <div className="text-[10px] text-slate-500">Last Latency</div>
-                    <div className="text-base font-bold text-indigo-400">{executionTime ? `${executionTime}ms` : '--'}</div>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => { setBottomTab('results'); setIsConsoleExpanded(true); }}
+                  className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                    bottomTab === 'results' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Test Results</span>
+                  {judgeVerdict && (
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold ${
+                      judgeVerdict === 'Accepted' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                    }`}>
+                      {judgeVerdict}
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setBottomTab('terminal'); setIsConsoleExpanded(true); }}
+                  className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                    bottomTab === 'terminal' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Terminal className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Console Output</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setBottomTab('chat'); setIsConsoleExpanded(true); }}
+                  className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                    bottomTab === 'chat' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Peer Chat</span>
+                  {messages.length > 0 && (
+                    <span className="text-[9px] bg-indigo-600/30 text-indigo-300 px-1 rounded-full font-mono">
+                      {messages.length}
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => { setBottomTab('editorial'); setIsConsoleExpanded(true); }}
+                  className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer ${
+                    bottomTab === 'editorial' ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <BarChart2 className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Complexity</span>
+                </button>
               </div>
 
-              <div className="p-3 bg-slate-900 border border-slate-800 rounded-lg space-y-2 font-mono">
-                <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider font-sans">Interview Progress</div>
-                <div className="flex justify-between text-[11px] text-slate-300">
-                  <span>Elapsed Time:</span>
-                  <span className="font-bold">{formatTimer((45 * 60) - timeLeft)}</span>
-                </div>
-                <div className="flex justify-between text-[11px] text-slate-300">
-                  <span>Language Active:</span>
-                  <span className="uppercase text-emerald-400 font-bold">{language}</span>
-                </div>
-                <div className="flex justify-between text-[11px] text-slate-300">
-                  <span>Buffer Length:</span>
-                  <span>{code.length} chars</span>
-                </div>
+              <div className="flex items-center gap-2">
+                {executionTime && (
+                  <span className="text-[10px] text-slate-500 font-mono hidden sm:inline">
+                    Latency: {executionTime}ms
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setIsConsoleExpanded(prev => !prev)}
+                  title={isConsoleExpanded ? 'Collapse panel' : 'Expand panel'}
+                  className="text-slate-400 hover:text-white p-1 rounded transition cursor-pointer"
+                >
+                  {isConsoleExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                </button>
               </div>
             </div>
-          )}
+
+            {/* Console Tab Contents */}
+            {isConsoleExpanded && (
+              <div className="flex-1 overflow-y-auto p-3 text-xs font-mono text-slate-300">
+                {/* 1. Test Cases Tab */}
+                {bottomTab === 'testcases' && (
+                  <div className="space-y-3 font-sans">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {(currentProblem?.testCases || currentProblem?.examples || []).map((tc, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setSelectedTestCaseIdx(idx)}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                            selectedTestCaseIdx === idx
+                              ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
+                              : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-900'
+                          }`}
+                        >
+                          Case {idx + 1}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedTestCaseIdx(-1)}
+                        className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1 ${
+                          selectedTestCaseIdx === -1
+                            ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 shadow-sm'
+                            : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-900'
+                        }`}
+                      >
+                        <Plus className="w-3 h-3" /> Custom Input
+                      </button>
+                    </div>
+
+                    {selectedTestCaseIdx >= 0 ? (
+                      <div className="bg-slate-900/90 border border-slate-800/80 rounded-xl p-3 space-y-2 text-xs font-mono">
+                        <div>
+                          <div className="text-[10px] text-slate-500 uppercase font-sans font-semibold mb-1">Input Parameters:</div>
+                          <div className="p-2 rounded bg-slate-950 border border-slate-800/60 text-slate-200">
+                            {(currentProblem?.testCases && currentProblem?.testCases[selectedTestCaseIdx]?.input) || 
+                             (currentProblem?.examples && currentProblem?.examples[selectedTestCaseIdx]?.input) || 'sample input'}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] text-slate-500 uppercase font-sans font-semibold mb-1">Expected Output:</div>
+                          <div className="p-2 rounded bg-slate-950 border border-slate-800/60 text-emerald-400">
+                            {(currentProblem?.testCases && currentProblem?.testCases[selectedTestCaseIdx]?.expectedOutput) || 
+                             (currentProblem?.examples && currentProblem?.examples[selectedTestCaseIdx]?.output) || 'expected output'}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] text-slate-400 font-semibold uppercase">Custom Test Input</label>
+                        <textarea
+                          value={customInput}
+                          onChange={e => setCustomInput(e.target.value)}
+                          placeholder="e.g. nums = [2, 7, 11, 15], target = 9"
+                          className="w-full h-24 bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 2. Test Results Tab */}
+                {bottomTab === 'results' && (
+                  <div className="space-y-3 font-sans">
+                    {judgeVerdict ? (
+                      <div className="space-y-3">
+                        <div className={`p-3 rounded-xl border flex items-center justify-between ${
+                          judgeVerdict === 'Accepted'
+                            ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
+                            : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+                        }`}>
+                          <div className="flex items-center gap-2">
+                            {judgeVerdict === 'Accepted' ? (
+                              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                            ) : (
+                              <XCircle className="w-5 h-5 text-rose-400" />
+                            )}
+                            <div>
+                              <div className="text-sm font-bold">{judgeVerdict}</div>
+                              <div className="text-[11px] opacity-80 font-mono">
+                                {judgeVerdict === 'Accepted' ? 'All test cases evaluated and verified.' : 'One or more cases produced mismatch or runtime error.'}
+                              </div>
+                            </div>
+                          </div>
+                          {executionTime && (
+                            <div className="text-right font-mono text-xs">
+                              <span className="opacity-75">Runtime:</span> <strong>{executionTime}ms</strong>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Test Cases Results List */}
+                        {testResults.length > 0 && (
+                          <div className="space-y-2">
+                            {testResults.map((r, idx) => (
+                              <div key={idx} className="bg-slate-900/90 border border-slate-800 rounded-lg p-2.5 font-mono text-xs space-y-1">
+                                <div className="flex items-center justify-between font-sans">
+                                  <span className="font-semibold text-slate-300">Case {r.id || idx + 1}</span>
+                                  <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
+                                    r.status === 'Passed' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                                  }`}>
+                                    {r.status}
+                                  </span>
+                                </div>
+                                <div className="text-slate-400"><strong className="text-slate-500 font-sans">Input: </strong>{r.input}</div>
+                                <div className="text-slate-400"><strong className="text-slate-500 font-sans">Expected: </strong><span className="text-emerald-400">{r.expected}</span></div>
+                                <div className="text-slate-400"><strong className="text-slate-500 font-sans">Output: </strong><span className={r.status === 'Passed' ? 'text-slate-200' : 'text-rose-400'}>{r.actual}</span></div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="py-8 text-center text-slate-500 font-sans">
+                        <Terminal className="w-6 h-6 mx-auto mb-2 text-slate-600" />
+                        <p className="text-xs">No execution results yet.</p>
+                        <p className="text-[11px] text-slate-600 mt-1">Press <strong>Run</strong> (Ctrl+Enter) to evaluate sample test cases or <strong>Submit</strong> (Ctrl+Shift+Enter) for official evaluation.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 3. Console Terminal Output Tab */}
+                {bottomTab === 'terminal' && (
+                  <pre className={`whitespace-pre-wrap font-mono text-xs leading-relaxed ${
+                    isError ? 'text-rose-400' : 'text-slate-200'
+                  }`}>
+                    {output || 'No terminal output. Run code to view stdout/stderr output.'}
+                  </pre>
+                )}
+
+                {/* 4. Live Peer Chat Tab */}
+                {bottomTab === 'chat' && (
+                  <div className="h-full flex flex-col font-sans">
+                    <div className="flex-1 overflow-y-auto space-y-2 pr-1 pb-2">
+                      {messages.length === 0 ? (
+                        <p className="text-slate-500 text-center text-[11px] py-4">No chat messages yet. Pair with your peer here.</p>
+                      ) : (
+                        messages.map(m => (
+                          <div
+                            key={m.id}
+                            className={`p-2 rounded-lg max-w-[85%] ${
+                              m.username === username
+                                ? 'ml-auto bg-indigo-600/30 text-indigo-100 border border-indigo-500/30'
+                                : 'bg-slate-900 text-slate-200 border border-slate-800'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
+                              <span className="font-semibold text-indigo-300">{m.username}</span>
+                              <span>{m.time}</span>
+                            </div>
+                            <p className="text-xs">{m.text}</p>
+                          </div>
+                        ))
+                      )}
+                      <div ref={chatBottomRef} />
+                    </div>
+
+                    <form onSubmit={handleSendMessage} className="pt-2 border-t border-slate-800 flex gap-2">
+                      <input
+                        type="text"
+                        value={chatInput}
+                        onChange={e => setChatInput(e.target.value)}
+                        placeholder="Type a message to peer..."
+                        className="flex-1 bg-slate-900 border border-slate-800 rounded px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      />
+                      <button
+                        type="submit"
+                        className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded text-xs transition cursor-pointer"
+                      >
+                        Send
+                      </button>
+                    </form>
+                  </div>
+                )}
+
+                {/* 5. Editorial & Complexity Tab */}
+                {bottomTab === 'editorial' && (
+                  <div className="space-y-3 font-sans text-xs">
+                    <div className="grid grid-cols-2 gap-2 font-mono">
+                      <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                        <div className="text-[10px] text-slate-500 uppercase font-sans">Time Complexity</div>
+                        <div className="text-sm font-bold text-emerald-400">{currentProblem?.solution?.timeComplexity || 'O(N)'}</div>
+                      </div>
+                      <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                        <div className="text-[10px] text-slate-500 uppercase font-sans">Space Complexity</div>
+                        <div className="text-sm font-bold text-indigo-400">{currentProblem?.solution?.spaceComplexity || 'O(1)'}</div>
+                      </div>
+                    </div>
+                    {currentProblem?.solution?.explanation && (
+                      <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800 leading-relaxed text-slate-300">
+                        <strong className="text-slate-200 font-semibold block mb-1">Optimal Strategy:</strong>
+                        {currentProblem.solution.explanation}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Solution Modal */}
-      {showSolutionModal && currentProblem?.solution && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 text-slate-200 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <Eye className="w-5 h-5 text-indigo-400" />
-                <h3 className="font-bold text-base text-white">Optimal Solution & Complexity</h3>
-              </div>
-              <button onClick={() => setShowSolutionModal(false)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+      {showSolutionModal && renderSolutionModal()}
 
-            <div className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg font-mono">
-                  <span className="text-slate-400">Time Complexity:</span>{' '}
-                  <span className="text-emerald-400 font-bold">{currentProblem.solution.timeComplexity}</span>
-                </div>
-                <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg font-mono">
-                  <span className="text-slate-400">Space Complexity:</span>{' '}
-                  <span className="text-emerald-400 font-bold">{currentProblem.solution.spaceComplexity}</span>
-                </div>
-              </div>
-
-              <div className="p-3 bg-slate-950/60 border border-slate-800 rounded-lg text-slate-300 leading-relaxed">
-                <strong>Algorithmic Explanation:</strong> {currentProblem.solution.explanation}
-              </div>
-
-              <div>
-                <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                  Optimal Reference Code:
-                </div>
-                <pre className="p-3 bg-slate-950 border border-slate-800 rounded-lg font-mono text-xs text-indigo-200 overflow-x-auto whitespace-pre-wrap">
-                  {currentProblem.solution.code}
-                </pre>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={copySolutionToEditor}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg font-medium transition flex items-center justify-center gap-1.5"
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Insert Solution Into Editor</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowSolutionModal(false)}
-                  className="px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-lg font-medium transition"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Rubric Scorecard Modal */}
+      {isScorecardOpen && renderScorecardModal()}
 
       {/* Pricing Modal */}
       {isPricingOpen && renderPricingModal()}
+    </div>
+  );
 
-      {/* 470-Company LeetCode Catalog Modal */}
-      {isCatalogOpen && renderCompanyCatalogModal()}
+  // Modal Render Helpers
+  function renderSolutionModal() {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl p-6 space-y-4 shadow-2xl">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <Eye className="w-4 h-4 text-indigo-400" />
+              <span>Optimal Solution: {currentProblem.title}</span>
+            </h3>
+            <button
+              onClick={() => setShowSolutionModal(false)}
+              className="text-slate-400 hover:text-white text-xs cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
 
-      {/* Structured Interviewer Evaluation Rubrics Modal */}
-      {isScorecardOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 text-slate-200">
-            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-amber-400" />
-                <h3 className="font-bold text-base text-white">Technical Interviewer Evaluation Rubric</h3>
-              </div>
-              <button onClick={() => setIsScorecardOpen(false)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
-              </button>
+          <div className="grid grid-cols-2 gap-3 text-xs font-mono">
+            <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+              <span className="text-slate-500 block text-[10px]">Time Complexity</span>
+              <span className="text-emerald-400 font-bold">{currentProblem.solution?.timeComplexity}</span>
             </div>
+            <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+              <span className="text-slate-500 block text-[10px]">Space Complexity</span>
+              <span className="text-indigo-400 font-bold">{currentProblem.solution?.spaceComplexity}</span>
+            </div>
+          </div>
 
-            <div className="space-y-4 text-xs">
-              {/* Score Breakdown (1-5) */}
-              {[
-                { key: 'approach', label: '1. Problem Formulation & Strategy' },
-                { key: 'complexity', label: '2. Algorithmic Complexity (Big-O)' },
-                { key: 'cleanliness', label: '3. Code Cleanliness & Edge Cases' },
-                { key: 'communication', label: '4. Communication & Thought Process' },
-              ].map(crit => (
-                <div key={crit.key} className="flex items-center justify-between">
-                  <span className="text-slate-300 font-medium">{crit.label}</span>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map(val => (
-                      <button
-                        key={val}
-                        type="button"
-                        onClick={() => setRubricScores(prev => ({ ...prev, [crit.key]: val }))}
-                        className={`w-6 h-6 rounded flex items-center justify-center font-mono text-xs transition ${
-                          rubricScores[crit.key] >= val
-                            ? 'bg-amber-500 text-slate-950 font-bold shadow'
-                            : 'bg-slate-950 border border-slate-800 text-slate-500'
-                        }`}
-                      >
-                        {val}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
+          <div className="text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800/80 leading-relaxed">
+            {currentProblem.solution?.explanation}
+          </div>
 
-              {/* Total Score Display */}
-              <div className="p-3 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-between">
-                <span className="font-semibold text-slate-300">Composite Score:</span>
-                <span className="text-sm font-bold font-mono text-amber-400">
-                  {rubricScores.approach + rubricScores.complexity + rubricScores.cleanliness + rubricScores.communication} / 20 ({Math.round(((rubricScores.approach + rubricScores.complexity + rubricScores.cleanliness + rubricScores.communication) / 20) * 100)}%)
-                </span>
-              </div>
+          <div className="relative">
+            <pre className="bg-slate-950 p-3 rounded-lg text-xs font-mono text-emerald-400 overflow-x-auto border border-slate-800 max-h-48">
+              {currentProblem.solution?.code}
+            </pre>
+          </div>
 
-              {/* Recommendation Selector */}
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Hiring Recommendation
-                </label>
-                <div className="grid grid-cols-4 gap-1.5 font-medium">
-                  {['Strong Hire', 'Hire', 'Leaning Hire', 'No Hire'].map(rec => (
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <button
+              onClick={() => setShowSolutionModal(false)}
+              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition cursor-pointer"
+            >
+              Close
+            </button>
+            <button
+              onClick={copySolutionToEditor}
+              className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow transition cursor-pointer"
+            >
+              Load Solution into Editor
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderScorecardModal() {
+    const total = Object.values(rubricScores).reduce((a, b) => a + b, 0);
+
+    return (
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 space-y-4 shadow-2xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <Award className="w-5 h-5 text-amber-400" />
+                <span>Interviewer Evaluation Scorecard</span>
+              </h3>
+              <p className="text-xs text-slate-400">Structured evaluation framework</p>
+            </div>
+            <button
+              onClick={() => setIsScorecardOpen(false)}
+              className="text-slate-400 hover:text-white text-xs cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+
+          <form onSubmit={handleScorecardSubmit} className="space-y-3 text-xs">
+            {Object.entries({
+              approach: '1. Problem Formulation & Strategy',
+              complexity: '2. Algorithmic Complexity (Big-O)',
+              cleanliness: '3. Code Cleanliness & Edge Cases',
+              communication: '4. Communication & Thought Articulation'
+            }).map(([key, label]) => (
+              <div key={key} className="flex items-center justify-between bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                <span className="text-slate-300 font-medium">{label}</span>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map(score => (
                     <button
-                      key={rec}
+                      key={score}
                       type="button"
-                      onClick={() => setRecommendation(rec)}
-                      className={`py-1.5 rounded text-[11px] transition ${
-                        recommendation === rec
-                          ? rec === 'Strong Hire' ? 'bg-emerald-600 text-white font-bold'
-                            : rec === 'Hire' ? 'bg-indigo-600 text-white font-bold'
-                            : rec === 'Leaning Hire' ? 'bg-amber-600 text-white font-bold'
-                            : 'bg-rose-600 text-white font-bold'
-                          : 'bg-slate-950 border border-slate-800 text-slate-400'
+                      onClick={() => setRubricScores(prev => ({ ...prev, [key]: score }))}
+                      className={`w-6 h-6 rounded text-xs font-bold transition cursor-pointer ${
+                        rubricScores[key] === score
+                          ? 'bg-amber-500 text-slate-950'
+                          : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                       }`}
                     >
-                      {rec}
+                      {score}
                     </button>
                   ))}
                 </div>
               </div>
+            ))}
 
-              {/* Interviewer Notes */}
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Interviewer Feedback & Notes
-                </label>
-                <textarea
-                  rows={3}
-                  value={interviewerNotes}
-                  onChange={e => setInterviewerNotes(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono"
-                  placeholder="Record strengths, code clarity, and areas of improvement..."
-                />
-              </div>
+            <div className="flex items-center justify-between bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg font-bold">
+              <span className="text-amber-300">Composite Score:</span>
+              <span className="text-sm text-amber-300 font-mono">{total} / 20 ({Math.round((total / 20) * 100)}%)</span>
+            </div>
 
-              {/* Actions */}
-              <div className="flex gap-2 pt-2">
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1 font-semibold uppercase">Hiring Recommendation</label>
+              <select
+                value={recommendation}
+                onChange={e => setRecommendation(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200"
+              >
+                <option value="Strong Hire">Strong Hire (Top 5%)</option>
+                <option value="Hire">Hire (Meets Expectations)</option>
+                <option value="Weak Hire">Weak Hire (Borderline)</option>
+                <option value="No Hire">No Hire (Below Threshold)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1 font-semibold uppercase">Evaluator Feedback</label>
+              <textarea
+                value={interviewerNotes}
+                onChange={e => setInterviewerNotes(e.target.value)}
+                rows={3}
+                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 text-xs font-sans focus:outline-none focus:ring-1 focus:ring-amber-500"
+              />
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="button"
+                onClick={exportScorecardText}
+                className="text-slate-400 hover:text-white text-xs underline cursor-pointer"
+              >
+                Export Report (.txt)
+              </button>
+
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={submitScorecard}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg font-medium transition flex items-center justify-center gap-1.5"
+                  onClick={() => setIsScorecardOpen(false)}
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
                 >
-                  <Check className="w-3.5 h-3.5" />
-                  {scorecardSubmitted ? 'Scorecard Saved!' : 'Save & Persist Scorecard'}
+                  Cancel
                 </button>
                 <button
-                  type="button"
-                  onClick={exportScorecardText}
-                  className="px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 py-2 rounded-lg transition flex items-center justify-center gap-1.5"
-                  title="Export official assessment report"
+                  type="submit"
+                  className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition shadow cursor-pointer"
                 >
-                  <Download className="w-3.5 h-3.5" /> Export
+                  {scorecardSubmitted ? 'Submitted!' : 'Submit Evaluation'}
                 </button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  function renderPricingModal() {
+    const amount = selectedPlan.includes('29') ? '29' : '99';
+    const upiLink = `upi://pay?pa=9730949538@axl&pn=Aman%20Gajbhiye&am=${amount}&cu=INR&tn=PeerPrep%20${encodeURIComponent(selectedPlan)}`;
+
+    return (
+      <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-6 text-slate-200 my-auto">
+          <button
+            onClick={() => setIsPricingOpen(false)}
+            className="absolute top-4 right-4 text-slate-400 hover:text-white transition cursor-pointer p-1"
+          >
+            ✕
+          </button>
+
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-md">
+              <Crown className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                Unlock PeerPrep Placement Pass
+              </h3>
+              <p className="text-xs text-slate-400">Access Trilogy & 470 Company Questions</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            {[
+              { id: 'Single Mock Pass (₹29)', title: '1 Mock Interview', price: '₹29', desc: 'Valid for 24 hours' },
+              { id: 'Full Placement Season Pass (₹99)', title: 'Season Pass', price: '₹99', desc: 'Unlimited Mock Interviews' }
+            ].map(plan => (
+              <div
+                key={plan.id}
+                onClick={() => setSelectedPlan(plan.id)}
+                className={`p-3 rounded-xl border cursor-pointer transition flex flex-col justify-between ${
+                  selectedPlan === plan.id
+                    ? 'bg-amber-500/10 border-amber-500/50 shadow-md ring-1 ring-amber-500/40'
+                    : 'bg-slate-950/70 border-slate-800 hover:border-slate-700'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-xs text-white">{plan.title}</span>
+                    <span className="text-xs font-mono font-bold text-amber-400">{plan.price}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-400">{plan.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl bg-slate-950 border border-slate-800 mb-4">
+            <div className="w-32 h-32 bg-white rounded-lg p-1.5 shrink-0 flex items-center justify-center">
+              <img
+                src="/upi_qr.png"
+                alt="Scan to pay Aman Gajbhiye"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentNode.innerHTML = '<div class="text-[9px] text-slate-900 font-mono text-center font-bold">UPI: 9730949538@axl<br/>Aman Gajbhiye</div>';
+                }}
+              />
+            </div>
+
+            <div className="space-y-2 text-xs flex-1">
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase font-semibold">UPI ID:</span>
+                <div className="font-mono text-amber-300 font-bold flex items-center gap-1.5">
+                  <span>9730949538@axl</span>
+                  <button
+                    type="button"
+                    onClick={() => navigator.clipboard.writeText('9730949538@axl')}
+                    className="text-[10px] text-indigo-400 hover:text-indigo-200 underline cursor-pointer"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase font-semibold">Account Holder:</span>
+                <div className="text-white font-medium">Aman Gajbhiye</div>
+              </div>
+
+              <div className="pt-1">
+                <a
+                  href={upiLink}
+                  className="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow cursor-pointer"
+                >
+                  Pay via UPI App (₹{amount})
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSimulatePayment}
+            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer"
+          >
+            I Have Paid • Activate Pro Pass
+          </button>
+        </div>
+      </div>
+    );
+  }
 }
