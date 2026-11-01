@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { io } from 'socket.io-client';
 import confetti from 'canvas-confetti';
+import { LeetCodePortal } from './LeetCodePortal';
 import { 
   Play, 
   RotateCcw, 
@@ -27,7 +28,11 @@ import {
   Download,
   X,
   CreditCard,
-  QrCode
+  QrCode,
+  Search,
+  ExternalLink,
+  Layers,
+  Flame
 } from 'lucide-react';
 
 const SOCKET_SERVER_URL = typeof window !== 'undefined'
@@ -37,6 +42,7 @@ const SOCKET_SERVER_URL = typeof window !== 'undefined'
 export default function App() {
   // Room & User State
   const [inRoom, setInRoom] = useState(false);
+  const [mainView, setMainView] = useState('lobby'); // 'lobby' | 'leetcode' | 'room'
   const [roomId, setRoomId] = useState('trilogy-sde-round1');
   const [username, setUsername] = useState('Aman Gajbhiye');
   const [role, setRole] = useState('candidate'); // 'candidate' | 'interviewer'
@@ -49,6 +55,15 @@ export default function App() {
   const [selectedPlan, setSelectedPlan] = useState('₹29 Company Drive Pass');
   const [upiId, setUpiId] = useState('aman@okaxis');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+
+  // Company Catalog Modal State (3,392 LeetCode Questions Across 470 Companies)
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [catalogCompany, setCatalogCompany] = useState('Trilogy');
+  const [catalogSearch, setCatalogSearch] = useState('');
+  const [catalogDifficulty, setCatalogDifficulty] = useState('All');
+  const [catalogProblems, setCatalogProblems] = useState([]);
+  const [catalogTotal, setCatalogTotal] = useState(0);
+  const [isCatalogLoading, setIsCatalogLoading] = useState(false);
 
   // Filter & Problems State
   const [selectedCompany, setSelectedCompany] = useState('Trilogy Innovations');
@@ -101,7 +116,7 @@ export default function App() {
     if (savedPro === 'true') setIsPro(true);
   }, []);
 
-  // Fetch problem list on load
+  // Fetch initial curated problem list
   useEffect(() => {
     fetch(`${SOCKET_SERVER_URL}/api/problems`)
       .then(res => res.json())
@@ -124,6 +139,35 @@ export default function App() {
       setCurrentProblem(prob);
     }
   }, [problemId, problems]);
+
+  // Fetch from 470-Company Directory API
+  const fetchCatalogProblems = (company = catalogCompany, search = catalogSearch, diff = catalogDifficulty) => {
+    setIsCatalogLoading(true);
+    const params = new URLSearchParams({
+      company: company === 'All' ? '' : company,
+      search,
+      difficulty: diff === 'All' ? '' : diff,
+      limit: '80'
+    });
+
+    fetch(`${SOCKET_SERVER_URL}/api/company-directory?${params}`)
+      .then(res => res.json())
+      .then(data => {
+        setCatalogProblems(data.problems || []);
+        setCatalogTotal(data.totalMatching || 0);
+        setIsCatalogLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load catalog:', err);
+        setIsCatalogLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (isCatalogOpen) {
+      fetchCatalogProblems(catalogCompany, catalogSearch, catalogDifficulty);
+    }
+  }, [isCatalogOpen, catalogCompany, catalogDifficulty]);
 
   // Timer Countdown Effect
   useEffect(() => {
@@ -221,6 +265,67 @@ export default function App() {
     setShowSolutionModal(false);
     if (socketRef.current) {
       socketRef.current.emit('problem-change', { roomId, problemId: newProbId });
+    }
+  };
+
+
+  // Launch problem from full LeetCode portal into live Monaco room
+  const handleSolveFromLeetCode = (prob) => {
+    const curatedMatch = problems.find(p => p.id === prob.id || p.id === prob.slug);
+    if (curatedMatch) {
+      setCurrentProblem(curatedMatch);
+      setProblemId(curatedMatch.id);
+      setCode(curatedMatch.starterCode[language] || curatedMatch.starterCode['javascript']);
+    } else {
+      handleLoadFromCatalog(prob);
+    }
+    setInRoom(true);
+    setMainView('room');
+  };
+
+  // Load Problem directly from 3,392 Company Catalog into Monaco Live Room
+  const handleLoadFromCatalog = (prob) => {
+    const loadedProb = {
+      id: prob.id || prob.slug,
+      title: prob.title,
+      difficulty: prob.difficulty,
+      category: (prob.topics && prob.topics.slice(0, 2).join(' & ')) || 'Algorithms',
+      company: (prob.companies && prob.companies.slice(0, 3).join(', ')) || 'Tier-1 Tech',
+      description: `Solve "${prob.title}" (${prob.difficulty}).\n\nCompany Frequencies: ${(prob.companies || []).slice(0, 6).join(', ')}\nAlgorithmic Topics: ${(prob.topics || []).join(', ')}\nAcceptance Rate: ${prob.acceptanceRate || 50}%\nOfficial LeetCode: ${prob.url || 'https://leetcode.com/problems/' + prob.slug}`,
+      examples: [
+        {
+          input: 'Input parameters match standard LeetCode specifications',
+          output: 'Return optimal answer adhering to time and space constraints',
+          explanation: `Direct official verification available on LeetCode: ${prob.url || 'https://leetcode.com'}`
+        }
+      ],
+      hints: [
+        `Hint 1: This problem tests core concepts in ${(prob.topics || ['DSA']).slice(0, 3).join(', ')}.`,
+        `Hint 2: It is a high-frequency question asked by ${(prob.companies || ['top tech']).slice(0, 4).join(', ')}.`,
+        "Hint 3: Think about optimal Big-O bounds before writing brute-force loops."
+      ],
+      starterCode: {
+        javascript: `// Problem: ${prob.title} (${prob.difficulty})\n// Target Companies: ${(prob.companies || []).slice(0, 3).join(', ')}\n\nfunction solve() {\n  // TODO: Write your optimal solution here...\n  return null;\n}\n\nconsole.log('Testing solution for ${prob.title}...');`,
+        python: `# Problem: ${prob.title} (${prob.difficulty})\n# Target Companies: ${(prob.companies || []).slice(0, 3).join(', ')}\n\ndef solve():\n    # TODO: Write your optimal solution here...\n    return None\n\nprint('Testing solution for ${prob.title}...')`,
+        java: `public class Solution {\n    public static void main(String[] args) {\n        // TODO: Solve ${prob.title} (${prob.difficulty})\n        System.out.println("Testing solution for ${prob.title}...");\n    }\n}`,
+        cpp: `#include <iostream>\nusing namespace std;\n\n// Problem: ${prob.title} (${prob.difficulty})\nint main() {\n    cout << "Testing solution for ${prob.title}..." << endl;\n    return 0;\n}`
+      },
+      solution: {
+        timeComplexity: 'Optimal LeetCode Benchmark',
+        spaceComplexity: 'O(1) / O(N)',
+        explanation: `Solve directly on LeetCode: ${prob.url}`,
+        code: `// Editorial and reference solution available on LeetCode: ${prob.url}`
+      }
+    };
+
+    setCurrentProblem(loadedProb);
+    setProblemId(loadedProb.id);
+    setCode(loadedProb.starterCode[language] || loadedProb.starterCode['javascript']);
+    setIsCatalogOpen(false);
+    confetti({ particleCount: 80, spread: 70 });
+
+    if (socketRef.current) {
+      socketRef.current.emit('problem-change', { roomId, problemId: loadedProb.id });
     }
   };
 
@@ -380,6 +485,27 @@ ${interviewerNotes}
     ? problems
     : problems.filter(p => p.company?.toLowerCase().includes(selectedCompany.toLowerCase()) || p.company === selectedCompany);
 
+
+  // Full LeetCode Company Directory & Heatmap View
+  if (mainView === 'leetcode') {
+    return (
+      <>
+        <LeetCodePortal
+          serverUrl={SOCKET_SERVER_URL}
+          inRoom={inRoom}
+          roomId={roomId}
+          onSelectProblem={handleSolveFromLeetCode}
+          onSwitchToInterviewRoom={() => {
+            setInRoom(true);
+            setMainView('room');
+          }}
+          onOpenPricing={() => setIsPricingOpen(true)}
+        />
+        {isPricingOpen && renderPricingModal()}
+      </>
+    );
+  }
+
   // 1. Lobby Screen (Join Room)
   if (!inRoom) {
     return (
@@ -396,7 +522,7 @@ ${interviewerNotes}
                 <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
                   PeerPrep <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">PRO</span>
                 </h1>
-                <p className="text-xs text-slate-400">Company-Wise LeetCode & Live Mock Interview Platform</p>
+                <p className="text-xs text-slate-400">470 Companies • 3,392 LeetCode Questions • Live Mocks</p>
               </div>
             </div>
 
@@ -404,16 +530,35 @@ ${interviewerNotes}
               onClick={() => setIsPricingOpen(true)}
               className="text-[11px] font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full flex items-center gap-1 hover:bg-amber-500/20 transition"
             >
-              <Crown className="w-3.5 h-3.5" /> Pass
+              <Crown className="w-3.5 h-3.5" /> Pass ₹29
             </button>
           </div>
 
-          <div className="mb-4 p-3 rounded-lg bg-indigo-950/40 border border-indigo-800/40 text-[11px] text-indigo-200 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
-            <span>Featured: <strong>Trilogy Innovations</strong>, Google & Amazon OA assessment drills.</span>
+          <div className="mb-4 p-3 rounded-lg bg-indigo-950/40 border border-indigo-800/40 text-[11px] text-indigo-200 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
+              <span>Catalog: <strong>3,392 LeetCode Questions</strong></span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setMainView('leetcode')}
+              className="text-[10px] font-bold text-amber-300 bg-amber-500/20 hover:bg-amber-500/40 px-2 py-1 rounded border border-amber-500/40 transition cursor-pointer"
+            >
+              Explore Bank & Heatmap →
+            </button>
           </div>
 
-          <form onSubmit={() => setInRoom(true)} className="space-y-4">
+          
+          <button
+            type="button"
+            onClick={() => setMainView('leetcode')}
+            className="w-full mb-3 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-indigo-500/20 hover:from-amber-500/30 hover:to-orange-500/30 border border-amber-500/40 text-amber-300 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md shadow-amber-500/10 cursor-pointer"
+          >
+            <Flame className="w-4 h-4 text-orange-400 fill-orange-400" />
+            <span>Practice 470-Company LeetCode Questions & Heatmap →</span>
+          </button>
+
+          <form onSubmit={() => { setInRoom(true); setMainView("room"); }} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
                 Your Name / Handle
@@ -509,6 +654,193 @@ ${interviewerNotes}
 
         {/* Pricing Modal */}
         {isPricingOpen && renderPricingModal()}
+
+        {/* 470-Company LeetCode Catalog Modal */}
+        {isCatalogOpen && renderCompanyCatalogModal()}
+      </div>
+    );
+  }
+
+  // 470-Company & 3,392 LeetCode Question Explorer Modal
+  function renderCompanyCatalogModal() {
+    const popularCompanies = ['Trilogy', 'Google', 'Amazon', 'Meta', 'Microsoft', 'Bloomberg', 'Uber', 'Apple', 'Goldman Sachs', 'All'];
+
+    return (
+      <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
+        <div className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden text-slate-200">
+          {/* Header */}
+          <div className="p-4 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-950/70">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                <Building className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base text-white flex items-center gap-2">
+                  Company-Wise Question Bank
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-normal">
+                    3,392 Problems • 470 Companies
+                  </span>
+                </h3>
+                <p className="text-[11px] text-slate-400">Filter by company, search topics, or load directly into the live mock interview room.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsCatalogOpen(false)}
+              className="text-slate-400 hover:text-white p-1 rounded-lg"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="p-3.5 border-b border-slate-800 bg-slate-950/40 space-y-3 shrink-0">
+            {/* Quick Company Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+              <span className="text-slate-500 text-[10px] font-semibold uppercase tracking-wider shrink-0 mr-1">Top Tech:</span>
+              {popularCompanies.map(comp => (
+                <button
+                  key={comp}
+                  type="button"
+                  onClick={() => {
+                    setCatalogCompany(comp);
+                    fetchCatalogProblems(comp, catalogSearch, catalogDifficulty);
+                  }}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition flex items-center gap-1 ${
+                    catalogCompany.toLowerCase() === comp.toLowerCase()
+                      ? comp === 'Trilogy' 
+                        ? 'bg-amber-500 text-slate-950 font-bold shadow' 
+                        : 'bg-indigo-600 text-white font-semibold'
+                      : 'bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  {comp === 'Trilogy' && <Flame className="w-3 h-3 text-amber-950 fill-current" />}
+                  {comp}
+                </button>
+              ))}
+            </div>
+
+            {/* Search Input & Difficulty Selector */}
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  value={catalogSearch}
+                  onChange={e => {
+                    setCatalogSearch(e.target.value);
+                    fetchCatalogProblems(catalogCompany, e.target.value, catalogDifficulty);
+                  }}
+                  placeholder="Search 3,392 LeetCode questions by title, keyword, or topic (e.g. XOR, Tree, DP, Graph)..."
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                />
+              </div>
+
+              {/* Difficulty Filter */}
+              <div className="flex gap-1">
+                {['All', 'Easy', 'Medium', 'Hard'].map(diff => (
+                  <button
+                    key={diff}
+                    type="button"
+                    onClick={() => {
+                      setCatalogDifficulty(diff);
+                      fetchCatalogProblems(catalogCompany, catalogSearch, diff);
+                    }}
+                    className={`px-2.5 py-1 text-xs rounded-lg transition ${
+                      catalogDifficulty === diff
+                        ? 'bg-slate-800 text-white font-semibold border border-slate-700'
+                        : 'bg-slate-950 border border-slate-800 text-slate-500 hover:text-slate-300'
+                    }`}
+                  >
+                    {diff}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Problem List Display */}
+          <div className="flex-1 overflow-y-auto p-3.5 space-y-2">
+            <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 mb-1">
+              <span>Showing <strong>{catalogProblems.length}</strong> matching questions (Total: {catalogTotal})</span>
+              <span className="text-indigo-400">Click "Load into Room" to start coding live</span>
+            </div>
+
+            {isCatalogLoading ? (
+              <div className="text-center py-12 text-slate-500 text-xs font-mono">
+                Searching 3,392 LeetCode problems...
+              </div>
+            ) : catalogProblems.length === 0 ? (
+              <div className="text-center py-12 text-slate-500 text-xs">
+                No problems found matching your filters. Try selecting "All" or a different keyword.
+              </div>
+            ) : (
+              catalogProblems.map((prob, idx) => (
+                <div
+                  key={prob.id || idx}
+                  className="p-3 bg-slate-950 border border-slate-800/80 rounded-xl hover:border-slate-700 transition flex items-center justify-between gap-3 group"
+                >
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-white tracking-tight truncate group-hover:text-indigo-300 transition">
+                        {prob.title}
+                      </h4>
+                      <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-semibold border ${
+                        prob.difficulty === 'Hard'
+                          ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                          : prob.difficulty === 'Medium'
+                          ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                      }`}>
+                        {prob.difficulty}
+                      </span>
+                      {prob.acceptanceRate && (
+                        <span className="text-[10px] text-slate-500 font-mono">
+                          {prob.acceptanceRate}% accept
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Tags */}
+                    <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
+                      {(prob.companies || []).slice(0, 3).map((c, cIdx) => (
+                        <span key={cIdx} className="px-1.5 py-0.2 rounded bg-indigo-950/60 text-indigo-300 border border-indigo-800/40 font-mono">
+                          {c}
+                        </span>
+                      ))}
+                      {(prob.topics || []).slice(0, 2).map((t, tIdx) => (
+                        <span key={tIdx} className="px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    {prob.url && (
+                      <a
+                        href={prob.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Solve on official LeetCode"
+                        className="text-[11px] text-slate-400 hover:text-white p-1.5 rounded-lg border border-slate-800 hover:border-slate-700 flex items-center gap-1"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleLoadFromCatalog(prob)}
+                      className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-1.5 rounded-lg shadow transition flex items-center gap-1 cursor-pointer"
+                    >
+                      <Zap className="w-3 h-3" /> Load into Room
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
     );
   }
@@ -616,6 +948,25 @@ ${interviewerNotes}
             <span className="font-bold text-sm tracking-tight hidden sm:inline">PeerPrep</span>
           </div>
 
+
+          {/* Full LeetCode Portal & Heatmap Switcher */}
+          <button
+            onClick={() => setMainView('leetcode')}
+            className="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-semibold cursor-pointer"
+          >
+            <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
+            <span>LeetCode Hub & Heatmap</span>
+          </button>
+
+          {/* 470-Company Explorer Button */}
+          <button
+            onClick={() => setIsCatalogOpen(true)}
+            className="bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-medium cursor-pointer"
+          >
+            <Building className="w-3.5 h-3.5" />
+            <span>Company Bank (3,392)</span>
+          </button>
+
           {/* Room ID Badge & Copy */}
           <div className="flex items-center gap-1.5 bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-md text-xs">
             <span className="text-slate-500">Room:</span>
@@ -630,7 +981,7 @@ ${interviewerNotes}
           </div>
 
           {/* Connected Peers with Role Badges */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 hidden lg:flex">
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 hidden xl:flex">
             <Users className="w-3.5 h-3.5 text-slate-500 ml-1" />
             {users.map((u, i) => (
               <span key={i} className="px-2 py-0.5 rounded bg-slate-800 text-slate-200 font-medium text-[11px] flex items-center gap-1">
@@ -733,16 +1084,27 @@ ${interviewerNotes}
               <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1">
                 <Building className="w-3 h-3 text-indigo-400" /> Target Company
               </span>
-              <select
-                value={selectedCompany}
-                onChange={e => setSelectedCompany(e.target.value)}
-                className="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-0.5 text-indigo-300 font-medium focus:outline-none"
-              >
-                <option value="Trilogy Innovations">Trilogy Innovations</option>
-                <option value="Amazon / Google">Amazon / Google</option>
-                <option value="Meta / Microsoft">Meta / Microsoft</option>
-                <option value="All Companies">All Companies</option>
-              </select>
+              <div className="flex items-center gap-1.5">
+                <select
+                  value={selectedCompany}
+                  onChange={e => setSelectedCompany(e.target.value)}
+                  className="bg-slate-900 border border-slate-800 text-[11px] rounded px-2 py-0.5 text-indigo-300 font-medium focus:outline-none"
+                >
+                  <option value="Trilogy Innovations">Trilogy Innovations</option>
+                  <option value="Amazon / Google">Amazon / Google</option>
+                  <option value="Meta / Microsoft">Meta / Microsoft</option>
+                  <option value="All Companies">All Companies</option>
+                </select>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCatalogOpen(true)}
+                  title="Browse full 3,392 questions"
+                  className="text-[10px] bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30"
+                >
+                  Browse 470+
+                </button>
+              </div>
             </div>
 
             <div className="flex items-center justify-between">
@@ -1089,6 +1451,9 @@ ${interviewerNotes}
 
       {/* Pricing Modal */}
       {isPricingOpen && renderPricingModal()}
+
+      {/* 470-Company LeetCode Catalog Modal */}
+      {isCatalogOpen && renderCompanyCatalogModal()}
 
       {/* Structured Interviewer Evaluation Rubrics Modal */}
       {isScorecardOpen && (
